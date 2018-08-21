@@ -15,8 +15,8 @@ import java.util.List;
 public interface GenericDAO<T> {
     public void save(T entity) throws SQLException;
     public void update(T entity) throws SQLException;
-    public void delete(int id);
-    public T getById(int id);
-    public T getByName(String name);
-    public List<T> getAll();
+    public void delete(int id) throws SQLException;
+    public T getById(int id) throws SQLException;
+    public T getByName(String name) throws SQLException;
+    public List<T> getAll() throws SQLException;
 }

@@ -7,7 +7,9 @@ package postoapplication.DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
@@ -77,23 +79,97 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
     }
     
     @Override
-    public void delete(int id) {
-        //teste GIT
+    public void delete(int id) throws SQLException {
+        try {
+            this.connection = new ConnectionFactory().getConnection();
+            String sql = "delete from combustivel where cd_combustivel = "+id;
+            PreparedStatement pstm = connection.prepareStatement(sql);
+            pstm.execute();
+            pstm.close();            
+        }catch (SQLException ex){
+            System.out.println("Erro ao Atualizar Combustivel");
+            ex.printStackTrace();
+        }finally {
+            this.connection.close();
+        }
     }
 
     @Override
-    public Combustivel getById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Combustivel getById(int id) throws SQLException {
+        Combustivel combustivel = null;
+        try{
+            this.connection = new ConnectionFactory().getConnection();
+            String sql = "SELECT * FROM COMBUSTIVEL WHERE CD_COMBUSTIVEL = "+id;
+            PreparedStatement pstm = connection.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
+            combustivel = new Combustivel();
+            while (rs.next()) {
+                combustivel.setCodigo(rs.getInt("CD_COMBUSTIVEL"));
+                combustivel.setDescricao(rs.getString("DS_COMBUSTIVEL"));
+                combustivel.setTipoCombustivel(rs.getString("TP_COMBUSTIVEL"));
+                combustivel.setUsuario(rs.getInt("CD_USUARIO"));
+            }
+            pstm.close();
+        }catch (SQLException ex){
+            System.out.println("Erro ao Atualizar Combustivel");
+            ex.printStackTrace();
+        }finally {
+            this.connection.close();
+        }
+        return combustivel;
     }
 
     @Override
-    public Combustivel getByName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Combustivel getByName(String name) throws SQLException{
+        Combustivel combustivel = null;
+        try{
+            this.connection = new ConnectionFactory().getConnection();
+            String sql = "SELECT * FROM COMBUSTIVEL WHERE DS_COMBUSTIVEL = '"+name+"' limit 1";
+            PreparedStatement pstm = connection.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
+            combustivel = new Combustivel();
+            while (rs.next()) {
+                combustivel.setCodigo(rs.getInt("CD_COMBUSTIVEL"));
+                combustivel.setDescricao(rs.getString("DS_COMBUSTIVEL"));
+                combustivel.setTipoCombustivel(rs.getString("TP_COMBUSTIVEL"));
+                combustivel.setUsuario(rs.getInt("CD_USUARIO"));
+            }
+            pstm.close();
+        }catch (SQLException ex){
+            System.out.println("Erro ao consultar por Nome");
+            ex.printStackTrace();
+        }finally {
+            this.connection.close();
+        }
+        return combustivel;
     }
 
     @Override
-    public List<Combustivel> getAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Combustivel> getAll() throws SQLException {
+        List<Combustivel> combustivelList = null;
+        Combustivel combustivel = null;
+        try{
+            this.connection = new ConnectionFactory().getConnection();
+            String sql = "SELECT * FROM COMBUSTIVEL ORDER BY CD_COMBUSTIVEL ";
+            PreparedStatement pstm = connection.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
+            combustivelList = new ArrayList<>();
+            while (rs.next()) {
+                combustivel = new Combustivel();
+                combustivel.setCodigo(rs.getInt("CD_COMBUSTIVEL"));
+                combustivel.setDescricao(rs.getString("DS_COMBUSTIVEL"));
+                combustivel.setTipoCombustivel(rs.getString("TP_COMBUSTIVEL"));
+                combustivel.setUsuario(rs.getInt("CD_USUARIO"));
+                combustivelList.add(combustivel);
+            }
+            pstm.close();
+        }catch (SQLException ex){
+            System.out.println("Erro ao consultar todos Combustivel");
+            ex.printStackTrace();
+        }finally {
+            this.connection.close();
+        }
+        return combustivelList;
     }
     
 }
