@@ -120,19 +120,22 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
     }
 
     @Override
-    public Combustivel getByName(String name) throws SQLException{
+    public List<Combustivel> getByName(String name) throws SQLException{
         Combustivel combustivel = null;
+        List<Combustivel> combustivelList = null;
         try{
             this.connection = new ConnectionFactory().getConnection();
-            String sql = "SELECT * FROM COMBUSTIVEL WHERE DS_COMBUSTIVEL = '"+name+"' limit 1";
+            String sql = "SELECT * FROM COMBUSTIVEL WHERE UPPER(DS_COMBUSTIVEL) like UPPER('%"+name+"%') ";
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
-            combustivel = new Combustivel();
+            combustivelList = new ArrayList<>();
             while (rs.next()) {
+                combustivel = new Combustivel();
                 combustivel.setCodigo(rs.getInt("CD_COMBUSTIVEL"));
                 combustivel.setDescricao(rs.getString("DS_COMBUSTIVEL"));
                 combustivel.setTipoCombustivel(rs.getString("TP_COMBUSTIVEL"));
                 combustivel.setUsuario(rs.getInt("CD_USUARIO"));
+                combustivelList.add(combustivel);
             }
             pstm.close();
         }catch (SQLException ex){
@@ -141,7 +144,7 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
         }finally {
             this.connection.close();
         }
-        return combustivel;
+        return combustivelList;
     }
 
     @Override
@@ -171,5 +174,25 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
         }
         return combustivelList;
     }
-    
+
+    @Override
+    public int getLastId() throws SQLException {
+        PreparedStatement pstm = null;
+        try {
+            this.connection = new ConnectionFactory().getConnection();
+            String sql = "SELECT COALESCE(MAX(CD_COMBUSTIVEL),0)+1 AS MAIOR FROM COMBUSTIVEL ";
+            pstm = connection.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
+            while (rs.next())
+                return rs.getInt("MAIOR");
+              
+        }catch (SQLException ex){
+            System.out.println("Erro ao maior ID Combustivel");
+            ex.printStackTrace();
+        }finally {
+            pstm.close();
+            this.connection.close();
+        }
+        return 1;
+    }    
 }

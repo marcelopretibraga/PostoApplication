@@ -5,6 +5,13 @@
  */
 package tela;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import postoapplication.DAO.CombustivelDAO;
 import postoapplication.model.Combustivel;
 
@@ -13,7 +20,9 @@ import postoapplication.model.Combustivel;
  * @author marcelo.braga
  */
 public class CombustivelJDialog extends javax.swing.JDialog {
+
     private CombustivelDAO combustivelDAO;
+
     /**
      * Creates new form CombustivelJDialog
      */
@@ -21,6 +30,27 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         combustivelDAO = new CombustivelDAO();
+
+        try {
+            carregaTable(combustivelDAO.getAll());
+        } catch (SQLException ex) {
+            Logger.getLogger(CombustivelJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        btSalvar.setEnabled(false);
+        tfCodigo.setEnabled(false);
+        desabilitaCampos(false);
+
+    }
+
+    private void desabilitaCampos(boolean ativo) {
+        tfDescricao.setEnabled(ativo);
+        cbTipo.setEnabled(ativo);
+    }
+
+    private void limparCampos() {
+        tfCodigo.setText("");
+        tfDescricao.setText("");
+        cbTipo.setSelectedIndex(0);
     }
 
     /**
@@ -32,6 +62,7 @@ public class CombustivelJDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         tfCodigo = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -39,6 +70,16 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         cbTipo = new javax.swing.JComboBox<>();
         btSalvar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbDados = new javax.swing.JTable();
+        btNovo = new javax.swing.JButton();
+        tfCodigoFiltro = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        tfDescicaoFiltro = new javax.swing.JTextField();
+        btFiltrar = new javax.swing.JButton();
+        rbCodigo = new javax.swing.JRadioButton();
+        rbDescricao = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -57,28 +98,107 @@ public class CombustivelJDialog extends javax.swing.JDialog {
             }
         });
 
+        tbDados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Código", "Descrição", "Tipo"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tbDados);
+
+        btNovo.setText("Novo");
+        btNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btNovoActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Codigo");
+
+        jLabel5.setText("Descrição");
+
+        btFiltrar.setText("Filtrar");
+        btFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btFiltrarActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(rbCodigo);
+        rbCodigo.setText("Codigo");
+        rbCodigo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbCodigoItemStateChanged(evt);
+            }
+        });
+
+        buttonGroup1.add(rbDescricao);
+        rbDescricao.setText("Descrição");
+        rbDescricao.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbDescricaoItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(tfDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 573, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btSalvar)
-                            .addComponent(cbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(362, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(60, 60, 60)
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(tfDescricao, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                                    .addComponent(tfCodigo)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(17, 17, 17)
+                                .addComponent(jLabel2)
+                                .addGap(317, 317, 317))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(rbCodigo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                                .addComponent(jLabel4)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addComponent(jLabel3)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(cbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addComponent(btNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(btSalvar)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(tfCodigoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel5)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(tfDescicaoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(26, 26, 26)
+                        .addComponent(btFiltrar)))
+                .addContainerGap(20, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(rbDescricao)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -95,9 +215,23 @@ public class CombustivelJDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(cbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 228, Short.MAX_VALUE)
-                .addComponent(btSalvar)
-                .addGap(97, 97, 97))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btSalvar)
+                    .addComponent(btNovo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfCodigoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(tfDescicaoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(btFiltrar)
+                    .addComponent(rbCodigo))
+                .addGap(1, 1, 1)
+                .addComponent(rbDescricao)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
@@ -108,12 +242,52 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         combustivel.setCodigo(Integer.parseInt(tfCodigo.getText()));
         combustivel.setDescricao(tfDescricao.getText());
         combustivel.setTipoCombustivel(cbTipo.getSelectedItem().toString());
-        try{
+        try {
             combustivelDAO.save(combustivel);
-        }catch(Exception ex){
+            JOptionPane.showMessageDialog(null, "Registro Salvo Com Sucesso!!!");
+            limparCampos();
+            desabilitaCampos(false);
+            carregaTable(combustivelDAO.getAll());
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_btSalvarActionPerformed
+
+    private void btNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNovoActionPerformed
+        try {
+            tfCodigo.setText(String.valueOf(combustivelDAO.getLastId()));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        desabilitaCampos(true);
+        btSalvar.setEnabled(true);
+    }//GEN-LAST:event_btNovoActionPerformed
+
+    private void btFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFiltrarActionPerformed
+        try {
+            if (rbCodigo.isSelected() && tfCodigoFiltro.getText().trim().length() > 0) {//Codigo está selecionado
+
+            } else if (rbDescricao.isSelected() && tfDescicaoFiltro.getText().trim().length() > 0) {
+                carregaTable(combustivelDAO.getByName(tfDescicaoFiltro.getText()));
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+
+    }//GEN-LAST:event_btFiltrarActionPerformed
+
+    private void rbDescricaoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbDescricaoItemStateChanged
+        tfCodigoFiltro.setText("");
+        tfCodigoFiltro.setEnabled(false);
+        tfDescicaoFiltro.setEnabled(true);
+    }//GEN-LAST:event_rbDescricaoItemStateChanged
+
+    private void rbCodigoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbCodigoItemStateChanged
+        tfDescicaoFiltro.setText("");
+        tfDescicaoFiltro.setEnabled(false);
+        tfCodigoFiltro.setEnabled(true);
+    }//GEN-LAST:event_rbCodigoItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -158,12 +332,49 @@ public class CombustivelJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btFiltrar;
+    private javax.swing.JButton btNovo;
     private javax.swing.JButton btSalvar;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JRadioButton rbCodigo;
+    private javax.swing.JRadioButton rbDescricao;
+    private javax.swing.JTable tbDados;
     private javax.swing.JTextField tfCodigo;
+    private javax.swing.JTextField tfCodigoFiltro;
+    private javax.swing.JTextField tfDescicaoFiltro;
     private javax.swing.JTextField tfDescricao;
     // End of variables declaration//GEN-END:variables
+
+    private void carregaTable(List<Combustivel> combustivelList) {
+        if (combustivelList == null)
+            return;
+        DefaultTableModel model = (DefaultTableModel) tbDados.getModel();
+        model.setRowCount(0);
+        for (Combustivel c : combustivelList) {
+            model.addRow(new Object[]{c.getCodigo(), c.getDescricao(), c.getTipoCombustivel()});
+        }
+    }
+
+    private void remover() {
+        //Recupera a Linha selecionada na Tabela
+        int linhaSeleciona = tbDados.getSelectedRow();
+        if (linhaSeleciona == -1) {//Nenhuma Linha foi Selecionada
+            JOptionPane.showMessageDialog(null, "Selecione uma linha para Remover");
+            return;
+        }
+        int codigoRemover = (int) tbDados.getValueAt(linhaSeleciona, 0);
+        try {
+            combustivelDAO.delete(codigoRemover);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        //carregaTodos();
+    }
 }
