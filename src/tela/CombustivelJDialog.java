@@ -39,6 +39,7 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         btSalvar.setEnabled(false);
         tfCodigo.setEnabled(false);
         desabilitaCampos(false);
+        habilitaFiltroCodigo();
 
     }
 
@@ -62,7 +63,7 @@ public class CombustivelJDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
+        btGroupFiltros = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         tfCodigo = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -80,6 +81,7 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         btFiltrar = new javax.swing.JButton();
         rbCodigo = new javax.swing.JRadioButton();
         rbDescricao = new javax.swing.JRadioButton();
+        btRemover = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -134,7 +136,8 @@ public class CombustivelJDialog extends javax.swing.JDialog {
             }
         });
 
-        buttonGroup1.add(rbCodigo);
+        btGroupFiltros.add(rbCodigo);
+        rbCodigo.setSelected(true);
         rbCodigo.setText("Codigo");
         rbCodigo.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -142,11 +145,18 @@ public class CombustivelJDialog extends javax.swing.JDialog {
             }
         });
 
-        buttonGroup1.add(rbDescricao);
+        btGroupFiltros.add(rbDescricao);
         rbDescricao.setText("Descrição");
         rbDescricao.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 rbDescricaoItemStateChanged(evt);
+            }
+        });
+
+        btRemover.setText("Remover");
+        btRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRemoverActionPerformed(evt);
             }
         });
 
@@ -178,15 +188,18 @@ public class CombustivelJDialog extends javax.swing.JDialog {
                                 .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                            .addComponent(jLabel3)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(cbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                            .addComponent(btNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(btSalvar)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(jLabel3)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(cbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(btNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btSalvar)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btRemover))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(tfCodigoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
@@ -218,7 +231,8 @@ public class CombustivelJDialog extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btSalvar)
-                    .addComponent(btNovo))
+                    .addComponent(btNovo)
+                    .addComponent(btRemover))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfCodigoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -266,15 +280,18 @@ public class CombustivelJDialog extends javax.swing.JDialog {
     private void btFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFiltrarActionPerformed
         try {
             if (rbCodigo.isSelected() && tfCodigoFiltro.getText().trim().length() > 0) {//Codigo está selecionado
-
+                Combustivel comb = combustivelDAO.getById(Integer.parseInt(tfCodigoFiltro.getText()));
+                List<Combustivel> combList = new ArrayList<>();
+                combList.add(comb);
+                carregaTable(combList);
             } else if (rbDescricao.isSelected() && tfDescicaoFiltro.getText().trim().length() > 0) {
                 carregaTable(combustivelDAO.getByName(tfDescicaoFiltro.getText()));
+            }else {
+                JOptionPane.showMessageDialog(null, "Favor Informe um filtro para Pesquisa...");
             }
         }catch (Exception ex){
             ex.printStackTrace();
         }
-
-
     }//GEN-LAST:event_btFiltrarActionPerformed
 
     private void rbDescricaoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbDescricaoItemStateChanged
@@ -284,11 +301,19 @@ public class CombustivelJDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_rbDescricaoItemStateChanged
 
     private void rbCodigoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbCodigoItemStateChanged
+        habilitaFiltroCodigo();
+    }//GEN-LAST:event_rbCodigoItemStateChanged
+
+    private void btRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverActionPerformed
+        remover();
+    }//GEN-LAST:event_btRemoverActionPerformed
+
+    private void habilitaFiltroCodigo(){
         tfDescicaoFiltro.setText("");
         tfDescicaoFiltro.setEnabled(false);
         tfCodigoFiltro.setEnabled(true);
-    }//GEN-LAST:event_rbCodigoItemStateChanged
-
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -333,9 +358,10 @@ public class CombustivelJDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btFiltrar;
+    private javax.swing.ButtonGroup btGroupFiltros;
     private javax.swing.JButton btNovo;
+    private javax.swing.JButton btRemover;
     private javax.swing.JButton btSalvar;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -372,9 +398,9 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         int codigoRemover = (int) tbDados.getValueAt(linhaSeleciona, 0);
         try {
             combustivelDAO.delete(codigoRemover);
+            carregaTable(combustivelDAO.getAll());
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }
-        //carregaTodos();
+        }       
     }
 }

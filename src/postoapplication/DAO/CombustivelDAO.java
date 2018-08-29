@@ -125,7 +125,7 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
         List<Combustivel> combustivelList = null;
         try{
             this.connection = new ConnectionFactory().getConnection();
-            String sql = "SELECT * FROM COMBUSTIVEL WHERE UPPER(DS_COMBUSTIVEL) like UPPER('%"+name+"%') ";
+            String sql = "SELECT * FROM COMBUSTIVEL WHERE UPPER(DS_COMBUSTIVEL) LIKE UPPER('%"+name+"%') ";
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             combustivelList = new ArrayList<>();
