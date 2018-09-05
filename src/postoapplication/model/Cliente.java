@@ -58,7 +58,7 @@ public class Cliente extends Record{
 
     @Override
     public String toString() {
-        return codigo + " - "+nome;
+        return codigo +" - "+ nome;
     }
     
 }
