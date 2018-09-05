@@ -7,13 +7,13 @@ package postoapplication.model;
 
 /**
  *
- * @author marcelo.braga
+ * @author mathe
  */
-public class Cliente extends Record{
+public class Fornecedor {
     private int codigo;
     private String nome;
-    private String cpfCnpj;
-    private String telefone;
+    private String cpfcnpj;
+    private String fone;
     private String endereco;
 
     public int getCodigo() {
@@ -32,20 +32,20 @@ public class Cliente extends Record{
         this.nome = nome;
     }
 
-    public String getCpfCnpj() {
-        return cpfCnpj;
+    public String getCpfcnpj() {
+        return cpfcnpj;
     }
 
-    public void setCpfCnpj(String cpfCnpj) {
-        this.cpfCnpj = cpfCnpj;
+    public void setCpfcnpj(String cpfcnpj) {
+        this.cpfcnpj = cpfcnpj;
     }
 
-    public String getTelefone() {
-        return telefone;
+    public String getFone() {
+        return fone;
     }
 
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
+    public void setFone(String fone) {
+        this.fone = fone;
     }
 
     public String getEndereco() {
