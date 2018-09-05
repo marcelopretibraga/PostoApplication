@@ -29,7 +29,8 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
                     .append(", cnpj_fornecedor, fone_fornecedor, endereco_fornecedor")
                     .append(", dt_record, dt_update, usuario) values (?,?,?,?,?,?,?,?)");
             
-//            PreparedStatement pstm = connection.prepareStatement(sql);
+ //           PreparedStatement pstm = connection.prepareStatement(sql);
+ //           pstm.setInt(1, );
         
     }catch(Exception ex){
         JOptionPane.showMessageDialog(null, "Falha ao salvar Fornecedor");
