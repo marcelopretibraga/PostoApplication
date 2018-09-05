@@ -2,7 +2,9 @@ package postoapplication.DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import postoapplication.model.Tanque;
 import postoapplication.jdbc.ConnectionFactory;
@@ -13,7 +15,7 @@ import postoapplication.jdbc.ConnectionFactory;
  */
 public class TanqueDAO implements GenericDAO<Tanque>{
 
-    Connection connection = null;
+    private Connection connection = null;
     
     @Override
     public void save(Tanque entity) throws SQLException {
@@ -45,7 +47,7 @@ public class TanqueDAO implements GenericDAO<Tanque>{
         List<Tanque> combustivelList = null;
         Tanque tanque = null;
         try{
-            this.connection = new ConnectionFactory().getConnection();
+            connection = new ConnectionFactory().getConnection();
             String sql = "SELECT * FROM TANQUE ORDER BY CD_TANQUE";
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
@@ -53,8 +55,9 @@ public class TanqueDAO implements GenericDAO<Tanque>{
             while (rs.next()) {
                 tanque = new Tanque();
                 tanque.setCodigo(rs.getInt("CD_TANQUE"));
-                tanque.setCapacidade(rs.getF);
-                
+                tanque.setCapacidade(rs.getDouble("CAPACIDADE_TANQUE"));
+                tanque.setDescricao("DS_TANQUE");
+                tanque.setUsuario(rs.getInt("USUARIO"));
                 combustivelList.add(tanque);
             }
             pstm.close();
