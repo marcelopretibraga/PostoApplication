@@ -11,14 +11,12 @@ import java.util.Date;
  *
  * @author mathe
  */
-public class Fornecedor {
+public class Fornecedor extends Record{
     private int codigo;
     private String nome;
     private String cpfcnpj;
     private String fone;
     private String endereco;
-    private Date dtrecord;
-    private Date dtupdate;
 
     public int getCodigo() {
         return codigo;
@@ -58,22 +56,6 @@ public class Fornecedor {
 
     public void setEndereco(String endereco) {
         this.endereco = endereco;
-    }
-
-    public Date getDtrecord() {
-        return dtrecord;
-    }
-
-    public void setDtrecord(Date dtrecord) {
-        this.dtrecord = dtrecord;
-    }
-
-    public Date getDtupdate() {
-        return dtupdate;
-    }
-
-    public void setDtupdate(Date dtupdate) {
-        this.dtupdate = dtupdate;
     }
 
     @Override
