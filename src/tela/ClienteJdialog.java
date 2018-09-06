@@ -5,6 +5,11 @@
  */
 package tela;
 
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import postoapplication.model.Cliente;
+import postoapplication.model.Combustivel;
+
 /**
  *
  * @author joseb
@@ -17,6 +22,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
     public ClienteJdialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
     }
 
     /**
@@ -42,7 +48,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tbCliente = new javax.swing.JTable();
         btSalvar = new javax.swing.JButton();
         btRemover = new javax.swing.JButton();
         btFiltrar = new javax.swing.JButton();
@@ -89,7 +95,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
 
         jLabel5.setText("Telefone");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tbCliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -100,9 +106,14 @@ public class ClienteJdialog extends javax.swing.JDialog {
                 "Codigo", "Nome", "Cpf/Cnpj", "Telefone", "Endereco"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tbCliente);
 
         btSalvar.setText("Salvar");
+        btSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSalvarActionPerformed(evt);
+            }
+        });
 
         btRemover.setText("Remover");
 
@@ -214,6 +225,16 @@ public class ClienteJdialog extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfCpfClienteActionPerformed
 
+    private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
+      Cliente cliente = new Cliente();
+      cliente.setCodigo(Integer.parseInt(tfCodigoCliente.getText()));
+      cliente.setCpfCnpj(tfCpfCliente.getText());
+      cliente.setEndereco(tfEnderecoCliente.getText());
+      cliente.setNome(tfNomeCliente.getText());
+      cliente.setTelefone(tfTelefoneCliente.getText());
+      
+    }//GEN-LAST:event_btSalvarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -255,6 +276,15 @@ public class ClienteJdialog extends javax.swing.JDialog {
             }
         });
     }
+    private void carregaTable(List<Cliente> clienteList) {
+        if (clienteList == null)
+            return;
+        DefaultTableModel model = (DefaultTableModel) tbCliente.getModel();
+        model.setRowCount(0);
+        for (Cliente c : clienteList) {
+            model.addRow(new Object[]{c.getCodigo(),c.getNome(),c.getCpfCnpj(),c.getTelefone(),c.getEndereco()});
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btFiltrar;
@@ -270,9 +300,9 @@ public class ClienteJdialog extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JRadioButton rbCodigo;
     private javax.swing.JRadioButton rbNome;
+    private javax.swing.JTable tbCliente;
     private javax.swing.JTextField tfCodigoCliente;
     private javax.swing.JTextField tfCodigoFt;
     private javax.swing.JTextField tfCpfCliente;
@@ -282,3 +312,4 @@ public class ClienteJdialog extends javax.swing.JDialog {
     private javax.swing.JTextField tfTelefoneCliente;
     // End of variables declaration//GEN-END:variables
 }
+ 
