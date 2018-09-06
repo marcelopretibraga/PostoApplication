@@ -6,6 +6,7 @@
 package tela;
 
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import postoapplication.model.Cliente;
 
@@ -16,9 +17,7 @@ import postoapplication.model.Cliente;
  */
 public class ClienteJdialog extends javax.swing.JDialog {
 
-    /**
-     * Creates new form ClienteJdialog
-     */
+    private ClienteDAO clienteDAO;
     public ClienteJdialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -228,11 +227,17 @@ public class ClienteJdialog extends javax.swing.JDialog {
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
       Cliente cliente = new Cliente();
       cliente.setCodigo(Integer.parseInt(tfCodigoCliente.getText()));
-      cliente.setCpfCnpj(Integer.parseInt(tfCpfCliente.getText());
+      cliente.setCpfCnpj(Integer.parseInt(tfCpfCliente.getText()));
       cliente.setEndereco(tfEnderecoCliente.getText());
       cliente.setNome(tfNomeCliente.getText());
       cliente.setTelefone(tfTelefoneCliente.getText());
-      
+      try{
+       clienteDAO.save(cliente);
+       JOptionPane.showMessageDialog(null,"Salvo Com Sucesso");
+       carregaTable(clienteDAO.getAll());
+      }catch(Exception Ex){
+        Ex.printStackTrace();
+      }
     }//GEN-LAST:event_btSalvarActionPerformed
 
     /**
