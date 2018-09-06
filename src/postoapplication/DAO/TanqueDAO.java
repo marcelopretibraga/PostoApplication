@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import postoapplication.model.Tanque;
 import postoapplication.jdbc.ConnectionFactory;
+import postoapplication.model.Combustivel;
 
 /**
  *
@@ -58,6 +59,8 @@ public class TanqueDAO implements GenericDAO<Tanque>{
                 tanque.setCapacidade(rs.getDouble("CAPACIDADE_TANQUE"));
                 tanque.setDescricao("DS_TANQUE");
                 tanque.setUsuario(rs.getInt("USUARIO"));
+                tanque.setCombustivel(populaCombustivel(rs.getInt("CD_COMBUSTIVEL"),
+                        rs.getString("DS_COMBUSTIVEL"), rs.getString("TP_COMBUSTIVEL"), rs.getInt("USUARIO")));
                 combustivelList.add(tanque);
             }
             pstm.close();
@@ -73,5 +76,16 @@ public class TanqueDAO implements GenericDAO<Tanque>{
     public int getLastId() throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    public Combustivel populaCombustivel(int codigo, String descricao, String tipoCombustivel, int usuario) {
+        Combustivel comb = new Combustivel();
+        comb.setCodigo(codigo);
+        comb.setDescricao(descricao);
+        comb.setTipoCombustivel(tipoCombustivel);
+        comb.setUsuario(usuario);
+        return comb;
+    }
+    
+    
     
 }

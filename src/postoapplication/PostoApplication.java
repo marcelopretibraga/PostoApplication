@@ -14,6 +14,7 @@ import java.util.List;
 import postoapplication.DAO.CombustivelDAO;
 import postoapplication.jdbc.ConnectionFactory;
 import postoapplication.model.Combustivel;
+import postoapplication.model.Tanque;
 
 /**
  *
@@ -39,6 +40,9 @@ public class PostoApplication {
         CombustivelDAO combustivelDAO = new CombustivelDAO();
         List<Combustivel> combustivelList = combustivelDAO.getAll();
         System.out.println(combustivelList);
+        
+        
+        
         //combustivelDAO.delete(1);
         //Combustivel combustivel = combustivelDAO.getByName("Gasolina Aditivada");
         
@@ -56,6 +60,8 @@ public class PostoApplication {
         //Salvar
         combustivelDAO.save(combustivel);
         */
+        
+        
     }
     
 }
