@@ -44,7 +44,7 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
             pstm.close();
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Falha ao salvar Fornecedor");
+            JOptionPane.showMessageDialog(null, "Falha ao salvar Fornecedor!");
             ex.printStackTrace();
         }
     }
@@ -78,7 +78,11 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
     @Override
     public void delete(int id) throws SQLException {
         try {
-
+            this.connection = new ConnectionFactory().getConnection();
+            String sql = "delete from fornecedor where cd_fornecedor = "+id;
+            PreparedStatement pstm = connection.prepareStatement(sql.toString());
+            pstm.execute();
+            pstm.close();          
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Falha ao deletar Fornecedor!");
             ex.printStackTrace();
@@ -112,7 +116,30 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
 
     @Override
     public List<Fornecedor> getByName(String name) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Fornecedor> listaFornecedores = null;
+        Fornecedor fornecedor = null;
+        try {
+            this.connection = new ConnectionFactory().getConnection();
+            String sql = "SELECT * FROM COMBUSTIVEL WHERE UPPER(DS_FORNECEDOR) LIKE UPPER('%"+name+"%') ";
+            PreparedStatement pstm = connection.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
+            listaFornecedores = new ArrayList<>();
+            while (rs.next()) {
+                fornecedor = new Fornecedor();
+                fornecedor.setCodigo(rs.getInt("CD_FORNECEDOR"));
+                fornecedor.setNome(rs.getString("DS_FORNECEDOR"));
+                fornecedor.setCpfcnpj(rs.getString("CNPJ_FORNECEDOR"));
+                fornecedor.setFone(rs.getString("FONE_FORNECEDOR"));
+                listaFornecedores.add(fornecedor);
+            }
+            pstm.close();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Falha ao buscar Fornecedor(es)!");
+            ex.printStackTrace();
+        } finally {
+            this.connection.close();
+        }
+        return listaFornecedores;
     }
 
     @Override
@@ -133,6 +160,7 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
                 fornecedor.setFone(rs.getString("FONE_FORNECEDOR"));
                 listaFornecedores.add(fornecedor);
             }
+            pstm.close();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Falha ao buscar Fornecedor(es)!");
             ex.printStackTrace();
@@ -145,7 +173,24 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
 
     @Override
     public int getLastId() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement pstm = null;
+        try {
+            this.connection = new ConnectionFactory().getConnection();
+            String sql = "SELECT COALESCE(MAX(CD_FORNECEDOR),0)+1 AS MAIOR FROM COMBUSTIVEL ";
+            pstm = connection.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("MAIOR");
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Erro ao pegar maior ID Fornecedor");
+            ex.printStackTrace();
+        } finally {
+            pstm.close();
+            this.connection.close();
+        }
+        return 1;
     }
 
 }
