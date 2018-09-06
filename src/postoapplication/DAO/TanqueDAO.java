@@ -35,12 +35,54 @@ public class TanqueDAO implements GenericDAO<Tanque>{
 
     @Override
     public Tanque getById(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Tanque tanque = new Tanque();
+        try { 
+            connection = new ConnectionFactory().getConnection();
+            String sql = "SELECT * FROM TANQUE WHERE CD_TANQUE = " + id + " LIMIT 1";
+            PreparedStatement pstm = connection.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
+            while (rs.next()) {
+                tanque.setCodigo(rs.getInt("CD_TANQUE"));
+                tanque.setCapacidade(rs.getDouble("CAPACIDADE_TANQUE"));
+                tanque.setDescricao(rs.getString("DS_TANQUE"));
+                tanque.setUsuario(rs.getInt("USUARIO"));
+            }
+            pstm.close();
+            rs.close();
+        } catch (SQLException sqle) {
+            System.out.println("Erro ao executar a instrução SQL\n");
+            sqle.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return tanque;
     }
 
     @Override
     public List<Tanque> getByName(String name) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Tanque tanque = null;
+        List<Tanque> tanqueList = new ArrayList<>();
+        
+        connection = new ConnectionFactory().getConnection();
+        
+//        SELECT T.*, C.* FROM TANQUE AS T
+//          JOIN COMBUSTIVEL AS C
+//          ON T.CD_COMBUSTIVEL = C.CD_COMBUSTIVEL
+//        WHERE T.DS_TANQUE = 'Tanque 1';
+        String sql = "SELECT T.*, C.* FROM TANQUE AS T "
+                + "INNER JOIN COMBUSTIVEL AS C ON "
+                + "T.CD_COMBUSTIVEL = C.CD_COMBUSTIVEL "
+                        + "WHERE T.DS_TANQUE = %" + name + "%";
+        PreparedStatement pstm = connection.prepareStatement(sql);
+        ResultSet rs = pstm.executeQuery();
+        while (rs.next()) {
+            tanque = new Tanque();
+            tanque.setCodigo(rs.getInt("CD_TANQUE"));
+            tanque.setDescricao(rs.getString("DS_TANQUE"));
+            tanque.setCapacidade(rs.getDouble("CAPACIDADE_TANQUE"));
+            tanque.setCombustivel(populaCombustivel(rs.getInt(""), sql, sql, 0));
+        }
+        return tanqueList;
     }
 
     @Override
@@ -85,7 +127,4 @@ public class TanqueDAO implements GenericDAO<Tanque>{
         comb.setUsuario(usuario);
         return comb;
     }
-    
-    
-    
 }
