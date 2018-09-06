@@ -8,7 +8,7 @@ package tela;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import postoapplication.model.Cliente;
-import postoapplication.model.Combustivel;
+
 
 /**
  *
@@ -228,7 +228,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
       Cliente cliente = new Cliente();
       cliente.setCodigo(Integer.parseInt(tfCodigoCliente.getText()));
-      cliente.setCpfCnpj(tfCpfCliente.getText());
+      cliente.setCpfCnpj(Integer.parseInt(tfCpfCliente.getText());
       cliente.setEndereco(tfEnderecoCliente.getText());
       cliente.setNome(tfNomeCliente.getText());
       cliente.setTelefone(tfTelefoneCliente.getText());
