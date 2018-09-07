@@ -5,18 +5,38 @@
  */
 package tela;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import postoapplication.DAO.FornecedorDAO;
+import postoapplication.model.Combustivel;
+import postoapplication.model.Fornecedor;
+
 /**
  *
- * @author mathe
+ * @author matheus
  */
 public class FornecedorJDialog extends javax.swing.JDialog {
 
+    private FornecedorDAO fornecedorDAO;
+    
     /**
      * Creates new form FornecedorJDialog
      */
     public FornecedorJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        fornecedorDAO = new FornecedorDAO();
+        setTfCodigo();
+        try {
+            carregaTable(fornecedorDAO.getAll());
+        } catch (SQLException ex) {
+            Logger.getLogger(CombustivelJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -28,8 +48,9 @@ public class FornecedorJDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbFornecedores = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -45,13 +66,14 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         rbNome = new javax.swing.JRadioButton();
         tfNomeFiltro = new javax.swing.JTextField();
         btFiltrar = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btRemover = new javax.swing.JButton();
         tfCodigoFiltro = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("FORNECEDOR");
         setName("Fornecedor"); // NOI18N
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbFornecedores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -67,8 +89,16 @@ public class FornecedorJDialog extends javax.swing.JDialog {
             new String [] {
                 "Código", "Nome / Fantasia", "CPF / CNPJ", "Contato"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tbFornecedores);
 
         jLabel1.setText("Código");
 
@@ -84,22 +114,67 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         tfCodigo.setEnabled(false);
 
         btSalvar.setText("Gravar");
+        btSalvar.setToolTipText("PARA GRAVAR PREENCHA TODOS OS CAMPOS");
+        btSalvar.setEnabled(false);
+        btSalvar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btSalvarMouseEntered(evt);
+            }
+        });
         btSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSalvarActionPerformed(evt);
             }
         });
 
+        buttonGroup1.add(rbCodigo);
         rbCodigo.setSelected(true);
         rbCodigo.setText("Código");
+        rbCodigo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbCodigoItemStateChanged(evt);
+            }
+        });
 
+        buttonGroup1.add(rbNome);
         rbNome.setText("Nome");
+        rbNome.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbNomeItemStateChanged(evt);
+            }
+        });
 
         tfNomeFiltro.setEnabled(false);
 
         btFiltrar.setText("Filtrar");
+        btFiltrar.setToolTipText("PARA FILTRAR PREENCHA UM DOS CAMPOS DE FILTRO");
+        btFiltrar.setEnabled(false);
+        btFiltrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btFiltrarMouseEntered(evt);
+            }
+        });
+        btFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btFiltrarActionPerformed(evt);
+            }
+        });
 
-        jButton1.setText("Remover");
+        btRemover.setText("Remover");
+        btRemover.setToolTipText("PARA REMOVER SELECIONE UMA LINHA");
+        btRemover.setEnabled(false);
+        btRemover.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btRemoverMouseEntered(evt);
+            }
+        });
+        btRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRemoverActionPerformed(evt);
+            }
+        });
+
+        tfCodigoFiltro.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -130,7 +205,7 @@ public class FornecedorJDialog extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))))
+                                .addComponent(btRemover))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rbCodigo)
@@ -165,7 +240,7 @@ public class FornecedorJDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfContato, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(jButton1)
+                    .addComponent(btRemover)
                     .addComponent(btSalvar))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -185,8 +260,47 @@ public class FornecedorJDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-        // TODO add your handling code here:
+        salvar();
+        setTfCodigo();
     }//GEN-LAST:event_btSalvarActionPerformed
+
+    private void btRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverActionPerformed
+        remover();
+        setTfCodigo();
+    }//GEN-LAST:event_btRemoverActionPerformed
+
+    private void btFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFiltrarActionPerformed
+        filtrar();
+    }//GEN-LAST:event_btFiltrarActionPerformed
+
+    private void rbNomeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbNomeItemStateChanged
+        selectFiltro(false);
+    }//GEN-LAST:event_rbNomeItemStateChanged
+
+    private void rbCodigoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbCodigoItemStateChanged
+        selectFiltro(true);
+    }//GEN-LAST:event_rbCodigoItemStateChanged
+
+    private void btSalvarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btSalvarMouseEntered
+        if(tfNome.getText().trim().length() > 0 && tfCpfcnpj.getText().trim().length() > 0 && tfEndereco.getText().trim().length() > 0 && tfContato.getText().trim().length() > 0)
+            btSalvar.setEnabled(true);
+        else
+            btSalvar.setEnabled(false);
+    }//GEN-LAST:event_btSalvarMouseEntered
+
+    private void btRemoverMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btRemoverMouseEntered
+        if(tbFornecedores.getSelectedRow() != -1)
+            btRemover.setEnabled(true);
+        else
+            btRemover.setEnabled(false);
+    }//GEN-LAST:event_btRemoverMouseEntered
+
+    private void btFiltrarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btFiltrarMouseEntered
+        if(tfCodigoFiltro.getText().trim().length() > 0 || tfNomeFiltro.getText().trim().length() > 0)
+            btFiltrar.setEnabled(true);
+        else
+            btFiltrar.setEnabled(false);
+    }//GEN-LAST:event_btFiltrarMouseEntered
 
     /**
      * @param args the command line arguments
@@ -230,19 +344,98 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         });
     }
 
+    private void selectFiltro(boolean habilitado) {
+        tfCodigoFiltro.setText("");
+        tfNomeFiltro.setText("");
+        tfCodigoFiltro.setEnabled(habilitado);
+        tfNomeFiltro.setEnabled(!habilitado);
+    }
+    
+    private void limpaCampos() {
+        tfCodigo.setText("");
+        tfCodigoFiltro.setText("");
+        tfNome.setText("");
+        tfNomeFiltro.setText("");
+        tfContato.setText("");
+        tfCpfcnpj.setText("");
+        tfEndereco.setText("");
+    }
+    
+    private void setTfCodigo() {
+        try {
+            tfCodigo.setText(String.valueOf(fornecedorDAO.getLastId()));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void carregaTable(List<Fornecedor> fornecedorList) {
+        if (fornecedorList == null)
+            return;
+        DefaultTableModel model = (DefaultTableModel) tbFornecedores.getModel();
+        model.setRowCount(0);
+        for (Fornecedor f : fornecedorList) {
+            model.addRow(new Object[]{f.getCodigo(), f.getNome(), f.getCpfcnpj(), f.getFone()});
+        }
+    }
+    
+    private void remover() {
+        int codigoRemover = (int) tbFornecedores.getValueAt(tbFornecedores.getSelectedRow(), 0);
+        try {
+            fornecedorDAO.delete(codigoRemover);
+            carregaTable(fornecedorDAO.getAll());
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void salvar() {
+        Fornecedor fornecedor = new Fornecedor();
+        fornecedor.setCodigo(Integer.parseInt(tfCodigo.getText()));
+        fornecedor.setNome(tfNome.getText());
+        fornecedor.setCpfcnpj(tfCpfcnpj.getText());
+        fornecedor.setFone(tfContato.getText());
+        fornecedor.setEndereco(tfEndereco.getText());
+        try {
+            fornecedorDAO.save(fornecedor);
+            JOptionPane.showMessageDialog(null, "Registro Salvo Com Sucesso!!!");
+            limpaCampos();
+            btSalvar.setEnabled(false);
+            carregaTable(fornecedorDAO.getAll());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void filtrar() {
+        try {
+            if (rbCodigo.isSelected()) {
+                Fornecedor fornecedor = fornecedorDAO.getById(Integer.parseInt(tfCodigoFiltro.getText()));
+                List<Fornecedor> fornecedorList = new ArrayList<>();
+                fornecedorList.add(fornecedor);
+                carregaTable(fornecedorList);
+            } else if (rbNome.isSelected()) {
+                carregaTable(fornecedorDAO.getByName(tfNomeFiltro.getText()));
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btFiltrar;
+    private javax.swing.JButton btRemover;
     private javax.swing.JButton btSalvar;
-    private javax.swing.JButton jButton1;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JRadioButton rbCodigo;
     private javax.swing.JRadioButton rbNome;
+    private javax.swing.JTable tbFornecedores;
     private javax.swing.JTextField tfCodigo;
     private javax.swing.JTextField tfCodigoFiltro;
     private javax.swing.JTextField tfContato;

@@ -176,7 +176,7 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
         PreparedStatement pstm = null;
         try {
             this.connection = new ConnectionFactory().getConnection();
-            String sql = "SELECT COALESCE(MAX(CD_FORNECEDOR),0)+1 AS MAIOR FROM COMBUSTIVEL ";
+            String sql = "SELECT COALESCE(MAX(CD_FORNECEDOR),0)+1 AS MAIOR FROM FORNECEDOR ";
             pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
