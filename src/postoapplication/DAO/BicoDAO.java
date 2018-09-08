@@ -36,7 +36,7 @@ public class BicoDAO implements GenericDAO<Bico>{
             pstm.execute();
             pstm.close();
         } catch (SQLException ex) {
-            System.out.println("Erro ao inserir Bico.");
+            System.out.println("Erro ao inserir Bico");
             ex.printStackTrace();
         } finally {
             connection.close();

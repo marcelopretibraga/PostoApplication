@@ -6,22 +6,26 @@
 package tela;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import postoapplication.DAO.BicoDAO;
-import postoapplication.DAO.CombustivelDAO;
+import postoapplication.DAO.TanqueDAO;
 import postoapplication.model.Bico;
+import postoapplication.model.Tanque;
 
 /**
  *
  * @author fag
  */
 public class BicoJDialog extends javax.swing.JDialog {
-    
+
     private BicoDAO bicoDAO;
+    private TanqueDAO tanqueDAO;
 
     /**
      * Creates new form BicoJDialog
@@ -36,7 +40,6 @@ public class BicoJDialog extends javax.swing.JDialog {
         } catch (SQLException ex) {
             Logger.getLogger(CombustivelJDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
-        carregaComboTanque();
         btSalvar.setEnabled(false);
         tfCodigo.setEnabled(false);
         desabilitaCampos(false);
@@ -238,19 +241,55 @@ public class BicoJDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNovoActionPerformed
-        
+        try {
+            tfCodigo.setText(String.valueOf(bicoDAO.getLastId()));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        carregaComboTanque();
+        desabilitaCampos(true);
+        btSalvar.setEnabled(true);
     }//GEN-LAST:event_btNovoActionPerformed
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-        
+        Bico bico = new Bico();
+        bico.setCodigo(Integer.parseInt(tfCodigo.getText()));
+        bico.setDescricao(tfDescricao.getText());
+        bico.setTanque((Tanque) cbTanque.getSelectedItem());
+        try {
+            bicoDAO.save(bico);
+            JOptionPane.showMessageDialog(null, "Registro Salvo Com Sucesso!!!");
+            limparCampos();
+            desabilitaCampos(false);
+            carregaTable(bicoDAO.getAll());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_btSalvarActionPerformed
 
     private void btRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverActionPerformed
-        
+        remover();
     }//GEN-LAST:event_btRemoverActionPerformed
 
     private void btFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFiltrarActionPerformed
-        
+        try {
+            if (bicoDAO.getAll() == null) {
+                if (rbCodigo.isSelected() && tfCodigoFiltro.getText().trim().length() > 0) {//Codigo está selecionado
+                    Bico bico = bicoDAO.getById(Integer.parseInt(tfCodigoFiltro.getText()));
+                    List<Bico> bicoList = new ArrayList<>();
+                    bicoList.add(bico);
+                    carregaTable(bicoList);
+                } else if (rbDescricao.isSelected() && tfDescricaoFiltro.getText().trim().length() > 0) {
+                    carregaTable(bicoDAO.getByName(tfDescricaoFiltro.getText()));
+                } else {
+                    JOptionPane.showMessageDialog(null, "Favor Informe um filtro para Pesquisa...");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Lista Vazia, Impossível Filtrar");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_btFiltrarActionPerformed
 
     private void rbCodigoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rbCodigoStateChanged
@@ -277,16 +316,24 @@ public class BicoJDialog extends javax.swing.JDialog {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(BicoJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BicoJDialog.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(BicoJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BicoJDialog.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(BicoJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BicoJDialog.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(BicoJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BicoJDialog.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -339,18 +386,44 @@ public class BicoJDialog extends javax.swing.JDialog {
     }
 
     private void carregaTable(List<Bico> bicoList) {
-        if (bicoList == null)
+        if (bicoList == null) {
             return;
+        }
         DefaultTableModel model = (DefaultTableModel) tbBico.getModel();
         model.setRowCount(0);
         for (Bico c : bicoList) {
             model.addRow(new Object[]{c.getCodigo(), c.getDescricao(), c.getTanque()});
         }
     }
-    
+
     private void carregaComboTanque() {
-        DefaultComboBoxModel modeloComboTanque = 
-                new DefaultComboBoxModel();
-        cbTanque.setModel(modeloComboTanque);
+        try {
+            DefaultComboBoxModel modeloComboTanque;
+            modeloComboTanque = new DefaultComboBoxModel(tanqueDAO.getAll().toArray());
+            cbTanque.setModel(modeloComboTanque);
+        } catch (SQLException ex) {
+            Logger.getLogger(BicoJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void limparCampos() {
+        tfCodigo.setText("");
+        tfDescricao.setText("");
+        cbTanque.setSelectedIndex(0);
+    }
+
+    private void remover() {
+        int linhaSeleciona = tbBico.getSelectedRow();
+        if (linhaSeleciona == -1) {//Nenhuma Linha foi Selecionada
+            JOptionPane.showMessageDialog(null, "Selecione uma linha para Remover");
+            return;
+        }
+        int codigoRemover = (int) tbBico.getValueAt(linhaSeleciona, 0);
+        try {
+            bicoDAO.delete(codigoRemover);
+            carregaTable(bicoDAO.getAll());
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 }
