@@ -39,7 +39,7 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
             pstm.setString(3, entity.getCpfcnpj());
             pstm.setString(4, entity.getFone());
             pstm.setString(5, entity.getEndereco());
-            pstm.setInt(8, entity.getUsuario());
+            pstm.setInt(6, entity.getUsuario());
             pstm.execute();
             pstm.close();
 
@@ -120,7 +120,7 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
         Fornecedor fornecedor = null;
         try {
             this.connection = new ConnectionFactory().getConnection();
-            String sql = "SELECT * FROM COMBUSTIVEL WHERE UPPER(DS_FORNECEDOR) LIKE UPPER('%"+name+"%') ";
+            String sql = "SELECT * FROM FORNECEDOR WHERE UPPER(DS_FORNECEDOR) LIKE UPPER('%"+name+"%') ";
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             listaFornecedores = new ArrayList<>();
@@ -176,7 +176,7 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
         PreparedStatement pstm = null;
         try {
             this.connection = new ConnectionFactory().getConnection();
-            String sql = "SELECT COALESCE(MAX(CD_FORNECEDOR),0)+1 AS MAIOR FROM COMBUSTIVEL ";
+            String sql = "SELECT COALESCE(MAX(CD_FORNECEDOR),0)+1 AS MAIOR FROM FORNECEDOR ";
             pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
