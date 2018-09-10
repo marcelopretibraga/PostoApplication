@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import postoapplication.DAO.ClienteDAO;
 import postoapplication.model.Cliente;
-import postoapplication.model.Combustivel;
+
 
 /**
  *
