@@ -39,7 +39,7 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
             pstm.setString(3, entity.getCpfcnpj());
             pstm.setString(4, entity.getFone());
             pstm.setString(5, entity.getEndereco());
-            pstm.setInt(8, entity.getUsuario());
+            pstm.setInt(6, entity.getUsuario());
             pstm.execute();
             pstm.close();
 
