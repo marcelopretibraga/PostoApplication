@@ -37,8 +37,8 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             pstm.setInt(3, entity.getCpfCnpj());
             pstm.setString(4, entity.getTelefone());
             pstm.setString(5, entity.getEndereco());
-            pstm.setDate(6, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
-            pstm.setDate(7, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));           
+            pstm.setDate(6, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));          
+             pstm.setDate(7, new java.sql.Date(Calendar.getInstance().getTimeInMillis())); 
             pstm.setInt(8, entity.getUsuario());
 
             pstm.execute();
