@@ -148,12 +148,6 @@ public class FornecedorJDialog extends javax.swing.JDialog {
 
         btFiltrar.setText("Filtrar");
         btFiltrar.setToolTipText("PARA FILTRAR PREENCHA UM DOS CAMPOS DE FILTRO");
-        btFiltrar.setEnabled(false);
-        btFiltrar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btFiltrarMouseEntered(evt);
-            }
-        });
         btFiltrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btFiltrarActionPerformed(evt);
@@ -295,13 +289,6 @@ public class FornecedorJDialog extends javax.swing.JDialog {
             btRemover.setEnabled(false);
     }//GEN-LAST:event_btRemoverMouseEntered
 
-    private void btFiltrarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btFiltrarMouseEntered
-        if(tfCodigoFiltro.getText().trim().length() > 0 || tfNomeFiltro.getText().trim().length() > 0)
-            btFiltrar.setEnabled(true);
-        else
-            btFiltrar.setEnabled(false);
-    }//GEN-LAST:event_btFiltrarMouseEntered
-
     /**
      * @param args the command line arguments
      */
@@ -409,13 +396,15 @@ public class FornecedorJDialog extends javax.swing.JDialog {
     
     private void filtrar() {
         try {
-            if (rbCodigo.isSelected()) {
+            if (rbCodigo.isSelected() && tfCodigoFiltro.getText().trim().length() != 0) {
                 Fornecedor fornecedor = fornecedorDAO.getById(Integer.parseInt(tfCodigoFiltro.getText()));
                 List<Fornecedor> fornecedorList = new ArrayList<>();
                 fornecedorList.add(fornecedor);
                 carregaTable(fornecedorList);
-            } else if (rbNome.isSelected()) {
+            } else if (rbNome.isSelected() && tfNomeFiltro.getText().trim().length() != 0) {
                 carregaTable(fornecedorDAO.getByName(tfNomeFiltro.getText()));
+            } else {
+                carregaTable(fornecedorDAO.getAll());
             }
         }catch (Exception ex){
             ex.printStackTrace();

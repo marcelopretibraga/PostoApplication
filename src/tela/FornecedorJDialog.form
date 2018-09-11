@@ -256,10 +256,8 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Filtrar"/>
         <Property name="toolTipText" type="java.lang.String" value="PARA FILTRAR PREENCHA UM DOS CAMPOS DE FILTRO"/>
-        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btFiltrarMouseEntered"/>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFiltrarActionPerformed"/>
       </Events>
     </Component>

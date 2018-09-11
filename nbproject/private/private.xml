@@ -3,20 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
             <file>file:/D:/000/FAG/Algoritmos/PostoApp/PostoApplication/src/tela/CombustivelJDialog.java</file>
             <file>file:/D:/000/FAG/Algoritmos/PostoApp/PostoApplication/src/postoapplication/jdbc/ConnectionFactory.java</file>
             <file>file:/D:/000/FAG/Algoritmos/PostoApp/PostoApplication/src/postoapplication/DAO/FornecedorDAO.java</file>
             <file>file:/D:/000/FAG/Algoritmos/PostoApp/PostoApplication/src/tela/FornecedorJDialog.java</file>
             <file>file:/D:/000/FAG/Algoritmos/PostoApp/PostoApplication/src/postoapplication/DAO/CombustivelDAO.java</file>
-=======
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/model/Fornecedor.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/DAO/GenericDAO.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/DAO/FornecedorDAO.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/jdbc/ConnectionFactory.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/model/Record.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/DAO/CombustivelDAO.java</file>
->>>>>>> d2593d1ca8c84c559df950aac4df5632cd119a34
         </group>
     </open-files>
 </project-private>
