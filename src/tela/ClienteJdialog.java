@@ -26,7 +26,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
     public ClienteJdialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        limpaCampos();
+       
         setLocationRelativeTo(null);
         clienteDAO = new ClienteDAO();
         try {

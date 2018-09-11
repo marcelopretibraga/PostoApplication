@@ -8,8 +8,7 @@ package postoapplication.jdbc;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -21,7 +20,7 @@ public class ConnectionFactory {
         try {
             //jdbc do postgres/endereço/ porta/ database
             return DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/postobd",
+                    "jdbc:postgresql://localhost:5432/postodb",
                     "postgres","postgres");
         } catch (SQLException ex) {
             System.out.println("Erro ao criar uma "
