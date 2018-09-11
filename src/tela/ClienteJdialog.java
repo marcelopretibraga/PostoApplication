@@ -8,6 +8,7 @@ package tela;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import postoapplication.DAO.ClienteDAO;
 import postoapplication.model.Cliente;
 
 
