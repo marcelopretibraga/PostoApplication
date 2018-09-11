@@ -5,7 +5,11 @@
  */
 package tela;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import postoapplication.DAO.ClienteDAO;
@@ -22,7 +26,19 @@ public class ClienteJdialog extends javax.swing.JDialog {
     public ClienteJdialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+        limpaCampos();
+        setLocationRelativeTo(null);
+        clienteDAO = new ClienteDAO();
+        try {
+            carregaTable(clienteDAO.getAll());
+        } catch (SQLException ex) {
+            Logger.getLogger(CombustivelJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        btSalvar.setEnabled(false);
+        tfCodigoCliente.setEnabled(false);
+        desabilitaCampos(false);
+        habilitaFiltroCodigo();
+ 
     }
 
     /**
@@ -116,14 +132,39 @@ public class ClienteJdialog extends javax.swing.JDialog {
         });
 
         btRemover.setText("Remover");
+        btRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRemoverActionPerformed(evt);
+            }
+        });
 
         btFiltrar.setText("Filtrar");
+        btFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btFiltrarActionPerformed(evt);
+            }
+        });
 
         btNovo.setText("Novo");
+        btNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btNovoActionPerformed(evt);
+            }
+        });
 
         rbNome.setText("Nome");
+        rbNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbNomeActionPerformed(evt);
+            }
+        });
 
         rbCodigo.setText("Codigo");
+        rbCodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbCodigoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -226,20 +267,28 @@ public class ClienteJdialog extends javax.swing.JDialog {
     }//GEN-LAST:event_tfCpfClienteActionPerformed
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-      Cliente cliente = new Cliente();
-      cliente.setCodigo(Integer.parseInt(tfCodigoCliente.getText()));
-      cliente.setCpfCnpj(Integer.parseInt(tfCpfCliente.getText()));
-      cliente.setEndereco(tfEnderecoCliente.getText());
-      cliente.setNome(tfNomeCliente.getText());
-      cliente.setTelefone(tfTelefoneCliente.getText());
-      try{
-       clienteDAO.save(cliente);
-       JOptionPane.showMessageDialog(null,"Salvo Com Sucesso");
-       carregaTable(clienteDAO.getAll());
-      }catch(Exception Ex){
-        Ex.printStackTrace();
-      }
+      salvar();
     }//GEN-LAST:event_btSalvarActionPerformed
+
+    private void btFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFiltrarActionPerformed
+       filtrar();
+    }//GEN-LAST:event_btFiltrarActionPerformed
+
+    private void btRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverActionPerformed
+       remover();
+    }//GEN-LAST:event_btRemoverActionPerformed
+
+    private void btNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNovoActionPerformed
+  novo();
+    }//GEN-LAST:event_btNovoActionPerformed
+
+    private void rbCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbCodigoActionPerformed
+     habilitaFiltroCodigo();
+    }//GEN-LAST:event_rbCodigoActionPerformed
+
+    private void rbNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbNomeActionPerformed
+             habilitaFiltroNome();
+    }//GEN-LAST:event_rbNomeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -291,6 +340,91 @@ public class ClienteJdialog extends javax.swing.JDialog {
             model.addRow(new Object[]{c.getCodigo(),c.getNome(),c.getCpfCnpj(),c.getTelefone(),c.getEndereco()});
         }
     }
+    
+        private void remover() {
+        int linhaSelecionada = tbCliente.getSelectedRow();
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(null, "Deve-se selecionar uma linha para ser removido");
+            return;
+        }
+        int codigoRemover = (int) tbCliente.getValueAt(linhaSelecionada, 0);
+        try {
+            clienteDAO.delete(codigoRemover);
+            JOptionPane.showMessageDialog(null, "Cliente Removido com Sucesso!");
+            carregaTable(clienteDAO.getAll());
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    private void limpaCampos() {
+        tfCodigoCliente.setText("");
+        tfNomeCliente.setText("");
+        tfEnderecoCliente.setText("");
+        tfCpfCliente.setText("");
+        tfTelefoneCliente.setText("");
+    }
+
+    private void filtrar() {
+        try {
+            if (rbCodigo.isSelected() && tfCodigoFt.getText().trim().length() > 0) {
+                Cliente cliente = clienteDAO.getById(Integer.parseInt(tfCodigoFt.getText()));
+                List<Cliente> clienteList = new ArrayList<>();
+                clienteList.add(cliente);
+                carregaTable(clienteList);
+            } else if (rbNome.isSelected() && tfNomeFt.getText().trim().length() > 0) {
+                carregaTable(clienteDAO.getByName(tfNomeFt.getText()));
+            } else {
+                JOptionPane.showMessageDialog(null, "Informe qual filtro desejado para pesquisa");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void desabilitaCampos(boolean ativo) {
+        tfCodigoCliente.setEnabled(ativo);
+        tfNomeCliente.setEnabled(ativo);
+        tfEnderecoCliente.setEnabled(ativo);
+        tfCpfCliente.setEnabled(ativo);
+        tfTelefoneCliente.setEnabled(ativo);
+    }
+
+    private void novo() {
+        try {
+            tfCodigoCliente.setText(String.valueOf(clienteDAO.getLastId()));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        desabilitaCampos(true);
+        btSalvar.setEnabled(true);
+    }
+
+    private void habilitaFiltroCodigo() {
+        tfNomeFt.setText("");
+        tfNomeFt.setEnabled(false);
+        tfCodigoFt.setEnabled(true);
+    }
+
+    private void habilitaFiltroNome() {
+        tfCodigoFt.setText("");
+        tfCodigoFt.setEnabled(false);
+        tfNomeFt.setEnabled(true);
+    }
+private void salvar(){
+      Cliente cliente = new Cliente();
+      cliente.setCodigo(Integer.parseInt(tfCodigoCliente.getText()));
+      cliente.setCpfCnpj(Integer.parseInt(tfCpfCliente.getText()));
+      cliente.setEndereco(tfEnderecoCliente.getText());
+      cliente.setNome(tfNomeCliente.getText());
+      cliente.setTelefone(tfTelefoneCliente.getText());
+      try{
+       clienteDAO.save(cliente);
+       JOptionPane.showMessageDialog(null,"Salvo Com Sucesso");
+       carregaTable(clienteDAO.getAll());
+      }catch(Exception Ex){
+        Ex.printStackTrace();
+      }
+    }     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btFiltrar;
