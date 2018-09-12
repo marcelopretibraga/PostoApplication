@@ -53,10 +53,10 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
         try {
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("update fornecedor set (ds_fornecedor = ?")
+            sql.append("update fornecedor set ds_fornecedor = ?")
                     .append(", cnpj_fornecedor = ?, fone_fornecedor = ?, endereco_fornecedor = ?")
-                    .append(", usuario = ?, dt_update = current_date) ")
-                    .append(" where cd_fornecedor = ?");
+                    .append(", usuario = ?, dt_update = current_date ")
+                    .append("where cd_fornecedor = ?");
 
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setString(1, entity.getNome());
@@ -64,10 +64,7 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
             pstm.setString(3, entity.getFone());
             pstm.setString(4, entity.getEndereco());
             pstm.setInt(5, entity.getUsuario());
-<<<<<<< HEAD
-=======
             pstm.setInt(6, entity.getCodigo());
->>>>>>> 294963ccc7ee5829d4d58baac2cd88277b624c8a
             pstm.execute();
             pstm.close();
 

@@ -272,11 +272,13 @@ public class FornecedorJDialog extends javax.swing.JDialog {
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
         salvar();
         setTfCodigo();
+        btSalvar.setText("Gravar");
     }//GEN-LAST:event_btSalvarActionPerformed
 
     private void btRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverActionPerformed
         remover();
         setTfCodigo();
+        btSalvar.setText("Gravar");
     }//GEN-LAST:event_btRemoverActionPerformed
 
     private void btFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFiltrarActionPerformed
@@ -308,6 +310,7 @@ public class FornecedorJDialog extends javax.swing.JDialog {
     private void btLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLimparActionPerformed
         limpaCampos();
         setTfCodigo();
+        btSalvar.setText("Gravar");
     }//GEN-LAST:event_btLimparActionPerformed
 
     private void tbFornecedoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbFornecedoresMouseClicked
@@ -317,6 +320,7 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        btSalvar.setText("Atualizar");
         tfCodigo.setText(String.valueOf(fornecedor.getCodigo()));
         tfCpfcnpj.setText(fornecedor.getCpfcnpj());
         tfNome.setText(fornecedor.getNome());
@@ -419,7 +423,10 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         fornecedor.setFone(tfContato.getText());
         fornecedor.setEndereco(tfEndereco.getText());
         try {
-            fornecedorDAO.save(fornecedor);
+            if(fornecedorDAO.getLastId() == Integer.parseInt(tfCodigo.getText()))
+                fornecedorDAO.save(fornecedor);
+            else
+                fornecedorDAO.update(fornecedor);
             JOptionPane.showMessageDialog(null, "Registro Salvo Com Sucesso!!!");
             limpaCampos();
             btSalvar.setEnabled(false);
