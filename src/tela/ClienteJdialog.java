@@ -26,8 +26,8 @@ public class ClienteJdialog extends javax.swing.JDialog {
     public ClienteJdialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-       
-        setLocationRelativeTo(null);
+      
+        
         clienteDAO = new ClienteDAO();
         try {
             carregaTable(clienteDAO.getAll());
@@ -280,6 +280,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
 
     private void btNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNovoActionPerformed
   novo();
+  limpaCampos();
     }//GEN-LAST:event_btNovoActionPerformed
 
     private void rbCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbCodigoActionPerformed

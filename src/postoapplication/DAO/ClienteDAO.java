@@ -28,8 +28,8 @@ public class ClienteDAO implements GenericDAO<Cliente> {
         try {
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("insert into cliente(cd_cliente, nm_cliente, nr_cpfcnpj,")
-                    .append("nr_telefone, ds_endereco, dt_record, dt_update, cd_usuario) values (?,?,?,?,?,?,?,?);");
+            sql.append("insert into cliente(cd_cliente, ds_cliente, cpfcnpj_cliente,")
+                    .append("fone_cliente, endereco_cliente, dt_record, dt_update, usuario) values (?,?,?,?,?,?,?,?);");
 
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setInt(1, entity.getCodigo());
