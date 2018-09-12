@@ -44,6 +44,12 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+nbproject/private/*    
+*.bak
+*.orig
+*~
+*.log
+*private.xml
 
 
 # OS
