@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import postoapplication.jdbc.ConnectionFactory;
@@ -54,9 +53,10 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
         try {
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("update fornecedor set (ds_fornecedor")
-                    .append(", cnpj_fornecedor, fone_fornecedor, endereco_fornecedor")
-                    .append(", dt_update, usuario) values (?,?,?,?,current_date,?)");
+            sql.append("update fornecedor set (ds_fornecedor = ?")
+                    .append(", cnpj_fornecedor = ?, fone_fornecedor = ?, endereco_fornecedor = ?")
+                    .append(", usuario = ?, dt_update = current_date) ")
+                    .append(" where cd_fornecedor = ?");
 
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setString(1, entity.getNome());
@@ -64,6 +64,10 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
             pstm.setString(3, entity.getFone());
             pstm.setString(4, entity.getEndereco());
             pstm.setInt(5, entity.getUsuario());
+<<<<<<< HEAD
+=======
+            pstm.setInt(6, entity.getCodigo());
+>>>>>>> 294963ccc7ee5829d4d58baac2cd88277b624c8a
             pstm.execute();
             pstm.close();
 
@@ -103,6 +107,7 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
                 fornecedor.setNome(rs.getString("DS_FORNECEDOR"));
                 fornecedor.setCpfcnpj(rs.getString("CNPJ_FORNECEDOR"));
                 fornecedor.setFone(rs.getString("FONE_FORNECEDOR"));
+                fornecedor.setEndereco(rs.getString("ENDERECO_FORNECEDOR"));
             }
             pstm.close();
         } catch (Exception ex) {
@@ -130,6 +135,7 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
                 fornecedor.setNome(rs.getString("DS_FORNECEDOR"));
                 fornecedor.setCpfcnpj(rs.getString("CNPJ_FORNECEDOR"));
                 fornecedor.setFone(rs.getString("FONE_FORNECEDOR"));
+                fornecedor.setEndereco(rs.getString("ENDERECO_FORNECEDOR"));
                 listaFornecedores.add(fornecedor);
             }
             pstm.close();
