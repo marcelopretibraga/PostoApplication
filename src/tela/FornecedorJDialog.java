@@ -68,6 +68,7 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         btFiltrar = new javax.swing.JButton();
         btRemover = new javax.swing.JButton();
         tfCodigoFiltro = new javax.swing.JTextField();
+        btLimpar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("FORNECEDOR");
@@ -96,6 +97,11 @@ public class FornecedorJDialog extends javax.swing.JDialog {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tbFornecedores.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbFornecedoresMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tbFornecedores);
@@ -170,6 +176,13 @@ public class FornecedorJDialog extends javax.swing.JDialog {
 
         tfCodigoFiltro.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
+        btLimpar.setText("Limpar");
+        btLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLimparActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -196,7 +209,9 @@ public class FornecedorJDialog extends javax.swing.JDialog {
                                 .addComponent(tfCpfcnpj))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(tfContato)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btRemover))))
@@ -235,7 +250,8 @@ public class FornecedorJDialog extends javax.swing.JDialog {
                     .addComponent(tfContato, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(btRemover)
-                    .addComponent(btSalvar))
+                    .addComponent(btSalvar)
+                    .addComponent(btLimpar))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -288,6 +304,25 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         else
             btRemover.setEnabled(false);
     }//GEN-LAST:event_btRemoverMouseEntered
+
+    private void btLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLimparActionPerformed
+        limpaCampos();
+        setTfCodigo();
+    }//GEN-LAST:event_btLimparActionPerformed
+
+    private void tbFornecedoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbFornecedoresMouseClicked
+        Fornecedor fornecedor = new Fornecedor();
+        try {
+            fornecedor = fornecedorDAO.getById((int) tbFornecedores.getValueAt(tbFornecedores.getSelectedRow(), 0));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        tfCodigo.setText(String.valueOf(fornecedor.getCodigo()));
+        tfCpfcnpj.setText(fornecedor.getCpfcnpj());
+        tfNome.setText(fornecedor.getNome());
+        tfEndereco.setText(fornecedor.getEndereco());
+        tfContato.setText(fornecedor.getFone());
+    }//GEN-LAST:event_tbFornecedoresMouseClicked
 
     /**
      * @param args the command line arguments
@@ -413,6 +448,7 @@ public class FornecedorJDialog extends javax.swing.JDialog {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btFiltrar;
+    private javax.swing.JButton btLimpar;
     private javax.swing.JButton btRemover;
     private javax.swing.JButton btSalvar;
     private javax.swing.ButtonGroup buttonGroup1;
