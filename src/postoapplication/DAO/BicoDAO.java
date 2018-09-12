@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import postoapplication.jdbc.ConnectionFactory;
 import postoapplication.model.Bico;
@@ -28,11 +29,12 @@ public class BicoDAO implements GenericDAO<Bico>{
         try {
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("insert into bico(cd_bico, ds_bico, cd_tanque) values (?,?,?)");
+            sql.append("insert into bico(cd_bico, ds_bico, cd_tanque, dt_record) values (?,?,?,?)");
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setInt(1, entity.getCodigo());
             pstm.setString(2, entity.getDescricao());
             pstm.setInt(3, entity.getTanque().getCodigo());
+            pstm.setDate(4, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
             pstm.execute();
             pstm.close();
         } catch (SQLException ex) {
@@ -49,13 +51,14 @@ public class BicoDAO implements GenericDAO<Bico>{
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
             sql.append("update combustivel set ds_bico = ?, ")
-                    .append("cd_tanque = ?")
+                    .append("cd_tanque = ?, dt_update = ?")
                     .append("where cd_bico = ?");
             
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setString(1, entity.getDescricao());
             pstm.setInt(2, entity.getTanque().getCodigo());
-            pstm.setInt(3, entity.getCodigo());
+            pstm.setDate(3, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+            pstm.setInt(4, entity.getCodigo());
             pstm.execute();
             pstm.close();
         }catch (SQLException ex){

@@ -34,7 +34,7 @@ public class BicoJDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         bicoDAO = new BicoDAO();
-
+        tanqueDAO = new TanqueDAO();
         try {
             carregaTable(bicoDAO.getAll());
         } catch (SQLException ex) {
@@ -242,13 +242,17 @@ public class BicoJDialog extends javax.swing.JDialog {
 
     private void btNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNovoActionPerformed
         try {
-            tfCodigo.setText(String.valueOf(bicoDAO.getLastId()));
+            if (tanqueDAO.getAll().size() != 0) {
+                tfCodigo.setText(String.valueOf(bicoDAO.getLastId()));
+                carregaComboTanque();
+                desabilitaCampos(true);
+                btSalvar.setEnabled(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Impossivel cadastrar Bico sem Tanques Cadastrados");
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        carregaComboTanque();
-        desabilitaCampos(true);
-        btSalvar.setEnabled(true);
     }//GEN-LAST:event_btNovoActionPerformed
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
