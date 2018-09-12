@@ -135,7 +135,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             while (rs.next()) {
                 cliente = new Cliente();
                 cliente.setCodigo(rs.getInt("cd_cliente"));
-                cliente.setNome(rs.getString("endereco_cliente"));
+                cliente.setNome(rs.getString("ds_cliente"));
                 cliente.setCpfCnpj(rs.getInt("cpfcnpj_cliente"));
                 cliente.setTelefone(rs.getString("fone_cliente"));
                 cliente.setEndereco(rs.getString("endereco_cliente"));
@@ -165,11 +165,11 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             while (rs.next()) {
                 cliente = new Cliente();
                 cliente.setCodigo(rs.getInt("cd_cliente"));
-                cliente.setNome(rs.getString("nm_cliente"));
-                cliente.setCpfCnpj(rs.getInt("nr_cpfcnpj"));
-                cliente.setTelefone(rs.getString("nr_telefone"));
-                cliente.setEndereco(rs.getString("ds_endereco"));
-                cliente.setUsuario(rs.getInt("cd_usuario"));
+                cliente.setNome(rs.getString("ds_cliente"));
+                cliente.setCpfCnpj(rs.getInt("cpfcnpj_cliente"));
+                cliente.setTelefone(rs.getString("fone_cliente"));
+                cliente.setEndereco(rs.getString("endereco_cliente"));
+                cliente.setUsuario(rs.getInt("usuario"));
                 clienteList.add(cliente);
             }
             pstm.close();
