@@ -56,9 +56,9 @@ public class ClienteDAO implements GenericDAO<Cliente> {
         try {
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("update cliente set nm_cliente = ?, ")
-                    .append("nr_cpfcnpj = ?, nr_telefone = ?, ")
-                    .append("nr_endereco = ?, dt_update = ?,cd_usuario = ? ")
+            sql.append("update cliente set ds_cliente = ?, ")
+                    .append("cpfcnpj_cliente = ?, fone_cliente= ?, ")
+                    .append("endereco_cliente = ?, dt_update = ?,usuario = ? ")
                     .append("where cd_cliente = ?");
 
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
