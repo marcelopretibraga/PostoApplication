@@ -17,6 +17,7 @@ public class MenuInicial extends javax.swing.JDialog {
     public MenuInicial(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
     }
 
     /**
@@ -139,7 +140,8 @@ public class MenuInicial extends javax.swing.JDialog {
     }//GEN-LAST:event_btFornecedorActionPerformed
 
     private void btCombustivelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCombustivelActionPerformed
-
+        CombustivelJDialog dialog = new CombustivelJDialog(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
     }//GEN-LAST:event_btCombustivelActionPerformed
 
     private void btClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btClienteActionPerformed

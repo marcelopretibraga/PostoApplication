@@ -360,8 +360,8 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
 
     private void btItensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btItensActionPerformed
         this.dispose();
-    //    NotaFiscalJDialog dialog = new NotaFiscalJDialog(new javax.swing.JFrame(), true);
-    //    dialog.setVisible(true);
+        NotaFiscalJDialog dialog = new NotaFiscalJDialog(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
 
     }//GEN-LAST:event_btItensActionPerformed
 
