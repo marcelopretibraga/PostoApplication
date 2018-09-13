@@ -23,5 +23,7 @@ public class PostoApplication {
 
      MenuInicial dialog = new MenuInicial(new javax.swing.JFrame(), true);
         dialog.setVisible(true);
+        if (!dialog.isActive())
+            System.exit(0);
     }
 }
