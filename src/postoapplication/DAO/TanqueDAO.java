@@ -35,12 +35,23 @@ public class TanqueDAO implements GenericDAO<Tanque>{
             sqle.printStackTrace();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            connection.close();
         }
     }
 
     @Override
     public void update(Tanque entity) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            connection = new ConnectionFactory().getConnection();
+            StringBuilder sql = new StringBuilder();
+            sql.append("");
+            PreparedStatement pstm = connection.prepareStatement(sql.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -53,19 +64,32 @@ public class TanqueDAO implements GenericDAO<Tanque>{
         Tanque tanque = new Tanque();
         try { 
             connection = new ConnectionFactory().getConnection();
-            String sql = "SELECT * FROM TANQUE WHERE CD_TANQUE = " + id + " LIMIT 1";
-            PreparedStatement pstm = connection.prepareStatement(sql);
+            StringBuilder sql = new StringBuilder();
+            sql.append("select t.cd_tanque, t.ds_tanque,")
+                    .append("t.capacidade_tanque as cp_tanque,")
+                    .append("t.usuario as user_tanque,")
+                    .append("c.cd_combustivel, c.ds_combustivel,")
+                    .append("c.tp_combustivel, unidademedida_combustivel")
+                    .append("as un_combustivel from tanque as t")
+                    .append("inner join combustivel as c")
+                    .append("using (cd_combustivel)")
+                    .append("where t.cd_combustivel = " + id);
+            PreparedStatement pstm = connection.prepareStatement(sql.toString());
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
                 tanque.setCodigo(rs.getInt("CD_TANQUE"));
                 tanque.setCapacidade(rs.getDouble("CAPACIDADE_TANQUE"));
                 tanque.setDescricao(rs.getString("DS_TANQUE"));
                 tanque.setUsuario(rs.getInt("USUARIO"));
+                tanque.setCombustivel(populaCombustivel(
+                        rs.getInt("CD_COMBUSTIVEL"), 
+                        rs.getString("DS_COMBUSTIVEL"), 
+                        rs.getString("TIPO_COMBUSTIVEL"), 
+                        rs.getInt("USER_TANQUE")));
             }
             pstm.close();
             rs.close();
         } catch (SQLException sqle) {
-            System.out.println("Erro ao executar a instrução SQL\n");
             sqle.printStackTrace();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -92,7 +116,10 @@ public class TanqueDAO implements GenericDAO<Tanque>{
             tanque.setDescricao(rs.getString("DS_TANQUE"));
             tanque.setCapacidade(rs.getDouble("CAPACIDADE_TANQUE"));
             //Passar os parâmetros para o populaCombustivel()
-            tanque.setCombustivel(populaCombustivel(rs.getInt(""), sql, sql, 0));
+            tanque.setCombustivel(populaCombustivel(rs.getInt("CD_COMBUSTIVEL"),
+                    rs.getString("DS_COMBUSTIVEL"), 
+                    rs.getString("TIPO_COMBUSTIVEL"),
+                    rs.getInt("USUARIO")));
         }
         return tanqueList;
     }
