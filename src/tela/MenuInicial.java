@@ -134,7 +134,8 @@ public class MenuInicial extends javax.swing.JDialog {
     }//GEN-LAST:event_btBicoActionPerformed
 
     private void btFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFornecedorActionPerformed
-        
+        FornecedorJDialog dialog = new FornecedorJDialog(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
     }//GEN-LAST:event_btFornecedorActionPerformed
 
     private void btCombustivelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCombustivelActionPerformed
