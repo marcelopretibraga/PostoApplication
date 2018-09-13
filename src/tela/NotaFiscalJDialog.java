@@ -327,6 +327,7 @@ public class NotaFiscalJDialog extends javax.swing.JDialog {
         this.dispose();
         NotaFiscalCabecalhoJDialog dialog = new NotaFiscalCabecalhoJDialog(new javax.swing.JFrame(), true);
         dialog.setVisible(true);
+        //COMENTARIO ALEATORIO
         
     }//GEN-LAST:event_btCabecalho1ActionPerformed
 
