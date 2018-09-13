@@ -12,7 +12,7 @@ package postoapplication.model;
 public class Cliente extends Record{
     private int codigo;
     private String nome;
-    private int cpfCnpj;
+    private String cpfCnpj;
     private String telefone;
     private String endereco;
 
@@ -32,11 +32,11 @@ public class Cliente extends Record{
         this.nome = nome;
     }
 
-    public int getCpfCnpj() {
+    public String getCpfCnpj() {
         return cpfCnpj;
     }
 
-    public void setCpfCnpj(int cpfCnpj) {
+    public void setCpfCnpj(String cpfCnpj) {
         this.cpfCnpj = cpfCnpj;
     }
 

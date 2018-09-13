@@ -34,11 +34,11 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setInt(1, entity.getCodigo());
             pstm.setString(2, entity.getNome());
-            pstm.setInt(3, entity.getCpfCnpj());
+            pstm.setString(3, entity.getCpfCnpj());
             pstm.setString(4, entity.getTelefone());
             pstm.setString(5, entity.getEndereco());
             pstm.setDate(6, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
-            pstm.setDate(7, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));           
+            pstm.setDate(7, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
             pstm.setInt(8, entity.getUsuario());
 
             pstm.execute();
@@ -56,14 +56,14 @@ public class ClienteDAO implements GenericDAO<Cliente> {
         try {
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("update cliente set nm_cliente = ?, ")
-                    .append("nr_cpfcnpj = ?, nr_telefone = ?, ")
-                    .append("nr_endereco = ?, dt_update = ?,cd_usuario = ? ")
+            sql.append("update cliente set ds_cliente = ?, ")
+                    .append("cpfcnpj_cliente = ?, fone_cliente= ?, ")
+                    .append("endereco_cliente = ?, dt_update = ?,usuario = ? ")
                     .append("where cd_cliente = ?");
 
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setString(1, entity.getNome());
-            pstm.setInt(2, entity.getCpfCnpj());
+            pstm.setString(2, entity.getCpfCnpj());
             pstm.setString(3, entity.getTelefone());
             pstm.setString(4, entity.getEndereco());
             pstm.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
@@ -107,7 +107,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             while (rs.next()) {
                 cliente.setCodigo(rs.getInt("cd_cliente"));
                 cliente.setNome(rs.getString("ds_cliente"));
-                cliente.setCpfCnpj(rs.getInt("cpfcnpj_cliente"));
+                cliente.setCpfCnpj(rs.getString("cpfcnpj_cliente"));
                 cliente.setTelefone(rs.getString("fone_cliente"));
                 cliente.setEndereco(rs.getString("endereco_cliente"));
                 cliente.setUsuario(rs.getInt("usuario"));
@@ -136,7 +136,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
                 cliente = new Cliente();
                 cliente.setCodigo(rs.getInt("cd_cliente"));
                 cliente.setNome(rs.getString("ds_cliente"));
-                cliente.setCpfCnpj(rs.getInt("cpfcnpj_cliente"));
+                cliente.setCpfCnpj(rs.getString("cpfcnpj_cliente"));
                 cliente.setTelefone(rs.getString("fone_cliente"));
                 cliente.setEndereco(rs.getString("endereco_cliente"));
                 cliente.setUsuario(rs.getInt("usuario"));
@@ -166,7 +166,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
                 cliente = new Cliente();
                 cliente.setCodigo(rs.getInt("cd_cliente"));
                 cliente.setNome(rs.getString("ds_cliente"));
-                cliente.setCpfCnpj(rs.getInt("cpfcnpj_cliente"));
+                cliente.setCpfCnpj(rs.getString("cpfcnpj_cliente"));
                 cliente.setTelefone(rs.getString("fone_cliente"));
                 cliente.setEndereco(rs.getString("endereco_cliente"));
                 cliente.setUsuario(rs.getInt("usuario"));
