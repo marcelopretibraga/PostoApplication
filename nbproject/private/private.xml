@@ -3,24 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/model/Fornecedor.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/tela/MenuInicial.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/DAO/GenericDAO.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/jdbc/ConnectionFactory.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/tela/FornecedorJDialog.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/DAO/FornecedorDAO.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/model/Record.java</file>
             <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/PostoApplication.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/tela/NotaFiscalCabecalhoJDialog.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/DAO/CombustivelDAO.java</file>
-            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/DAO/BicoDAO.java</file>
-=======
-            <file>file:/C:/GIT/PostoApplication/src/postoapplication/model/Cliente.java</file>
-            <file>file:/C:/GIT/PostoApplication/src/postoapplication/DAO/ClienteDAO.java</file>
-            <file>file:/C:/GIT/PostoApplication/src/tela/CombustivelJDialog.java</file>
-            <file>file:/C:/GIT/PostoApplication/src/postoapplication/DAO/CombustivelDAO.java</file>
->>>>>>> 82f032e3f9bbff23ae70b5e28cfdada94c400f86
+            <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/tela/BicoJDialog.java</file>
         </group>
     </open-files>
 </project-private>
