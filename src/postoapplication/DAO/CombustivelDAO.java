@@ -160,7 +160,7 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
                 combustivel.setCodigo(rs.getInt("CD_COMBUSTIVEL"));
                 combustivel.setDescricao(rs.getString("DS_COMBUSTIVEL"));
                 combustivel.setTipoCombustivel(rs.getString("TP_COMBUSTIVEL"));
-                combustivel.setUsuario(rs.getInt("CD_USUARIO"));
+                combustivel.setUsuario(rs.getInt("USUARIO"));
                 combustivelList.add(combustivel);
             }
             pstm.close();
