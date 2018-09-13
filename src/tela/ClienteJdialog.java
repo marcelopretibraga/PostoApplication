@@ -93,7 +93,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jLabel7.setText("jLabel7");
+       
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -293,7 +293,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
     }//GEN-LAST:event_tfEnderecoClienteActionPerformed
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-        salvar();
+       salvar();
 
     }//GEN-LAST:event_btSalvarActionPerformed
 
@@ -436,7 +436,8 @@ public class ClienteJdialog extends javax.swing.JDialog {
         cliente.setEndereco(tfEnderecoCliente.getText());
         cliente.setNome(tfNomeCliente.getText());
         cliente.setTelefone(tfTelefoneCliente.getText());
-        try {
+        
+       try {
             clienteDAO.save(cliente);
             JOptionPane.showMessageDialog(null, "Cliente Salvo com Sucesso");
             limpaCampos();
