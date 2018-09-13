@@ -4,6 +4,7 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/model/Fornecedor.java</file>
             <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/tela/MenuInicial.java</file>
             <file>file:/C:/Users/eduar/Documents/NetBeansProjects/GIT/PostoApplication/src/postoapplication/DAO/GenericDAO.java</file>
@@ -21,6 +22,15 @@
             <file>file:/D:/000/FAG/Algoritmos/PostoApp/PostoApplication/src/tela/FornecedorJDialog.java</file>
             <file>file:/D:/000/FAG/Algoritmos/PostoApp/PostoApplication/src/postoapplication/DAO/CombustivelDAO.java</file>
 >>>>>>> d978e550d2ce67a6f17597035c194a9f6c2aab08
+=======
+            <file>file:/C:/Users/norto/Desktop/Drive/Facul/4º%20Período/Algoritmo%20IV/PostoApplication/src/tela/CombustivelJDialog.java</file>
+            <file>file:/C:/Users/norto/Desktop/Drive/Facul/4º%20Período/Algoritmo%20IV/PostoApplication/src/postoapplication/model/ItemNF.java</file>
+            <file>file:/C:/Users/norto/Desktop/Drive/Facul/4º%20Período/Algoritmo%20IV/PostoApplication/src/postoapplication/DAO/CombustivelDAO.java</file>
+            <file>file:/C:/Users/norto/Desktop/Drive/Facul/4º%20Período/Algoritmo%20IV/PostoApplication/src/tela/NotaFiscalCabecalhoJDialog.java</file>
+            <file>file:/C:/Users/norto/Desktop/Drive/Facul/4º%20Período/Algoritmo%20IV/PostoApplication/src/tela/NotaFiscalJDialog.java</file>
+            <file>file:/C:/Users/norto/Desktop/Drive/Facul/4º%20Período/Algoritmo%20IV/PostoApplication/src/postoapplication/model/Combustivel.java</file>
+            <file>file:/C:/Users/norto/Desktop/Drive/Facul/4º%20Período/Algoritmo%20IV/PostoApplication/src/postoapplication/model/NotaFiscal.java</file>
+>>>>>>> f18becd591214aefe940670960364e4259086c20
         </group>
     </open-files>
 </project-private>
