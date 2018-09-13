@@ -32,6 +32,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
+       
         clienteDAO = new ClienteDAO();
         try {
             carregaTable(clienteDAO.getAll());
@@ -42,6 +43,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
         tfCodigoCliente.setEnabled(false);
         desabilitaCampos(false);
         habilitaFiltroCodigo();
+        tfCodigoFt.setEnabled(false);
     }
 
     /**
@@ -61,6 +63,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         tfCodigoCliente = new javax.swing.JTextField();
         tfEnderecoCliente = new javax.swing.JTextField();
+        tfNomeCliente = new javax.swing.JTextField();
         tfCpfCliente = new javax.swing.JTextField();
         tfTelefoneCliente = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -80,7 +83,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
         jSeparator1 = new javax.swing.JSeparator();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        tfNomeCliente = new javax.swing.JFormattedTextField();
+        btAtualizar = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -175,6 +178,13 @@ public class ClienteJdialog extends javax.swing.JDialog {
         jLabel8.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel8.setText("Filtrar");
 
+        btAtualizar.setText("Atualizar");
+        btAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAtualizarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -206,18 +216,15 @@ public class ClienteJdialog extends javax.swing.JDialog {
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tfTelefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tfNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(tfTelefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(60, 60, 60)
-                        .addComponent(tfCodigoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfCodigoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -242,9 +249,11 @@ public class ClienteJdialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25))
+                        .addGap(27, 27, 27))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btAtualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(21, 21, 21))))
         );
         layout.setVerticalGroup(
@@ -262,10 +271,10 @@ public class ClienteJdialog extends javax.swing.JDialog {
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tfNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
                             .addComponent(tfEnderecoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2)
-                            .addComponent(tfNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tfTelefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -283,11 +292,13 @@ public class ClienteJdialog extends javax.swing.JDialog {
                     .addComponent(rbNome)
                     .addComponent(tfCodigoFt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(rbCodigo))
-                .addGap(39, 39, 39)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btFiltrar)
-                .addGap(18, 18, 18)
+                .addGap(45, 45, 45)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btAtualizar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addComponent(btRemover)
                 .addGap(18, 18, 18))
         );
@@ -388,6 +399,14 @@ public class ClienteJdialog extends javax.swing.JDialog {
         habilitaFiltroNome();
     }//GEN-LAST:event_rbNomeActionPerformed
 
+    private void btAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAtualizarActionPerformed
+        try {
+            carregaTable(clienteDAO.getAll());
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar tabela.");
+        }
+    }//GEN-LAST:event_btAtualizarActionPerformed
+
     private void carregaTable(List<Cliente> clienteList) {
         if (clienteList == null) {
             return;
@@ -400,6 +419,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btAtualizar;
     private javax.swing.JButton btFiltrar;
     private javax.swing.JButton btNovo;
     private javax.swing.JButton btRemover;
@@ -425,7 +445,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
     private javax.swing.JTextField tfCodigoFt;
     private javax.swing.JTextField tfCpfCliente;
     private javax.swing.JTextField tfEnderecoCliente;
-    private javax.swing.JFormattedTextField tfNomeCliente;
+    private javax.swing.JTextField tfNomeCliente;
     private javax.swing.JTextField tfNomeFt;
     private javax.swing.JTextField tfTelefoneCliente;
     // End of variables declaration//GEN-END:variables
@@ -454,11 +474,11 @@ public class ClienteJdialog extends javax.swing.JDialog {
             cliente.setEndereco(tfEnderecoCliente.getText());
             cliente.setNome(tfNomeCliente.getText());
             cliente.setTelefone(tfTelefoneCliente.getText());
-
             try {
                 clienteDAO.save(cliente);
                 JOptionPane.showMessageDialog(null, "Cliente Salvo com Sucesso");
                 limpaCampos();
+                desabilitaCampos(false);
                 carregaTable(clienteDAO.getAll());
             } catch (SQLException ex) {
                 ex.printStackTrace();
@@ -505,6 +525,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
     private void novo() {
         try {
             tfCodigoCliente.setText(String.valueOf(clienteDAO.getLastId()));
+            tfCodigoCliente.setEditable(false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
