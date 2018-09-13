@@ -423,7 +423,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
     private void salvar() {
         Cliente cliente = new Cliente();
         cliente.setCodigo(Integer.parseInt(tfCodigoCliente.getText()));
-        cliente.setCpfCnpj(Integer.parseInt(tfCpfCliente.getText()));
+        cliente.setCpfCnpj(tfCpfCliente.getText());
         cliente.setEndereco(tfEnderecoCliente.getText());
         cliente.setNome(tfNomeCliente.getText());
         cliente.setTelefone(tfTelefoneCliente.getText());

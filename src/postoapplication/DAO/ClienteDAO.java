@@ -106,11 +106,11 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             cliente = new Cliente();
             while (rs.next()) {
                 cliente.setCodigo(rs.getInt("cd_cliente"));
-                cliente.setNome(rs.getString("nm_cliente"));
-                cliente.setCpfCnpj(rs.getString("nr_cpfcnpj"));
-                cliente.setTelefone(rs.getString("nr_telefone"));
-                cliente.setEndereco(rs.getString("ds_endereco"));
-                cliente.setUsuario(rs.getInt("cd_usuario"));
+                cliente.setNome(rs.getString("ds_cliente"));
+                cliente.setCpfCnpj(rs.getString("cpfcnpj_cliente"));
+                cliente.setTelefone(rs.getString("fone_cliente"));
+                cliente.setEndereco(rs.getString("endereco_cliente"));
+                cliente.setUsuario(rs.getInt("usuario"));
             }
             pstm.close();
         } catch (SQLException ex) {
@@ -128,18 +128,18 @@ public class ClienteDAO implements GenericDAO<Cliente> {
         List<Cliente> clienteList = null;
         try {
             this.connection = new ConnectionFactory().getConnection();
-            String sql = "select * from cliente where upper(nm_cliente) like upper('%" + name + "%')";
+            String sql = "select * from cliente where upper(ds_cliente) like upper('%" + name + "%')";
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             clienteList = new ArrayList<>();
             while (rs.next()) {
                 cliente = new Cliente();
                 cliente.setCodigo(rs.getInt("cd_cliente"));
-                cliente.setNome(rs.getString("nm_cliente"));
-                cliente.setCpfCnpj(rs.getString("nr_cpfcnpj"));
-                cliente.setTelefone(rs.getString("nr_telefone"));
-                cliente.setEndereco(rs.getString("ds_endereco"));
-                cliente.setUsuario(rs.getInt("cd_usuario"));
+                cliente.setNome(rs.getString("ds_cliente"));
+                cliente.setCpfCnpj(rs.getString("cpfcnpj_cliente"));
+                cliente.setTelefone(rs.getString("fone_cliente"));
+                cliente.setEndereco(rs.getString("endereco_cliente"));
+                cliente.setUsuario(rs.getInt("usuario"));
                 clienteList.add(cliente);
             }
             pstm.close();
@@ -165,11 +165,11 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             while (rs.next()) {
                 cliente = new Cliente();
                 cliente.setCodigo(rs.getInt("cd_cliente"));
-                cliente.setNome(rs.getString("nm_cliente"));
-                cliente.setCpfCnpj(rs.getString("nr_cpfcnpj"));
-                cliente.setTelefone(rs.getString("nr_telefone"));
-                cliente.setEndereco(rs.getString("ds_endereco"));
-                cliente.setUsuario(rs.getInt("cd_usuario"));
+                cliente.setNome(rs.getString("ds_cliente"));
+                cliente.setCpfCnpj(rs.getString("cpfcnpj_cliente"));
+                cliente.setTelefone(rs.getString("fone_cliente"));
+                cliente.setEndereco(rs.getString("endereco_cliente"));
+                cliente.setUsuario(rs.getInt("usuario"));
                 clienteList.add(cliente);
             }
             pstm.close();
