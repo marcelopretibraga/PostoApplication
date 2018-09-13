@@ -61,12 +61,25 @@ public class NotaFiscalDAO implements GenericDAO<NotaFiscal> {
 
     @Override
     public void update(NotaFiscal entity) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
     public void delete(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            this.connection = new ConnectionFactory().getConnection();
+                String sql = "DELETE FROM ITEMNF WHERE CD_NOTAFISCAL = " + id;
+                sql += "DELETE FROM NOTAFISCAL WHERE CD_NOTAFISCAL = " + id;
+            
+            PreparedStatement pstm = connection.prepareStatement(sql.toString());
+            pstm.execute();
+            pstm.close();
+        } catch (SQLException ex) {
+            System.out.println("Erro ao Deletar Nota Fiscal");
+            ex.printStackTrace();
+        }finally {
+            this.connection.close();
+        }
     }
 
     @Override
