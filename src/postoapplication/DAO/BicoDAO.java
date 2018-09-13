@@ -91,7 +91,7 @@ public class BicoDAO implements GenericDAO<Bico>{
         try{
             this.connection = new ConnectionFactory().getConnection();
             String sql = "SELECT B.CD_BICO, B.DS_BICO, B.CD_TANQUE, T.DS_TANQUE, "
-                    + "T.NR_CAPACIDADE, C.CD_COMBUSTIVEL, C.DS_COMBUSTIVEL, C.TP_COMBUSTIVEL "
+                    + "T.CAPACIDADE_TANQUE, C.CD_COMBUSTIVEL, C.DS_COMBUSTIVEL, C.TP_COMBUSTIVEL "
                     + "FROM BICO AS B "
                     + "INNER JOIN TANQUE AS T ON (T.CD_TANQUE = B.CD_TANQUE) "
                     + "INNER JOIN COMBUSTIVEL AS C ON (C.CD_COMBUSTIVEL = T.CD_COMBUSTIVEL) "
@@ -103,7 +103,7 @@ public class BicoDAO implements GenericDAO<Bico>{
                 bico.setCodigo(rs.getInt("CD_BICO"));
                 bico.setDescricao(rs.getString("DS_BICO"));
                 bico.setTanque(carregaTanque(rs.getInt("CD_TANQUE"), rs.getString("DS_TANQUE"),
-                        rs.getDouble("NR_CAPACIDADE"), rs.getInt("CD_COMBUSTIVEL"),
+                        rs.getDouble("CAPACIDADE_TANQUE"), rs.getInt("CD_COMBUSTIVEL"),
                         rs.getString("DS_COMBUSTIVEL"), rs.getString("TP_COMBUSTIVEL")));
             }
             pstm.close();
@@ -158,7 +158,7 @@ public class BicoDAO implements GenericDAO<Bico>{
         try{
             this.connection = new ConnectionFactory().getConnection();
             String sql = "SELECT B.CD_BICO, B.DS_BICO, B.CD_TANQUE, T.DS_TANQUE, "
-                    + "T.NR_CAPACIDADE, C.CD_COMBUSTIVEL, "
+                    + "T.CAPACIDADE_TANQUE, C.CD_COMBUSTIVEL, "
                     + "C.DS_COMBUSTIVEL, C.TP_COMBUSTIVEL FROM BICO AS B "
                     + "INNER JOIN TANQUE AS T ON (T.CD_TANQUE = B.CD_TANQUE) "
                     + "INNER JOIN COMBUSTIVEL AS C ON (C.CD_COMBUSTIVEL = T.CD_COMBUSTIVEL) "
