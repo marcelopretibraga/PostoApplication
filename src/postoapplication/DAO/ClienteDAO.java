@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javax.swing.JOptionPane;
 import postoapplication.jdbc.ConnectionFactory;
 import postoapplication.model.Cliente;
 
@@ -37,14 +38,14 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             pstm.setString(3, entity.getCpfCnpj());
             pstm.setString(4, entity.getTelefone());
             pstm.setString(5, entity.getEndereco());
-            pstm.setDate(6, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));          
-             pstm.setDate(7, new java.sql.Date(Calendar.getInstance().getTimeInMillis())); 
+            pstm.setDate(6, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+            pstm.setDate(7, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
             pstm.setInt(8, entity.getUsuario());
 
             pstm.execute();
             pstm.close();
         } catch (SQLException ex) {
-            System.out.println("Erro ao inserir Cliente.");
+            JOptionPane.showMessageDialog(null, "Erro ao inserir Cliente.", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
             connection.close();
@@ -72,7 +73,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             pstm.execute();
             pstm.close();
         } catch (SQLException ex) {
-            System.out.println("Erro ao Atualizar Cliente");
+           JOptionPane.showMessageDialog(null, "Erro ao Atualizar Cliente", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
             connection.close();
@@ -88,7 +89,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             pstm.execute();
             pstm.close();
         } catch (SQLException ex) {
-            System.out.println("Erro ao deletar Cliente");
+            JOptionPane.showMessageDialog(null, "Erro ao deletar Cliente", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
             this.connection.close();
@@ -114,7 +115,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             }
             pstm.close();
         } catch (SQLException ex) {
-            System.out.println("Erro ao consultar por  ID");
+           JOptionPane.showMessageDialog(null, "Erro ao consultar por  ID", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
             this.connection.close();
@@ -144,7 +145,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             }
             pstm.close();
         } catch (SQLException ex) {
-            System.out.println("Erro ao consultar por nome");
+            JOptionPane.showMessageDialog(null, "Erro ao consultar por nome", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
             this.connection.close();
@@ -174,7 +175,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             }
             pstm.close();
         } catch (SQLException ex) {
-            System.out.println("Erro ao consultar todos os clientes");
+            JOptionPane.showMessageDialog(null, "Erro ao consultar todos os clientes", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
             this.connection.close();
@@ -194,7 +195,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
                 return rs.getInt("MAIOR");
             }
         } catch (SQLException ex) {
-            System.out.println("Erro ao mostrar  maior ID Cliente");
+            JOptionPane.showMessageDialog(null, "Erro ao mostrar  maior ID Cliente", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
             pstm.close();

@@ -5,6 +5,7 @@
  */
 package tela;
 
+import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,6 @@ public class ClienteJdialog extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         tfCodigoCliente = new javax.swing.JTextField();
         tfEnderecoCliente = new javax.swing.JTextField();
-        tfNomeCliente = new javax.swing.JTextField();
         tfCpfCliente = new javax.swing.JTextField();
         tfTelefoneCliente = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -80,6 +80,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
         jSeparator1 = new javax.swing.JSeparator();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        tfNomeCliente = new javax.swing.JFormattedTextField();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -205,15 +206,18 @@ public class ClienteJdialog extends javax.swing.JDialog {
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfTelefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(tfTelefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(tfNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(60, 60, 60)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tfCodigoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tfNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                        .addComponent(tfCodigoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -258,10 +262,10 @@ public class ClienteJdialog extends javax.swing.JDialog {
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tfNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
                             .addComponent(tfEnderecoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(tfNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tfTelefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -296,10 +300,15 @@ public class ClienteJdialog extends javax.swing.JDialog {
     }//GEN-LAST:event_tfEnderecoClienteActionPerformed
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-        if (validaCampos() == true) {
+        if (validaCampos() == true && validaCodigo(Integer.parseInt(tfCodigoCliente.getText())) == true){
             salvar();
         }
+
     }//GEN-LAST:event_btSalvarActionPerformed
+
+    private void tfCpfClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfCpfClienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfCpfClienteActionPerformed
 
     private void btRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverActionPerformed
         remover();
@@ -320,6 +329,10 @@ public class ClienteJdialog extends javax.swing.JDialog {
     private void rbNomeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbNomeItemStateChanged
         habilitaFiltroNome();
     }//GEN-LAST:event_rbNomeItemStateChanged
+
+    private void rbCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbCodigoActionPerformed
+        habilitaFiltroCodigo();
+    }//GEN-LAST:event_rbCodigoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -371,6 +384,10 @@ public class ClienteJdialog extends javax.swing.JDialog {
         });
     }
 
+    private void rbNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbNomeActionPerformed
+        habilitaFiltroNome();
+    }//GEN-LAST:event_rbNomeActionPerformed
+
     private void carregaTable(List<Cliente> clienteList) {
         if (clienteList == null) {
             return;
@@ -408,7 +425,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
     private javax.swing.JTextField tfCodigoFt;
     private javax.swing.JTextField tfCpfCliente;
     private javax.swing.JTextField tfEnderecoCliente;
-    private javax.swing.JTextField tfNomeCliente;
+    private javax.swing.JFormattedTextField tfNomeCliente;
     private javax.swing.JTextField tfNomeFt;
     private javax.swing.JTextField tfTelefoneCliente;
     // End of variables declaration//GEN-END:variables
@@ -416,7 +433,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
     private void remover() {
         int linhaSelecionada = tbCliente.getSelectedRow();
         if (linhaSelecionada == -1) {
-            JOptionPane.showMessageDialog(null, "Deve-se selecionar uma linha para ser removido");
+            JOptionPane.showMessageDialog(null, "Deve-se selecionar uma linha para ser removido", "Atenção", JOptionPane.ERROR_MESSAGE);
             return;
         }
         int codigoRemover = (int) tbCliente.getValueAt(linhaSelecionada, 0);
@@ -430,25 +447,25 @@ public class ClienteJdialog extends javax.swing.JDialog {
     }
 
     private void salvar() {
-      try{
-        Cliente cliente = new Cliente();
-        cliente.setCodigo(Integer.parseInt(tfCodigoCliente.getText()));
-        cliente.setCpfCnpj(tfCpfCliente.getText());
-        cliente.setEndereco(tfEnderecoCliente.getText());
-        cliente.setNome(tfNomeCliente.getText());
-        cliente.setTelefone(tfTelefoneCliente.getText());
         try {
+            Cliente cliente = new Cliente();
+            cliente.setCodigo(Integer.parseInt(tfCodigoCliente.getText()));
+            cliente.setCpfCnpj(tfCpfCliente.getText());
+            cliente.setEndereco(tfEnderecoCliente.getText());
+            cliente.setNome(tfNomeCliente.getText());
+            cliente.setTelefone(tfTelefoneCliente.getText());
 
-            clienteDAO.save(cliente);
-            JOptionPane.showMessageDialog(null, "Cliente Salvo com Sucesso");
-            limpaCampos();
-            carregaTable(clienteDAO.getAll());
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-            
-        } catch (NumberFormatException nfe){
-            JOptionPane.showMessageDialog(null, "Caracter Inválido");
+            try {
+                clienteDAO.save(cliente);
+                JOptionPane.showMessageDialog(null, "Cliente Salvo com Sucesso");
+                limpaCampos();
+                carregaTable(clienteDAO.getAll());
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(null, "Caracter Inválido", "ERRO", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -470,7 +487,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
             } else if (rbNome.isSelected() && tfNomeFt.getText().trim().length() > 0) {
                 carregaTable(clienteDAO.getByName(tfNomeFt.getText()));
             } else {
-                JOptionPane.showMessageDialog(null, "Informe qual filtro desejado para pesquisa");
+                JOptionPane.showMessageDialog(null, "Informe o filtro desejado para pesquisa", "Atenção", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -508,26 +525,39 @@ public class ClienteJdialog extends javax.swing.JDialog {
     }
 
     public Boolean validaCampos() {
-        try {
-            if (tfCodigoCliente.getText().trim().length() <= 0) {
-                JOptionPane.showMessageDialog(null, "Informe um código para salvar.");
-                return false;
-            } else if (tfNomeCliente.getText().trim().length() <= 0) {
-                JOptionPane.showMessageDialog(null, "Informe um nome para salvar.");
-                return false;
-            } else if (tfTelefoneCliente.getText().trim().length() <=0) {
-                JOptionPane.showMessageDialog(null, "Informe um telefone para salvar.");
-                return false;
-            } else if (tfCpfCliente.getText().trim().length() <=0) {
-                JOptionPane.showMessageDialog(null, "Informe um CPF/CNPJ para salvar.");
-                return false;   
-            } else if (tfEnderecoCliente.getText().trim().length() <= 0) {
-                JOptionPane.showMessageDialog(null, "Informe um endereço para salvar.");
-                return false;
-            }
-        } catch (NumberFormatException nfe){
-            JOptionPane.showMessageDialog(null, "Caracter Inválido");
+
+        if (tfCodigoCliente.getText().trim().length() <= 0) {
+            JOptionPane.showMessageDialog(null, "Informe um código para salvar.", "Atenção", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } else if (tfNomeCliente.getText().trim().length() <= 0) {
+            JOptionPane.showMessageDialog(null, "Informe um nome para salvar.", "Atenção", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } else if (tfTelefoneCliente.getText().trim().length() <= 0) {
+            JOptionPane.showMessageDialog(null, "Informe um telefone para salvar.", "Atenção", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } else if (tfCpfCliente.getText().trim().length() <= 0) {
+            JOptionPane.showMessageDialog(null, "Informe um CPF/CNPJ para salvar.", "Atenção", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } else if (tfEnderecoCliente.getText().trim().length() <= 0) {
+            JOptionPane.showMessageDialog(null, "Informe um endereço para salvar.", "Atenção", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
         return true;
+    }
+
+    public Boolean validaCodigo(int codigo) {
+        Boolean retorno = true;
+        try {
+            for (Cliente c : clienteDAO.getAll()) {
+                if (c.getCodigo() == codigo) {
+                    JOptionPane.showMessageDialog(null, "Esse código ja está sendo usado. Cadastre outro.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    retorno =  false;
+                }
+            }
+        } catch (SQLException ex) {
+                ex.printStackTrace();
+        }
+        return retorno;
+
     }
 }
