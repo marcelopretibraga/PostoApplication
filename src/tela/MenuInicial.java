@@ -129,7 +129,8 @@ public class MenuInicial extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btBicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBicoActionPerformed
-
+        BicoJDialog dialog = new BicoJDialog(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
     }//GEN-LAST:event_btBicoActionPerformed
 
     private void btFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFornecedorActionPerformed
