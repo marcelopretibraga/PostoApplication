@@ -296,8 +296,9 @@ public class ClienteJdialog extends javax.swing.JDialog {
     }//GEN-LAST:event_tfEnderecoClienteActionPerformed
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-        salvar();
-
+        if (validaCampos() == true) {
+            salvar();
+        }
     }//GEN-LAST:event_btSalvarActionPerformed
 
     private void btRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverActionPerformed
@@ -317,7 +318,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
     }//GEN-LAST:event_rbCodigoItemStateChanged
 
     private void rbNomeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbNomeItemStateChanged
-       habilitaFiltroNome();
+        habilitaFiltroNome();
     }//GEN-LAST:event_rbNomeItemStateChanged
 
     /**
@@ -334,16 +335,24 @@ public class ClienteJdialog extends javax.swing.JDialog {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ClienteJdialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClienteJdialog.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ClienteJdialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClienteJdialog.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ClienteJdialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClienteJdialog.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ClienteJdialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClienteJdialog.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -421,6 +430,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
     }
 
     private void salvar() {
+      try{
         Cliente cliente = new Cliente();
         cliente.setCodigo(Integer.parseInt(tfCodigoCliente.getText()));
         cliente.setCpfCnpj(tfCpfCliente.getText());
@@ -428,12 +438,17 @@ public class ClienteJdialog extends javax.swing.JDialog {
         cliente.setNome(tfNomeCliente.getText());
         cliente.setTelefone(tfTelefoneCliente.getText());
         try {
+
             clienteDAO.save(cliente);
             JOptionPane.showMessageDialog(null, "Cliente Salvo com Sucesso");
             limpaCampos();
             carregaTable(clienteDAO.getAll());
         } catch (SQLException ex) {
             ex.printStackTrace();
+        }
+            
+        } catch (NumberFormatException nfe){
+            JOptionPane.showMessageDialog(null, "Caracter Inválido");
         }
     }
 
@@ -490,5 +505,29 @@ public class ClienteJdialog extends javax.swing.JDialog {
         tfCodigoFt.setText("");
         tfCodigoFt.setEnabled(false);
         tfNomeFt.setEnabled(true);
+    }
+
+    public Boolean validaCampos() {
+        try {
+            if (tfCodigoCliente.getText().trim().length() <= 0) {
+                JOptionPane.showMessageDialog(null, "Informe um código para salvar.");
+                return false;
+            } else if (tfNomeCliente.getText().trim().length() <= 0) {
+                JOptionPane.showMessageDialog(null, "Informe um nome para salvar.");
+                return false;
+            } else if (tfTelefoneCliente.getText().trim().length() <=0) {
+                JOptionPane.showMessageDialog(null, "Informe um telefone para salvar.");
+                return false;
+            } else if (tfCpfCliente.getText().trim().length() <=0) {
+                JOptionPane.showMessageDialog(null, "Informe um CPF/CNPJ para salvar.");
+                return false;   
+            } else if (tfEnderecoCliente.getText().trim().length() <= 0) {
+                JOptionPane.showMessageDialog(null, "Informe um endereço para salvar.");
+                return false;
+            }
+        } catch (NumberFormatException nfe){
+            JOptionPane.showMessageDialog(null, "Caracter Inválido");
+        }
+        return true;
     }
 }
