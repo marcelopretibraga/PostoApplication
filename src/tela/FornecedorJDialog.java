@@ -73,6 +73,11 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("FORNECEDOR");
         setName("Fornecedor"); // NOI18N
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
+            }
+        });
 
         tbFornecedores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -99,6 +104,7 @@ public class FornecedorJDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        tbFornecedores.getTableHeader().setReorderingAllowed(false);
         tbFornecedores.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tbFornecedoresMouseClicked(evt);
@@ -122,11 +128,6 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         btSalvar.setText("Gravar");
         btSalvar.setToolTipText("PARA GRAVAR PREENCHA TODOS OS CAMPOS");
         btSalvar.setEnabled(false);
-        btSalvar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btSalvarMouseEntered(evt);
-            }
-        });
         btSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSalvarActionPerformed(evt);
@@ -163,11 +164,6 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         btRemover.setText("Remover");
         btRemover.setToolTipText("PARA REMOVER SELECIONE UMA LINHA");
         btRemover.setEnabled(false);
-        btRemover.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btRemoverMouseEntered(evt);
-            }
-        });
         btRemover.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRemoverActionPerformed(evt);
@@ -293,23 +289,10 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         selectFiltro(true);
     }//GEN-LAST:event_rbCodigoItemStateChanged
 
-    private void btSalvarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btSalvarMouseEntered
-        if(tfNome.getText().trim().length() > 0 && tfCpfcnpj.getText().trim().length() > 0 && tfEndereco.getText().trim().length() > 0 && tfContato.getText().trim().length() > 0)
-            btSalvar.setEnabled(true);
-        else
-            btSalvar.setEnabled(false);
-    }//GEN-LAST:event_btSalvarMouseEntered
-
-    private void btRemoverMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btRemoverMouseEntered
-        if(tbFornecedores.getSelectedRow() != -1)
-            btRemover.setEnabled(true);
-        else
-            btRemover.setEnabled(false);
-    }//GEN-LAST:event_btRemoverMouseEntered
-
     private void btLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLimparActionPerformed
         limpaCampos();
         setTfCodigo();
+        btSalvar.setEnabled(false);
         btSalvar.setText("Gravar");
     }//GEN-LAST:event_btLimparActionPerformed
 
@@ -326,7 +309,20 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         tfNome.setText(fornecedor.getNome());
         tfEndereco.setText(fornecedor.getEndereco());
         tfContato.setText(fornecedor.getFone());
+        btSalvar.setEnabled(true);
+        btRemover.setEnabled(true);
     }//GEN-LAST:event_tbFornecedoresMouseClicked
+
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+        if(tfNome.getText().trim().length() > 0 && tfCpfcnpj.getText().trim().length() > 0 && tfEndereco.getText().trim().length() > 0 && tfContato.getText().trim().length() > 0)
+            btSalvar.setEnabled(true);
+        else
+            btSalvar.setEnabled(false);
+        if(tbFornecedores.getSelectedRow() != -1)
+            btRemover.setEnabled(true);
+        else
+            btRemover.setEnabled(false);
+    }//GEN-LAST:event_formMouseMoved
 
     /**
      * @param args the command line arguments
@@ -410,9 +406,13 @@ public class FornecedorJDialog extends javax.swing.JDialog {
         try {
             fornecedorDAO.delete(codigoRemover);
             carregaTable(fornecedorDAO.getAll());
+            JOptionPane.showMessageDialog(null, "Registro Removido Com Sucesso!!!");
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        limpaCampos();
+        btSalvar.setEnabled(false);
+        btRemover.setEnabled(false);
     }
     
     private void salvar() {
@@ -427,10 +427,10 @@ public class FornecedorJDialog extends javax.swing.JDialog {
                 fornecedorDAO.save(fornecedor);
             else
                 fornecedorDAO.update(fornecedor);
-            JOptionPane.showMessageDialog(null, "Registro Salvo Com Sucesso!!!");
-            limpaCampos();
-            btSalvar.setEnabled(false);
             carregaTable(fornecedorDAO.getAll());
+            JOptionPane.showMessageDialog(null, "Registro Salvo Com Sucesso!!!");
+            btSalvar.setEnabled(false);
+            limpaCampos();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
