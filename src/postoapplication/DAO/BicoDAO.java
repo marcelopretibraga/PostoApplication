@@ -50,7 +50,7 @@ public class BicoDAO implements GenericDAO<Bico>{
         try{
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("update combustivel set ds_bico = ?, ")
+            sql.append("update bico set ds_bico = ?, ")
                     .append("cd_tanque = ?, dt_update = ?")
                     .append("where cd_bico = ?");
             
@@ -73,7 +73,7 @@ public class BicoDAO implements GenericDAO<Bico>{
     public void delete(int id) throws SQLException {
         try {
             this.connection = new ConnectionFactory().getConnection();
-            String sql = "delete from combustivel where cd_bico = " + id;
+            String sql = "delete from bico where cd_bico = " + id;
             PreparedStatement pstm = connection.prepareStatement(sql);
             pstm.execute();
             pstm.close();            
@@ -95,7 +95,7 @@ public class BicoDAO implements GenericDAO<Bico>{
                     + "FROM BICO AS B "
                     + "INNER JOIN TANQUE AS T ON (T.CD_TANQUE = B.CD_TANQUE) "
                     + "INNER JOIN COMBUSTIVEL AS C ON (C.CD_COMBUSTIVEL = T.CD_COMBUSTIVEL) "
-                    + "WHERE CD_BICO = 1 " + id;
+                    + "WHERE CD_BICO = " + id;
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             bico = new Bico();
@@ -123,12 +123,13 @@ public class BicoDAO implements GenericDAO<Bico>{
         try{
             this.connection = new ConnectionFactory().getConnection();
             String sql = "SELECT B.CD_BICO, B.DS_BICO, B.CD_TANQUE, T.DS_TANQUE, "
-                    + "T.NR_CAPACIDADE, C.CD_COMBUSTIVEL, "
+                    + "T.CAPACIDADE_TANQUE, C.CD_COMBUSTIVEL, "
                     + "C.DS_COMBUSTIVEL, C.TP_COMBUSTIVEL "
                     + "FROM BICO AS B "
                     + "INNER JOIN TANQUE AS T ON (T.CD_TANQUE = B.CD_TANQUE) "
                     + "INNER JOIN COMBUSTIVEL AS C ON (C.CD_COMBUSTIVEL = T.CD_COMBUSTIVEL) "
-                    + "WHERE UPPER(DS_BICO) LIKE UPPER('%\"+name+\"%') ";
+                    + "WHERE UPPER(DS_BICO) LIKE UPPER('%\"+name+\"%') "
+                    + "ORDER BY CD_BICO";
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             bicoList = new ArrayList<>();
@@ -137,7 +138,7 @@ public class BicoDAO implements GenericDAO<Bico>{
                 bico.setCodigo(rs.getInt("CD_BICO"));
                 bico.setDescricao(rs.getString("DS_BICO"));
                 bico.setTanque(carregaTanque(rs.getInt("CD_TANQUE"), rs.getString("DS_TANQUE"),
-                        rs.getDouble("NR_CAPACIDADE"), rs.getInt("CD_COMBUSTIVEL"),
+                        rs.getDouble("CAPACIDADE_TANQUE"), rs.getInt("CD_COMBUSTIVEL"),
                         rs.getString("DS_COMBUSTIVEL"), rs.getString("TP_COMBUSTIVEL")));
                 bicoList.add(bico);
             }
@@ -162,7 +163,7 @@ public class BicoDAO implements GenericDAO<Bico>{
                     + "C.DS_COMBUSTIVEL, C.TP_COMBUSTIVEL FROM BICO AS B "
                     + "INNER JOIN TANQUE AS T ON (T.CD_TANQUE = B.CD_TANQUE) "
                     + "INNER JOIN COMBUSTIVEL AS C ON (C.CD_COMBUSTIVEL = T.CD_COMBUSTIVEL) "
-                    + "ORDER BY CD_COMBUSTIVEL ";
+                    + "ORDER BY CD_BICO ";
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             bicoList = new ArrayList<>();
@@ -171,7 +172,7 @@ public class BicoDAO implements GenericDAO<Bico>{
                 bico.setCodigo(rs.getInt("CD_BICO"));
                 bico.setDescricao(rs.getString("DS_BICO"));
                 bico.setTanque(carregaTanque(rs.getInt("CD_TANQUE"), rs.getString("DS_TANQUE"),
-                        rs.getDouble("NR_CAPACIDADE"), rs.getInt("CD_COMBUSTIVEL"),
+                        rs.getDouble("CAPACIDADE_TANQUE"), rs.getInt("CD_COMBUSTIVEL"),
                         rs.getString("DS_COMBUSTIVEL"), rs.getString("TP_COMBUSTIVEL")));
                 bicoList.add(bico);
             }

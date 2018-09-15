@@ -278,7 +278,12 @@ public class BicoJDialog extends javax.swing.JDialog {
 
     private void btFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFiltrarActionPerformed
         try {
-            if (bicoDAO.getAll() == null) {
+            if (bicoDAO.getAll() != null) {
+                if (tfCodigoFiltro.getText().trim().length() == 0 &&
+                        tfDescricaoFiltro.getText().trim().length() ==0) {
+                    carregaTable(bicoDAO.getAll());
+                    return;
+                }
                 if (rbCodigo.isSelected() && tfCodigoFiltro.getText().trim().length() > 0) {//Codigo está selecionado
                     Bico bico = bicoDAO.getById(Integer.parseInt(tfCodigoFiltro.getText()));
                     List<Bico> bicoList = new ArrayList<>();
@@ -292,6 +297,8 @@ public class BicoJDialog extends javax.swing.JDialog {
             } else {
                 JOptionPane.showMessageDialog(null, "Lista Vazia, Impossível Filtrar");
             }
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(null, "Impossível filtrar código com letras");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
