@@ -62,13 +62,25 @@ public class TanqueDAO implements GenericDAO<Tanque>{
 
     @Override
     public void delete(int id) throws SQLException {
-        //Not yet
+        try {
+        connection = new ConnectionFactory().getConnection();
+        String sql = "DELETE FROM TANQUE WHERE CD_TANQUE = " + id;
+        PreparedStatement pstm = connection.prepareStatement(sql);
+        pstm.execute();
+        pstm.close();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+        connection.close();
+        }
     }
 
     @Override
     public Tanque getById(int id) throws SQLException {
         Tanque tanque = new Tanque();
-        try { 
+        try {
             connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
             sql.append("select t.cd_tanque, t.ds_tanque,")
@@ -183,7 +195,8 @@ public class TanqueDAO implements GenericDAO<Tanque>{
 
     @Override
     public int getLastId() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //String sql = "SELECT CD_TANQUE AS CODIGO FROM TANQUE WHERE "
+        return 0;
     }
     
     public Combustivel populaCombustivel(int codigo, String descricao, String tipo, int usuario) {
