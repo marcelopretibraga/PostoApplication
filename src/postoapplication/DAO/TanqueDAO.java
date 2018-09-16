@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import postoapplication.model.Tanque;
 import postoapplication.jdbc.ConnectionFactory;
@@ -29,6 +30,8 @@ public class TanqueDAO implements GenericDAO<Tanque>{
             pstm.setString(2, entity.getDescricao());
             pstm.setDouble(3, entity.getCapacidade());
             pstm.setInt(4, entity.getCombustivel().getCodigo());
+            pstm.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+            pstm.setInt(6, entity.getUsuario());
             pstm.execute();
             pstm.close();
         } catch (SQLException sqle) {
@@ -47,7 +50,7 @@ public class TanqueDAO implements GenericDAO<Tanque>{
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE TANQUE SET DS_TANQUE = ?, ")
                     .append("CAPACIDADE_TANQUE = ?, = ?, ")
-                    .append("dt_update = ?, USUARIO = ? ")
+                    .append("DT_UPDATE = ?, USUARIO = ? ")
                     .append("WHERE = ?");
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
         } catch (SQLException sqle) {
@@ -59,7 +62,7 @@ public class TanqueDAO implements GenericDAO<Tanque>{
 
     @Override
     public void delete(int id) throws SQLException {
-        
+        //Not yet
     }
 
     @Override
@@ -76,7 +79,7 @@ public class TanqueDAO implements GenericDAO<Tanque>{
                     .append("as un_combustivel from tanque as t")
                     .append("inner join combustivel as c")
                     .append("using (cd_combustivel)")
-                    .append("where t.cd_combustivel = " + id);
+                    .append("where t.cd_combustivel = ").append(id);
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
@@ -88,7 +91,8 @@ public class TanqueDAO implements GenericDAO<Tanque>{
                         rs.getInt("CD_COMBUSTIVEL"), 
                         rs.getString("DS_COMBUSTIVEL"), 
                         rs.getString("TIPO_COMBUSTIVEL"), 
-                        rs.getInt("USER_TANQUE")));
+                        rs.getInt("USER_TANQUE")
+                ));
             }
             pstm.close();
             rs.close();
@@ -109,14 +113,14 @@ public class TanqueDAO implements GenericDAO<Tanque>{
         StringBuilder sql = new StringBuilder();
         
         sql.append("select t.cd_tanque, t.ds_tanque,")
-                    .append("t.capacidade_tanque as cp_tanque,")
-                    .append("t.usuario as user_tanque,")
-                    .append("c.cd_combustivel, c.ds_combustivel,")
-                    .append("c.tp_combustivel, unidademedida_combustivel")
-                    .append("as un_combustivel from tanque as t")
-                    .append("inner join combustivel as c")
-                    .append("using (cd_combustivel)")
-                    .append("where t.ds_tanque = '%" + name + "%'");
+                .append("t.capacidade_tanque as cp_tanque,")
+                .append("t.usuario as user_tanque,")
+                .append("c.cd_combustivel, c.ds_combustivel,")
+                .append("c.tp_combustivel, unidademedida_combustivel")
+                .append("as un_combustivel from tanque as t")
+                .append("inner join combustivel as c")
+                .append("using (cd_combustivel)")
+                .append("where t.ds_tanque = '%").append(name).append("%'");
         
         PreparedStatement pstm = connection.prepareStatement(sql.toString());
         ResultSet rs = pstm.executeQuery();
@@ -125,10 +129,12 @@ public class TanqueDAO implements GenericDAO<Tanque>{
             tanque.setCodigo(rs.getInt("CD_TANQUE"));
             tanque.setDescricao(rs.getString("DS_TANQUE"));
             tanque.setCapacidade(rs.getDouble("CAPACIDADE_TANQUE"));
-            tanque.setCombustivel(populaCombustivel(rs.getInt("CD_COMBUSTIVEL"),
+            tanque.setCombustivel(populaCombustivel(
+                    rs.getInt("CD_COMBUSTIVEL"),
                     rs.getString("DS_COMBUSTIVEL"), 
                     rs.getString("TIPO_COMBUSTIVEL"),
-                    rs.getInt("USER_TANQUE")));
+                    rs.getInt("USER_TANQUE")
+            ));
             tanqueList.add(tanque);
         }
         return tanqueList;
