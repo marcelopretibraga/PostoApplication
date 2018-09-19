@@ -1,0 +1,849 @@
+<<<<<<< HEAD
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.3.23
+-- Dumped by pg_dump version 9.3.23
+-- Started on 2018-09-05 19:56:05
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+DROP DATABASE postodb;
+--
+-- TOC entry 1991 (class 1262 OID 17004)
+-- Name: postodb; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE postodb WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'Portuguese_Brazil.1252' LC_CTYPE = 'Portuguese_Brazil.1252';
+
+
+ALTER DATABASE postodb OWNER TO postgres;
+
+\connect postodb
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 1 (class 3079 OID 11750)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 1994 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 171 (class 1259 OID 17005)
+-- Name: bico; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.bico (
+    cd_bico integer NOT NULL,
+    ds_bico character varying(60),
+    cd_tanque integer,
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.bico OWNER TO postgres;
+
+--
+-- TOC entry 172 (class 1259 OID 17008)
+-- Name: cliente; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.cliente (
+    cd_cliente integer NOT NULL,
+    ds_cliente character varying(60),
+    cpfcnpj_cliente character varying(14),
+    fone_cliente character varying(20),
+    endereco_cliente character varying(200),
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.cliente OWNER TO postgres;
+
+--
+-- TOC entry 173 (class 1259 OID 17011)
+-- Name: combustivel; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.combustivel (
+    cd_combustivel integer NOT NULL,
+    ds_combustivel character varying(60),
+    tp_combustivel character varying(10),
+    unidademedida_combustivel character varying(10),
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.combustivel OWNER TO postgres;
+
+--
+-- TOC entry 174 (class 1259 OID 17014)
+-- Name: fornecedor; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.fornecedor (
+    cd_fornecedor integer NOT NULL,
+    ds_fornecedor character varying(60),
+    cnpj_fornecedor character varying(14),
+    fone_fornecedor character varying(20),
+    endereco_fornecedor character varying(200),
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.fornecedor OWNER TO postgres;
+
+--
+-- TOC entry 175 (class 1259 OID 17017)
+-- Name: itemnf; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.itemnf (
+    cd_itemnf integer NOT NULL,
+    qt_itemnf numeric(15,2),
+    vlunitario_itemnf numeric(15,2),
+    desconto_itemnf numeric(15,2),
+    vltotal_itemnf numeric(15,2),
+    cd_combustivel integer,
+    cd_notafiscal integer,
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.itemnf OWNER TO postgres;
+
+--
+-- TOC entry 176 (class 1259 OID 17020)
+-- Name: notafiscal; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.notafiscal (
+    cd_notafiscal integer NOT NULL,
+    numero_notafiscal integer NOT NULL,
+    serie_notafiscal integer NOT NULL,
+    dtemissao_notafiscal date,
+    vltotal_notafiscal numeric(15,2),
+    cd_cliente integer,
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.notafiscal OWNER TO postgres;
+
+--
+-- TOC entry 177 (class 1259 OID 17023)
+-- Name: tanque; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.tanque (
+    cd_tanque integer NOT NULL,
+    ds_tanque character varying(60),
+    capacidade_tanque numeric(15,2),
+    cd_combustivel integer,
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.tanque OWNER TO postgres;
+
+--
+-- TOC entry 178 (class 1259 OID 17026)
+-- Name: valorcombustivel; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.valorcombustivel (
+    cd_valorcombustivel integer NOT NULL,
+    vlunitario_valorcombustivel numeric(15,2),
+    dtemissao_valorcombustivel date,
+    margem_valorcombustivel numeric(15,2),
+    cd_combustivel integer,
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.valorcombustivel OWNER TO postgres;
+
+--
+-- TOC entry 1978 (class 0 OID 17005)
+-- Dependencies: 171
+-- Data for Name: bico; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1979 (class 0 OID 17008)
+-- Dependencies: 172
+-- Data for Name: cliente; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1980 (class 0 OID 17011)
+-- Dependencies: 173
+-- Data for Name: combustivel; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.combustivel (cd_combustivel, ds_combustivel, tp_combustivel, unidademedida_combustivel, dt_record, dt_update, usuario) VALUES (10, 'Alcool', 'AA', '1', '2018-08-15', NULL, NULL);
+INSERT INTO public.combustivel (cd_combustivel, ds_combustivel, tp_combustivel, unidademedida_combustivel, dt_record, dt_update, usuario) VALUES (11, 'Gasolina TOP', 'GA', '1', '2018-08-22', NULL, NULL);
+INSERT INTO public.combustivel (cd_combustivel, ds_combustivel, tp_combustivel, unidademedida_combustivel, dt_record, dt_update, usuario) VALUES (12, 'Teste', 'AA', '1', '2018-08-22', NULL, NULL);
+INSERT INTO public.combustivel (cd_combustivel, ds_combustivel, tp_combustivel, unidademedida_combustivel, dt_record, dt_update, usuario) VALUES (13, 'TESTEEE', 'GLV', '1', '2018-08-22', NULL, NULL);
+INSERT INTO public.combustivel (cd_combustivel, ds_combustivel, tp_combustivel, unidademedida_combustivel, dt_record, dt_update, usuario) VALUES (14, 'Etanol com agua', 'DS500', '1', '2018-08-22', NULL, NULL);
+INSERT INTO public.combustivel (cd_combustivel, ds_combustivel, tp_combustivel, unidademedida_combustivel, dt_record, dt_update, usuario) VALUES (15, 'etanol com mais agua', 'GLV', '1', '2018-08-22', NULL, NULL);
+
+
+--
+-- TOC entry 1981 (class 0 OID 17014)
+-- Dependencies: 174
+-- Data for Name: fornecedor; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1982 (class 0 OID 17017)
+-- Dependencies: 175
+-- Data for Name: itemnf; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1983 (class 0 OID 17020)
+-- Dependencies: 176
+-- Data for Name: notafiscal; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1984 (class 0 OID 17023)
+-- Dependencies: 177
+-- Data for Name: tanque; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1985 (class 0 OID 17026)
+-- Dependencies: 178
+-- Data for Name: valorcombustivel; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1850 (class 2606 OID 17030)
+-- Name: bico_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.bico
+    ADD CONSTRAINT bico_pkey PRIMARY KEY (cd_bico);
+
+
+--
+-- TOC entry 1852 (class 2606 OID 17032)
+-- Name: cliente_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.cliente
+    ADD CONSTRAINT cliente_pkey PRIMARY KEY (cd_cliente);
+
+
+--
+-- TOC entry 1854 (class 2606 OID 17034)
+-- Name: combustivel_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.combustivel
+    ADD CONSTRAINT combustivel_pkey PRIMARY KEY (cd_combustivel);
+
+
+--
+-- TOC entry 1856 (class 2606 OID 17036)
+-- Name: fornecedor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.fornecedor
+    ADD CONSTRAINT fornecedor_pkey PRIMARY KEY (cd_fornecedor);
+
+
+--
+-- TOC entry 1858 (class 2606 OID 17038)
+-- Name: itemnf_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.itemnf
+    ADD CONSTRAINT itemnf_pkey PRIMARY KEY (cd_itemnf);
+
+
+--
+-- TOC entry 1860 (class 2606 OID 17040)
+-- Name: notafiscal_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.notafiscal
+    ADD CONSTRAINT notafiscal_pkey PRIMARY KEY (cd_notafiscal);
+
+
+--
+-- TOC entry 1862 (class 2606 OID 17042)
+-- Name: tanque_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.tanque
+    ADD CONSTRAINT tanque_pkey PRIMARY KEY (cd_tanque);
+
+
+--
+-- TOC entry 1864 (class 2606 OID 17044)
+-- Name: valorcombustivel_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.valorcombustivel
+    ADD CONSTRAINT valorcombustivel_pkey PRIMARY KEY (cd_valorcombustivel);
+
+
+--
+-- TOC entry 1865 (class 2606 OID 17045)
+-- Name: bico_cd_tanque_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.bico
+    ADD CONSTRAINT bico_cd_tanque_fkey FOREIGN KEY (cd_tanque) REFERENCES public.tanque(cd_tanque);
+
+
+--
+-- TOC entry 1866 (class 2606 OID 17050)
+-- Name: itemnf_cd_combustivel_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.itemnf
+    ADD CONSTRAINT itemnf_cd_combustivel_fkey FOREIGN KEY (cd_combustivel) REFERENCES public.combustivel(cd_combustivel);
+
+
+--
+-- TOC entry 1867 (class 2606 OID 17055)
+-- Name: itemnf_cd_notafiscal_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.itemnf
+    ADD CONSTRAINT itemnf_cd_notafiscal_fkey FOREIGN KEY (cd_notafiscal) REFERENCES public.notafiscal(cd_notafiscal);
+
+
+--
+-- TOC entry 1868 (class 2606 OID 17060)
+-- Name: notafiscal_cd_cliente_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.notafiscal
+    ADD CONSTRAINT notafiscal_cd_cliente_fkey FOREIGN KEY (cd_cliente) REFERENCES public.cliente(cd_cliente);
+
+
+--
+-- TOC entry 1869 (class 2606 OID 17065)
+-- Name: tanque_cd_combustivel_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tanque
+    ADD CONSTRAINT tanque_cd_combustivel_fkey FOREIGN KEY (cd_combustivel) REFERENCES public.combustivel(cd_combustivel);
+
+
+--
+-- TOC entry 1870 (class 2606 OID 17070)
+-- Name: valorcombustivel_cd_combustivel_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.valorcombustivel
+    ADD CONSTRAINT valorcombustivel_cd_combustivel_fkey FOREIGN KEY (cd_combustivel) REFERENCES public.combustivel(cd_combustivel);
+
+
+--
+-- TOC entry 1993 (class 0 OID 0)
+-- Dependencies: 6
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2018-09-05 19:56:05
+
+--
+-- PostgreSQL database dump complete
+--
+
+=======
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.3.23
+-- Dumped by pg_dump version 9.3.23
+-- Started on 2018-09-05 19:56:05
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+DROP DATABASE postodb;
+--
+-- TOC entry 1991 (class 1262 OID 17004)
+-- Name: postodb; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE postodb WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'Portuguese_Brazil.1252' LC_CTYPE = 'Portuguese_Brazil.1252';
+
+
+ALTER DATABASE postodb OWNER TO postgres;
+
+\connect postodb
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 1 (class 3079 OID 11750)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 1994 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 171 (class 1259 OID 17005)
+-- Name: bico; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.bico (
+    cd_bico integer NOT NULL,
+    ds_bico character varying(60),
+    cd_tanque integer,
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.bico OWNER TO postgres;
+
+--
+-- TOC entry 172 (class 1259 OID 17008)
+-- Name: cliente; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.cliente (
+    cd_cliente integer NOT NULL,
+    ds_cliente character varying(60),
+    cpfcnpj_cliente character varying(14),
+    fone_cliente character varying(20),
+    endereco_cliente character varying(200),
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.cliente OWNER TO postgres;
+
+--
+-- TOC entry 173 (class 1259 OID 17011)
+-- Name: combustivel; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.combustivel (
+    cd_combustivel integer NOT NULL,
+    ds_combustivel character varying(60),
+    tp_combustivel character varying(10),
+    unidademedida_combustivel character varying(10),
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.combustivel OWNER TO postgres;
+
+--
+-- TOC entry 174 (class 1259 OID 17014)
+-- Name: fornecedor; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.fornecedor (
+    cd_fornecedor integer NOT NULL,
+    ds_fornecedor character varying(60),
+    cnpj_fornecedor character varying(14),
+    fone_fornecedor character varying(20),
+    endereco_fornecedor character varying(200),
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.fornecedor OWNER TO postgres;
+
+--
+-- TOC entry 175 (class 1259 OID 17017)
+-- Name: itemnf; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.itemnf (
+    cd_itemnf integer NOT NULL,
+    qt_itemnf numeric(15,2),
+    vlunitario_itemnf numeric(15,2),
+    desconto_itemnf numeric(15,2),
+    vltotal_itemnf numeric(15,2),
+    cd_combustivel integer,
+    cd_notafiscal integer,
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.itemnf OWNER TO postgres;
+
+--
+-- TOC entry 176 (class 1259 OID 17020)
+-- Name: notafiscal; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.notafiscal (
+    cd_notafiscal integer NOT NULL,
+    numero_notafiscal integer NOT NULL,
+    serie_notafiscal integer NOT NULL,
+    dtemissao_notafiscal date,
+    vltotal_notafiscal numeric(15,2),
+    cd_cliente integer,
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.notafiscal OWNER TO postgres;
+
+--
+-- TOC entry 177 (class 1259 OID 17023)
+-- Name: tanque; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.tanque (
+    cd_tanque integer NOT NULL,
+    ds_tanque character varying(60),
+    capacidade_tanque numeric(15,2),
+    cd_combustivel integer,
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.tanque OWNER TO postgres;
+
+--
+-- TOC entry 178 (class 1259 OID 17026)
+-- Name: valorcombustivel; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE public.valorcombustivel (
+    cd_valorcombustivel integer NOT NULL,
+    vlunitario_valorcombustivel numeric(15,2),
+    dtemissao_valorcombustivel date,
+    margem_valorcombustivel numeric(15,2),
+    cd_combustivel integer,
+    dt_record date,
+    dt_update date,
+    usuario integer
+);
+
+
+ALTER TABLE public.valorcombustivel OWNER TO postgres;
+
+--
+-- TOC entry 1978 (class 0 OID 17005)
+-- Dependencies: 171
+-- Data for Name: bico; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1979 (class 0 OID 17008)
+-- Dependencies: 172
+-- Data for Name: cliente; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1980 (class 0 OID 17011)
+-- Dependencies: 173
+-- Data for Name: combustivel; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.combustivel (cd_combustivel, ds_combustivel, tp_combustivel, unidademedida_combustivel, dt_record, dt_update, usuario) VALUES (10, 'Alcool', 'AA', '1', '2018-08-15', NULL, NULL);
+INSERT INTO public.combustivel (cd_combustivel, ds_combustivel, tp_combustivel, unidademedida_combustivel, dt_record, dt_update, usuario) VALUES (11, 'Gasolina TOP', 'GA', '1', '2018-08-22', NULL, NULL);
+INSERT INTO public.combustivel (cd_combustivel, ds_combustivel, tp_combustivel, unidademedida_combustivel, dt_record, dt_update, usuario) VALUES (12, 'Teste', 'AA', '1', '2018-08-22', NULL, NULL);
+INSERT INTO public.combustivel (cd_combustivel, ds_combustivel, tp_combustivel, unidademedida_combustivel, dt_record, dt_update, usuario) VALUES (13, 'TESTEEE', 'GLV', '1', '2018-08-22', NULL, NULL);
+INSERT INTO public.combustivel (cd_combustivel, ds_combustivel, tp_combustivel, unidademedida_combustivel, dt_record, dt_update, usuario) VALUES (14, 'Etanol com agua', 'DS500', '1', '2018-08-22', NULL, NULL);
+INSERT INTO public.combustivel (cd_combustivel, ds_combustivel, tp_combustivel, unidademedida_combustivel, dt_record, dt_update, usuario) VALUES (15, 'etanol com mais agua', 'GLV', '1', '2018-08-22', NULL, NULL);
+
+
+--
+-- TOC entry 1981 (class 0 OID 17014)
+-- Dependencies: 174
+-- Data for Name: fornecedor; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1982 (class 0 OID 17017)
+-- Dependencies: 175
+-- Data for Name: itemnf; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1983 (class 0 OID 17020)
+-- Dependencies: 176
+-- Data for Name: notafiscal; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1984 (class 0 OID 17023)
+-- Dependencies: 177
+-- Data for Name: tanque; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1985 (class 0 OID 17026)
+-- Dependencies: 178
+-- Data for Name: valorcombustivel; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 1850 (class 2606 OID 17030)
+-- Name: bico_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.bico
+    ADD CONSTRAINT bico_pkey PRIMARY KEY (cd_bico);
+
+
+--
+-- TOC entry 1852 (class 2606 OID 17032)
+-- Name: cliente_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.cliente
+    ADD CONSTRAINT cliente_pkey PRIMARY KEY (cd_cliente);
+
+
+--
+-- TOC entry 1854 (class 2606 OID 17034)
+-- Name: combustivel_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.combustivel
+    ADD CONSTRAINT combustivel_pkey PRIMARY KEY (cd_combustivel);
+
+
+--
+-- TOC entry 1856 (class 2606 OID 17036)
+-- Name: fornecedor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.fornecedor
+    ADD CONSTRAINT fornecedor_pkey PRIMARY KEY (cd_fornecedor);
+
+
+--
+-- TOC entry 1858 (class 2606 OID 17038)
+-- Name: itemnf_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.itemnf
+    ADD CONSTRAINT itemnf_pkey PRIMARY KEY (cd_itemnf);
+
+
+--
+-- TOC entry 1860 (class 2606 OID 17040)
+-- Name: notafiscal_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.notafiscal
+    ADD CONSTRAINT notafiscal_pkey PRIMARY KEY (cd_notafiscal);
+
+
+--
+-- TOC entry 1862 (class 2606 OID 17042)
+-- Name: tanque_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.tanque
+    ADD CONSTRAINT tanque_pkey PRIMARY KEY (cd_tanque);
+
+
+--
+-- TOC entry 1864 (class 2606 OID 17044)
+-- Name: valorcombustivel_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY public.valorcombustivel
+    ADD CONSTRAINT valorcombustivel_pkey PRIMARY KEY (cd_valorcombustivel);
+
+
+--
+-- TOC entry 1865 (class 2606 OID 17045)
+-- Name: bico_cd_tanque_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.bico
+    ADD CONSTRAINT bico_cd_tanque_fkey FOREIGN KEY (cd_tanque) REFERENCES public.tanque(cd_tanque);
+
+
+--
+-- TOC entry 1866 (class 2606 OID 17050)
+-- Name: itemnf_cd_combustivel_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.itemnf
+    ADD CONSTRAINT itemnf_cd_combustivel_fkey FOREIGN KEY (cd_combustivel) REFERENCES public.combustivel(cd_combustivel);
+
+
+--
+-- TOC entry 1867 (class 2606 OID 17055)
+-- Name: itemnf_cd_notafiscal_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.itemnf
+    ADD CONSTRAINT itemnf_cd_notafiscal_fkey FOREIGN KEY (cd_notafiscal) REFERENCES public.notafiscal(cd_notafiscal);
+
+
+--
+-- TOC entry 1868 (class 2606 OID 17060)
+-- Name: notafiscal_cd_cliente_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.notafiscal
+    ADD CONSTRAINT notafiscal_cd_cliente_fkey FOREIGN KEY (cd_cliente) REFERENCES public.cliente(cd_cliente);
+
+
+--
+-- TOC entry 1869 (class 2606 OID 17065)
+-- Name: tanque_cd_combustivel_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tanque
+    ADD CONSTRAINT tanque_cd_combustivel_fkey FOREIGN KEY (cd_combustivel) REFERENCES public.combustivel(cd_combustivel);
+
+
+--
+-- TOC entry 1870 (class 2606 OID 17070)
+-- Name: valorcombustivel_cd_combustivel_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.valorcombustivel
+    ADD CONSTRAINT valorcombustivel_cd_combustivel_fkey FOREIGN KEY (cd_combustivel) REFERENCES public.combustivel(cd_combustivel);
+
+
+--
+-- TOC entry 1993 (class 0 OID 0)
+-- Dependencies: 6
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2018-09-05 19:56:05
+
+--
+-- PostgreSQL database dump complete
+--
+
+>>>>>>> 3769d832713a7af09fc0a357f5c893e1cf38b00d

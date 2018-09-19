@@ -12,8 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import postoapplication.jdbc.ConnectionFactory;
 import postoapplication.model.Combustivel;
 
@@ -162,7 +160,7 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
                 combustivel.setCodigo(rs.getInt("CD_COMBUSTIVEL"));
                 combustivel.setDescricao(rs.getString("DS_COMBUSTIVEL"));
                 combustivel.setTipoCombustivel(rs.getString("TP_COMBUSTIVEL"));
-                combustivel.setUsuario(rs.getInt("CD_USUARIO"));
+                combustivel.setUsuario(rs.getInt("USUARIO"));
                 combustivelList.add(combustivel);
             }
             pstm.close();

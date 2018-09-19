@@ -40,7 +40,6 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         tfCodigo.setEnabled(false);
         desabilitaCampos(false);
         habilitaFiltroCodigo();
-
     }
 
     private void desabilitaCampos(boolean ativo) {
