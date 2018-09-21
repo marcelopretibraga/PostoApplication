@@ -168,9 +168,9 @@ public class TanqueDAO implements GenericDAO<Tanque>{
                     .append("T.CAPACIDADE_TANQUE AS CP_TANQUE,")
                     .append("T.USUARIO AS USER_TANQUE,")
                     .append("C.CD_COMBUSTIVEL, C.DS_COMBUSTIVEL,")
-                    .append("C.TP_COMBUSTIVEL, UNIDADEMEDIDA_COMBUSTIVEL")
-                    .append("AS UN_COMBUSTIVEL FROM TANQUE AS T")
-                    .append("AS UN_COMBUSTIVEL FROM TANQUE AS T")
+                    .append("C.TP_COMBUSTIVEL, UNIDADEMEDIDA_COMBUSTIVEL ")
+                    .append("AS UNIDADEMEDIDA_COMBUSTIVEL FROM TANQUE AS T ")
+                    .append("INNER JOIN COMBUSTIVEL AS C ")
                     .append("USING (CD_COMBUSTIVEL) ORDER BY T.CD_TANQUE");
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             ResultSet rs = pstm.executeQuery();
@@ -179,8 +179,8 @@ public class TanqueDAO implements GenericDAO<Tanque>{
                 tanque = new Tanque();
                 tanque.setCodigo(rs.getInt("CD_TANQUE"));
                 tanque.setCapacidade(rs.getDouble("CP_TANQUE"));
-                tanque.setDescricao("DS_TANQUE");
-                tanque.setUsuario(rs.getInt("USUARIO"));
+                tanque.setDescricao(rs.getString("DS_TANQUE"));
+                tanque.setUsuario(rs.getInt("USER_TANQUE"));
                 tanque.setCombustivel(populaCombustivel(
                         rs.getInt("CD_COMBUSTIVEL"),
                         rs.getString("DS_COMBUSTIVEL"),
@@ -203,7 +203,7 @@ public class TanqueDAO implements GenericDAO<Tanque>{
         PreparedStatement pstm = null;
         try {
             connection = new ConnectionFactory().getConnection();
-            String sql = "SELECT COALESCE(MAX(CD_TANQUE), 0) AS CODIGO FROM TANQUE";
+            String sql = "SELECT COALESCE(MAX(CD_TANQUE), 0) + 1 AS CODIGO FROM TANQUE";
             pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             rs.next();

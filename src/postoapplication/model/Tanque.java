@@ -46,7 +46,7 @@ public class Tanque extends Record{
     public void setCombustivel(Combustivel combustivel) {
         this.combustivel = combustivel;
     }
-
+    
     @Override
     public String toString() {
         return codigo + " - "+ descricao;
