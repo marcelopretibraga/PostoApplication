@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javax.swing.JOptionPane;
 import postoapplication.model.Tanque;
 import postoapplication.jdbc.ConnectionFactory;
 import postoapplication.model.Combustivel;
@@ -30,8 +31,8 @@ public class TanqueDAO implements GenericDAO<Tanque>{
             pstm.setString(2, entity.getDescricao());
             pstm.setDouble(3, entity.getCapacidade());
             pstm.setInt(4, entity.getCombustivel().getCodigo());
-            pstm.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
-            pstm.setInt(6, entity.getUsuario());
+            /*pstm.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+            pstm.setInt(6, entity.getUsuario());*/
             pstm.execute();
             pstm.close();
         } catch (SQLException sqle) {
@@ -87,22 +88,22 @@ public class TanqueDAO implements GenericDAO<Tanque>{
                     .append("t.capacidade_tanque as cp_tanque,")
                     .append("t.usuario as user_tanque,")
                     .append("c.cd_combustivel, c.ds_combustivel,")
-                    .append("c.tp_combustivel, unidademedida_combustivel")
-                    .append("as un_combustivel from tanque as t")
-                    .append("inner join combustivel as c")
-                    .append("using (cd_combustivel)")
-                    .append("where t.cd_combustivel = ").append(id);
+                    .append("c.tp_combustivel, unidademedida_combustivel ")
+                    .append("as un_combustivel from tanque as t ")
+                    .append("inner join combustivel as c ")
+                    .append("using (cd_combustivel) ")
+                    .append("where t.cd_tanque = ").append(id);
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
                 tanque.setCodigo(rs.getInt("CD_TANQUE"));
                 tanque.setCapacidade(rs.getDouble("CP_TANQUE"));
                 tanque.setDescricao(rs.getString("DS_TANQUE"));
-                tanque.setUsuario(rs.getInt("USUARIO"));
+                tanque.setUsuario(rs.getInt("USER_TANQUE"));
                 tanque.setCombustivel(populaCombustivel(
                         rs.getInt("CD_COMBUSTIVEL"), 
                         rs.getString("DS_COMBUSTIVEL"), 
-                        rs.getString("TIPO_COMBUSTIVEL"), 
+                        rs.getString("TP_COMBUSTIVEL"), 
                         rs.getInt("USER_TANQUE")
                 ));
             }
@@ -112,6 +113,8 @@ public class TanqueDAO implements GenericDAO<Tanque>{
             sqle.printStackTrace();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            connection.close();
         }
         return tanque;
     }
@@ -128,11 +131,11 @@ public class TanqueDAO implements GenericDAO<Tanque>{
                     .append("t.capacidade_tanque as cp_tanque,")
                     .append("t.usuario as user_tanque,")
                     .append("c.cd_combustivel, c.ds_combustivel,")
-                    .append("c.tp_combustivel, unidademedida_combustivel")
-                    .append("as un_combustivel from tanque as t")
-                    .append("inner join combustivel as c")
-                    .append("using (cd_combustivel)")
-                    .append("where t.ds_tanque = '%").append(name).append("%'");
+                    .append("c.tp_combustivel, unidademedida_combustivel ")
+                    .append("as un_combustivel from tanque as t ")
+                    .append("inner join combustivel as c ")
+                    .append("using (cd_combustivel) ")
+                    .append("where t.ds_tanque like '%").append(name).append("%'");
 
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             ResultSet rs = pstm.executeQuery();
@@ -140,11 +143,11 @@ public class TanqueDAO implements GenericDAO<Tanque>{
                 tanque = new Tanque();
                 tanque.setCodigo(rs.getInt("CD_TANQUE"));
                 tanque.setDescricao(rs.getString("DS_TANQUE"));
-                tanque.setCapacidade(rs.getDouble("CAPACIDADE_TANQUE"));
+                tanque.setCapacidade(rs.getDouble("CP_TANQUE"));
                 tanque.setCombustivel(populaCombustivel(
                         rs.getInt("CD_COMBUSTIVEL"),
                         rs.getString("DS_COMBUSTIVEL"), 
-                        rs.getString("TIPO_COMBUSTIVEL"),
+                        rs.getString("TP_COMBUSTIVEL"),
                         rs.getInt("USER_TANQUE")
                 ));
                 tanqueList.add(tanque);
@@ -153,6 +156,8 @@ public class TanqueDAO implements GenericDAO<Tanque>{
             sqle.printStackTrace();
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            connection.close();
         }
         return tanqueList;
     }
