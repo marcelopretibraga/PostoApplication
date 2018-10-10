@@ -28,7 +28,7 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
             sql.append("insert into combustivel(cd_combustivel, ds_combustivel, tp_combustivel,")
-                    .append("cd_unidademedida, dt_record, cd_usuario) values (?,?,?,?,?,?)");
+                    .append("unidademedida_combustivel, dt_record, usuario) values (?,?,?,?,?,?)");
             
             //Preparar a execução do comando
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
@@ -55,8 +55,8 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
             sql.append("update combustivel set ds_combustivel = ?, ")
-                    .append("tp_combustivel = ?, cd_unidademedida = ?, ")
-                    .append("dt_update = ?, cd_usuario = ? ")
+                    .append("tp_combustivel = ?, unidademedida_combustivel = ?, ")
+                    .append("dt_update = ?, usuario = ? ")
                     .append("where cd_combustivel = ?");
             
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
@@ -105,7 +105,7 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
                 combustivel.setCodigo(rs.getInt("CD_COMBUSTIVEL"));
                 combustivel.setDescricao(rs.getString("DS_COMBUSTIVEL"));
                 combustivel.setTipoCombustivel(rs.getString("TP_COMBUSTIVEL"));
-                combustivel.setUsuario(rs.getInt("CD_USUARIO"));
+                combustivel.setUsuario(rs.getInt("USUARIO"));
             }
             pstm.close();
         }catch (SQLException ex){
@@ -132,7 +132,7 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
                 combustivel.setCodigo(rs.getInt("CD_COMBUSTIVEL"));
                 combustivel.setDescricao(rs.getString("DS_COMBUSTIVEL"));
                 combustivel.setTipoCombustivel(rs.getString("TP_COMBUSTIVEL"));
-                combustivel.setUsuario(rs.getInt("CD_USUARIO"));
+                combustivel.setUsuario(rs.getInt("USUARIO"));
                 combustivelList.add(combustivel);
             }
             pstm.close();
@@ -160,7 +160,7 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
                 combustivel.setCodigo(rs.getInt("CD_COMBUSTIVEL"));
                 combustivel.setDescricao(rs.getString("DS_COMBUSTIVEL"));
                 combustivel.setTipoCombustivel(rs.getString("TP_COMBUSTIVEL"));
-                combustivel.setUsuario(rs.getInt("CD_USUARIO"));
+                combustivel.setUsuario(rs.getInt("USUARIO"));
                 combustivelList.add(combustivel);
             }
             pstm.close();

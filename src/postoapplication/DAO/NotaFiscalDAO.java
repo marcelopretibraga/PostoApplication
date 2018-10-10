@@ -21,6 +21,7 @@ public class NotaFiscalDAO implements GenericDAO<NotaFiscal> {
     public void save(NotaFiscal entity) throws SQLException {
         try {
             this.connection = new ConnectionFactory().getConnection();
+            this.connection.setAutoCommit(false);
             StringBuilder sql = new StringBuilder();
             sql.append("INSERT INTO NOTAFISCAL (CD_NOTAFISCAL, NR_NOTA, DS_SERIE, CD_CLIENTE, DT_EMISSAO, VL_TOTAL) VALUES")
                     .append("(?,?,?,?,?,?)");
@@ -52,9 +53,11 @@ public class NotaFiscalDAO implements GenericDAO<NotaFiscal> {
             pstm.close();
             pstmItem.close();
         } catch (SQLException ex) {
+            this.connection.rollback();
             System.out.println("Erro ao inserir Combustivel.");
             ex.printStackTrace();
         } finally {//Sempre executa o Finally 
+            this.connection.commit();
             connection.close();
         }
     }

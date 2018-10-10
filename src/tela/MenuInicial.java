@@ -155,7 +155,7 @@ public class MenuInicial extends javax.swing.JDialog {
     }//GEN-LAST:event_btNFActionPerformed
 
     private void btTanqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTanqueActionPerformed
-        NotaFiscalCabecalhoJDialog dialog = new NotaFiscalCabecalhoJDialog (new javax.swing.JFrame(), true);
+        TanqueJDialog dialog = new TanqueJDialog (new javax.swing.JFrame(), true);
         dialog.setVisible(true);
     }//GEN-LAST:event_btTanqueActionPerformed
 

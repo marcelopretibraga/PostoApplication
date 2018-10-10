@@ -171,7 +171,7 @@ public class TanqueDAO implements GenericDAO<Tanque> {
             connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT T.CD_TANQUE, T.DS_TANQUE,")
-                    .append("T.CAPACIDADE_TANQUE AS CP_TANQUE,")
+                    .append("T.CAPACIDADE_TANQUE AS CP_TANQUE, ")
                     .append("T.USUARIO AS USER_TANQUE,")
                     .append("C.CD_COMBUSTIVEL, C.DS_COMBUSTIVEL,")
                     .append("C.TP_COMBUSTIVEL, UNIDADEMEDIDA_COMBUSTIVEL ")
@@ -184,7 +184,7 @@ public class TanqueDAO implements GenericDAO<Tanque> {
             while (rs.next()) {
                 tanque = new Tanque();
                 tanque.setCodigo(rs.getInt("CD_TANQUE"));
-                tanque.setCapacidade(rs.getDouble("CAPACIDADE_TANQUE"));
+                tanque.setCapacidade(rs.getDouble("CP_TANQUE"));
                 tanque.setDescricao("DS_TANQUE");
                 tanque.setUsuario(rs.getInt("USUARIO"));
                 tanque.setCombustivel(populaCombustivel(rs.getInt("CD_COMBUSTIVEL"),

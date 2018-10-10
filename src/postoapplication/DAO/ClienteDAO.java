@@ -116,7 +116,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             pstm.close();
         } catch (SQLException ex) {
            JOptionPane.showMessageDialog(null, "Erro ao consultar por  ID", "ERRO", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
+           ex.printStackTrace();
         } finally {
             this.connection.close();
         }

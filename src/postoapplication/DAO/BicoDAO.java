@@ -80,6 +80,9 @@ public class BicoDAO implements GenericDAO<Bico>{
         }catch (SQLException ex){
             System.out.println("Erro ao Deletar Bico");
             ex.printStackTrace();
+        }catch (Exception ex){
+            System.out.println("Erro inesperado ao Deletar Bico");
+            ex.printStackTrace();
         }finally {
             this.connection.close();
         }
