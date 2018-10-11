@@ -19,6 +19,7 @@ public class TanqueJDialog extends javax.swing.JDialog {
 
     TanqueDAO tDao = new TanqueDAO();
     CombustivelDAO cDao = new CombustivelDAO();
+    
 
     public TanqueJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -367,8 +368,7 @@ public class TanqueJDialog extends javax.swing.JDialog {
 
     private void carregaTable(List<Tanque> tanques) {
         if (tanques != null) {
-            DefaultTableModel tbTanqueModel
-                    = (DefaultTableModel) tbTanque.getModel();
+            DefaultTableModel tbTanqueModel = (DefaultTableModel) tbTanque.getModel();
             tbTanqueModel.setRowCount(0);
             for (Tanque t : tanques) {
                 tbTanqueModel.addRow(new Object[]{
