@@ -7,10 +7,11 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
+    <Property name="title" type="java.lang.String" value="Cabe&#xe7;alho Nota Fiscal"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -39,9 +40,9 @@
                           <Component id="paFornecedor" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="paCliente" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="jButton6" min="-2" pref="100" max="-2" attributes="0"/>
+                              <Component id="btSairCabecalho" min="-2" pref="100" max="-2" attributes="0"/>
                               <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                              <Component id="jButton5" min="-2" pref="100" max="-2" attributes="0"/>
+                              <Component id="btRodapeItens" min="-2" pref="100" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -64,8 +65,8 @@
               <Component id="paFornecedor" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jButton6" alignment="0" min="-2" pref="35" max="-2" attributes="0"/>
-                  <Component id="jButton5" alignment="0" min="-2" pref="35" max="-2" attributes="0"/>
+                  <Component id="btSairCabecalho" alignment="0" min="-2" pref="35" max="-2" attributes="0"/>
+                  <Component id="btRodapeItens" alignment="0" min="-2" pref="35" max="-2" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -429,7 +430,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jButton4" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="cbCliente1" alignment="0" min="-2" pref="300" max="-2" attributes="0"/>
+                      <Component id="cbFornecedor" alignment="0" min="-2" pref="300" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="161" max="32767" attributes="0"/>
               </Group>
@@ -441,7 +442,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbCliente1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbFornecedor" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -460,7 +461,7 @@
             <Property name="text" type="java.lang.String" value="Fornecedor"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cbCliente1">
+        <Component class="javax.swing.JComboBox" name="cbFornecedor">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
@@ -484,15 +485,21 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="jButton6">
+    <Component class="javax.swing.JButton" name="btSairCabecalho">
       <Properties>
         <Property name="text" type="java.lang.String" value="Sair"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSairCabecalhoActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton5">
+    <Component class="javax.swing.JButton" name="btRodapeItens">
       <Properties>
         <Property name="text" type="java.lang.String" value="Itens"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRodapeItensActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
