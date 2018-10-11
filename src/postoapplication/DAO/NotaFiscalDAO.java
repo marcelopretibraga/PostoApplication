@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 import postoapplication.jdbc.ConnectionFactory;
+import postoapplication.model.Combustivel;
 import postoapplication.model.ItemNF;
 import postoapplication.model.NotaFiscal;
 
@@ -23,8 +24,9 @@ public class NotaFiscalDAO implements GenericDAO<NotaFiscal> {
             this.connection = new ConnectionFactory().getConnection();
             this.connection.setAutoCommit(false);
             StringBuilder sql = new StringBuilder();
-            sql.append("INSERT INTO NOTAFISCAL (CD_NOTAFISCAL, NR_NOTA, DS_SERIE, CD_CLIENTE, DT_EMISSAO, VL_TOTAL) VALUES")
-                    .append("(?,?,?,?,?,?)");
+            sql.append("INSERT INTO NOTAFISCAL (CD_NOTAFISCAL, NR_NOTA,")
+                    .append("DS_SERIE, CD_CLIENTE, DT_EMISSAO, VL_TOTAL")
+                    .append(" VALUES(?,?,?,?,?,?)");
             
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setInt(1, entity.getCodigo());
@@ -36,8 +38,10 @@ public class NotaFiscalDAO implements GenericDAO<NotaFiscal> {
         
             PreparedStatement pstmItem = connection.prepareStatement(sql.toString()); //Pstm para os Itens
             for (ItemNF inf : entity.getItensNF()) {
-                sql.append("INSERT INTO ITEMNF (CD_ITEMNF, CD_NOTAFISCAL, NR_QUANTIDADE, VL_UNITARIO, VL_DESCONTO, VL_TOTALITEM, CD_COMBUSTIVEL)")
-                        .append("VALUES (?,?,?,?,?,?,?)");
+                sql.append("INSERT INTO ITEMNF (CD_ITEMNF, CD_NOTAFISCAL,")
+                        .append("NR_QUANTIDADE, VL_UNITARIO, VL_DESCONTO,")
+                        .append("VL_TOTALITEM, CD_COMBUSTIVEL)")
+                        .append(" VALUES (?,?,?,?,?,?,?)");
                 
                 pstmItem.setInt(1, inf.getCodigo());
                 pstmItem.setInt(2, inf.getNotaFiscal().getCodigo());
@@ -71,8 +75,9 @@ public class NotaFiscalDAO implements GenericDAO<NotaFiscal> {
     public void delete(int id) throws SQLException {
         try {
             this.connection = new ConnectionFactory().getConnection();
-                String sql = "DELETE FROM ITEMNF WHERE CD_NOTAFISCAL = " + id;
-                sql += "DELETE FROM NOTAFISCAL WHERE CD_NOTAFISCAL = " + id;
+            StringBuilder sql = new StringBuilder();
+            sql.append("DELETE FROM ITEMNF WHERE CD_NOTAFISCAL = " + id)
+                .append(" DELETE FROM NOTAFISCAL WHERE CD_NOTAFISCAL = " + id);
             
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.execute();
@@ -104,5 +109,13 @@ public class NotaFiscalDAO implements GenericDAO<NotaFiscal> {
     public int getLastId() throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
+    public Combustivel populaCombustivel(int codigo, String descricao, String tipo, int usuario) {
+        Combustivel comb = new Combustivel();
+        comb.setCodigo(codigo);
+        comb.setDescricao(descricao);
+        comb.setTipoCombustivel(tipo);
+        comb.setUsuario(usuario);
+        return comb;
+    }
 }
