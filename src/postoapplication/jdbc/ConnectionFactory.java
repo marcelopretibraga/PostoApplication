@@ -22,7 +22,7 @@ public class ConnectionFactory {
             //jdbc do postgres/endereço/ porta/ database
             return DriverManager.getConnection(
                     "jdbc:postgresql://localhost:5432/postodb",
-                    "postgres","msspsql09pass");
+                    "postgres","root");
         } catch (SQLException ex) {
             System.out.println("Erro ao criar uma "
                     + "conexão com o banco de dados "+
