@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Calendar;
-import java.util.List;
 import javax.swing.JOptionPane;
 import postoapplication.model.Tanque;
 import postoapplication.jdbc.ConnectionFactory;
@@ -20,6 +18,15 @@ import postoapplication.model.Combustivel;
 public class TanqueDAO implements GenericDAO<Tanque> {
 
     private Connection connection = null;
+
+    private StringBuilder sqlPadrao = new StringBuilder("SELECT T.CD_TANQUE, T.DS_TANQUE,")
+            .append("T.CAPACIDADE_TANQUE AS CP_TANQUE, ")
+            .append("T.USUARIO AS USER_TANQUE,")
+            .append("C.CD_COMBUSTIVEL, C.DS_COMBUSTIVEL,")
+            .append("C.TP_COMBUSTIVEL, C.USUARIO, UNIDADEMEDIDA_COMBUSTIVEL ")
+            .append("AS UNIDADEMEDIDA_COMBUSTIVEL FROM TANQUE AS T ")
+            .append("INNER JOIN COMBUSTIVEL AS C ")
+            .append("USING (CD_COMBUSTIVEL) ");
 
     @Override
     public void save(Tanque entity) throws SQLException {
@@ -51,8 +58,9 @@ public class TanqueDAO implements GenericDAO<Tanque> {
             connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE TANQUE SET DS_TANQUE = ?, ")
-                    .append("CAPACIDADE_TANQUE = ?, = ?, ")
-                    .append("DT_UPDATE = ?, USUARIO = ? ")
+                    .append("CAPACIDADE_TANQUE = ?, ")
+                    .append("DT_UPDATE = ?, ")
+                    .append("USUARIO = ? ")
                     .append("WHERE = ?");
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
         } catch (SQLException sqle) {
@@ -84,16 +92,9 @@ public class TanqueDAO implements GenericDAO<Tanque> {
         Tanque tanque = new Tanque();
         try {
             connection = new ConnectionFactory().getConnection();
-            StringBuilder sql = new StringBuilder();
-            sql.append("select t.cd_tanque, t.ds_tanque,")
-                    .append("t.capacidade_tanque as cp_tanque,")
-                    .append("t.usuario as user_tanque,")
-                    .append("c.cd_combustivel, c.ds_combustivel,")
-                    .append("c.tp_combustivel, unidademedida_combustivel ")
-                    .append("as un_combustivel from tanque as t ")
-                    .append("inner join combustivel as c ")
-                    .append("using (cd_combustivel) ")
-                    .append("where t.cd_tanque = ").append(id);
+            String sql = sqlPadrao.toString();
+            sql += " WHERE T.CD_TANQUE = "+id;
+            System.out.println(sql);
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
@@ -111,9 +112,10 @@ public class TanqueDAO implements GenericDAO<Tanque> {
             pstm.close();
             rs.close();
         } catch (SQLException sqle) {
-            System.out.println("Erro ao executar a instrução SQL\n");
+            JOptionPane.showMessageDialog(null, "Erro ao buscar pelo ID!");
             sqle.printStackTrace();
         } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro inesperado, favor entrar em contato com o Suporte!");
             ex.printStackTrace();
         } finally {
             connection.close();
@@ -169,16 +171,9 @@ public class TanqueDAO implements GenericDAO<Tanque> {
         Tanque tanque = null;
         try {
             connection = new ConnectionFactory().getConnection();
-            StringBuilder sql = new StringBuilder();
-            sql.append("SELECT T.CD_TANQUE, T.DS_TANQUE,")
-                    .append("T.CAPACIDADE_TANQUE AS CP_TANQUE, ")
-                    .append("T.USUARIO AS USER_TANQUE,")
-                    .append("C.CD_COMBUSTIVEL, C.DS_COMBUSTIVEL,")
-                    .append("C.TP_COMBUSTIVEL, UNIDADEMEDIDA_COMBUSTIVEL ")
-                    .append("AS UNIDADEMEDIDA_COMBUSTIVEL FROM TANQUE AS T ")
-                    .append("INNER JOIN COMBUSTIVEL AS C ")
-                    .append("USING (CD_COMBUSTIVEL) ORDER BY T.CD_TANQUE");
-            PreparedStatement pstm = connection.prepareStatement(sql.toString());
+            String sql = sqlPadrao.toString();
+            sql += " ORDER BY T.CD_TANQUE ";
+            PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             combustivelList = new ArrayList<>();
             while (rs.next()) {
@@ -189,15 +184,6 @@ public class TanqueDAO implements GenericDAO<Tanque> {
                 tanque.setUsuario(rs.getInt("USUARIO"));
                 tanque.setCombustivel(populaCombustivel(rs.getInt("CD_COMBUSTIVEL"),
                         rs.getString("DS_COMBUSTIVEL"), rs.getString("TP_COMBUSTIVEL"), rs.getInt("USUARIO")));
-                tanque.setCapacidade(rs.getDouble("CP_TANQUE"));
-                tanque.setDescricao(rs.getString("DS_TANQUE"));
-                tanque.setUsuario(rs.getInt("USER_TANQUE"));
-                tanque.setCombustivel(populaCombustivel(
-                        rs.getInt("CD_COMBUSTIVEL"),
-                        rs.getString("DS_COMBUSTIVEL"),
-                        rs.getString("TP_COMBUSTIVEL"),
-                        rs.getInt("USER_TANQUE"))
-                );
                 combustivelList.add(tanque);
             }
             pstm.close();
