@@ -27,10 +27,11 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
     public void save(Fornecedor entity) throws SQLException {
         try {
             this.connection = new ConnectionFactory().getConnection();
+            this.connection.setAutoCommit(false);
             StringBuilder sql = new StringBuilder();
-            sql.append("insert into fornecedor(cd_fornecedor, ds_fornecedor")
-                    .append(", cnpj_fornecedor, fone_fornecedor, endereco_fornecedor")
-                    .append(", dt_record, dt_update, usuario) values (?,?,?,?,?, current_date, current_date, ?)");
+            sql.append("INSERT INTO FORNECEDOR(CD_FORNECEDOR, DS_FORNECEDOR")
+                    .append(", CNPJ_FORNECEDOR, FONE_FORNECEDOR, ENDERECO_FORNECEDOR")
+                    .append(", DT_RECORD, DT_UPDATE, USUARIO) VALUES (?,?,?,?,?, CURRENT_DATE, CURRENT_DATE, ?)");
 
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setInt(1, entity.getCodigo());
@@ -42,9 +43,17 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
             pstm.execute();
             pstm.close();
 
-        } catch (Exception ex) {
+        } catch (SQLException sqle) {
             JOptionPane.showMessageDialog(null, "Falha ao salvar Fornecedor!");
+            sqle.printStackTrace();
+            this.connection.rollback();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Falha inesperada ao salvar Fornecedor!");
             ex.printStackTrace();
+            this.connection.rollback();
+        } finally {
+            this.connection.commit();
+            this.connection.close();
         }
     }
 
@@ -52,11 +61,12 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
     public void update(Fornecedor entity) throws SQLException {
         try {
             this.connection = new ConnectionFactory().getConnection();
+            this.connection.setAutoCommit(false);
             StringBuilder sql = new StringBuilder();
-            sql.append("update fornecedor set ds_fornecedor = ?")
-                    .append(", cnpj_fornecedor = ?, fone_fornecedor = ?, endereco_fornecedor = ?")
-                    .append(", usuario = ?, dt_update = current_date ")
-                    .append("where cd_fornecedor = ?");
+            sql.append("UPDATE FORNECEDOR SET DS_FORNECEDOR = ?")
+                    .append(", CNPJ_FORNECEDOR = ?, FONE_FORNECEDOR = ?, ENDERECO_FORNECEDOR = ?")
+                    .append(", USUARIO = ?, DT_UPDATE = CURRENT_DATE ")
+                    .append("WHERE CD_FORNECEDOR = ?");
 
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setString(1, entity.getNome());
@@ -68,10 +78,16 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
             pstm.execute();
             pstm.close();
 
-        } catch (Exception ex) {
+        } catch (SQLException sqle) {
             JOptionPane.showMessageDialog(null, "Falha ao atualizar Fornecedor!");
+            sqle.printStackTrace();
+            this.connection.rollback();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Falha inesperada ao atualizar Fornecedor!");
             ex.printStackTrace();
+            this.connection.rollback();
         } finally {
+            this.connection.commit();
             this.connection.close();
         }
     }
@@ -80,13 +96,22 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
     public void delete(int id) throws SQLException {
         try {
             this.connection = new ConnectionFactory().getConnection();
-            String sql = "delete from fornecedor where cd_fornecedor = "+id;
+            this.connection.setAutoCommit(false);
+            String sql = "DELETE FROM FORNECEDOR WHERE CD_FORNECEDOR =" + id;
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.execute();
-            pstm.close();          
-        } catch (Exception ex) {
+            pstm.close();
+        } catch (SQLException sqle) {
             JOptionPane.showMessageDialog(null, "Falha ao deletar Fornecedor!");
+            sqle.printStackTrace();
+            this.connection.rollback();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Falha inesperada ao deletar Fornecedor!");
             ex.printStackTrace();
+            this.connection.rollback();
+        } finally {
+            this.connection.commit();
+            this.connection.close();
         }
     }
 
@@ -95,6 +120,7 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
         Fornecedor fornecedor = null;
         try {
             this.connection = new ConnectionFactory().getConnection();
+            this.connection.setAutoCommit(false);
             String sql = "SELECT * FROM FORNECEDOR WHERE CD_FORNECEDOR = " + id;
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
@@ -107,10 +133,16 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
                 fornecedor.setEndereco(rs.getString("ENDERECO_FORNECEDOR"));
             }
             pstm.close();
+        } catch (SQLException sqle) {
+            JOptionPane.showMessageDialog(null, "Falha ao buscar Fornecedor pelo ID!");
+            sqle.printStackTrace();
+            this.connection.rollback();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Falha ao buscar Fornecedor pelo ID!");
             ex.printStackTrace();
+            this.connection.rollback();
         } finally {
+            this.connection.commit();
             this.connection.close();
         }
         return fornecedor;
@@ -122,7 +154,8 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
         Fornecedor fornecedor = null;
         try {
             this.connection = new ConnectionFactory().getConnection();
-            String sql = "SELECT * FROM FORNECEDOR WHERE UPPER(DS_FORNECEDOR) LIKE UPPER('%"+name+"%') ";
+            this.connection.setAutoCommit(false);
+            String sql = "SELECT * FROM FORNECEDOR WHERE UPPER(DS_FORNECEDOR) LIKE UPPER('%" + name + "%') ";
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             listaFornecedores = new ArrayList<>();
@@ -136,10 +169,16 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
                 listaFornecedores.add(fornecedor);
             }
             pstm.close();
-        } catch (Exception ex) {
+        } catch (SQLException sqle) {
             JOptionPane.showMessageDialog(null, "Falha ao buscar Fornecedor(es)!");
+            sqle.printStackTrace();
+            this.connection.rollback();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Falha inesperada ao buscar Fornecedor(es)!");
             ex.printStackTrace();
+            this.connection.rollback();
         } finally {
+            this.connection.commit();
             this.connection.close();
         }
         return listaFornecedores;
@@ -151,6 +190,7 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
         Fornecedor fornecedor = null;
         try {
             this.connection = new ConnectionFactory().getConnection();
+            this.connection.setAutoCommit(false);
             String sql = "SELECT * FROM FORNECEDOR ORDER BY CD_FORNECEDOR ";
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
@@ -164,14 +204,19 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
                 listaFornecedores.add(fornecedor);
             }
             pstm.close();
-        } catch (Exception ex) {
+        } catch (SQLException sqle) {
             JOptionPane.showMessageDialog(null, "Falha ao buscar Fornecedor(es)!");
+            sqle.printStackTrace();
+            this.connection.rollback();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Falha inesperada ao buscar Fornecedor(es)!");
             ex.printStackTrace();
+            this.connection.rollback();
         } finally {
+            this.connection.commit();
             this.connection.close();
         }
         return listaFornecedores;
-
     }
 
     @Override
@@ -179,19 +224,25 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
         PreparedStatement pstm = null;
         try {
             this.connection = new ConnectionFactory().getConnection();
+            this.connection.setAutoCommit(false);
             String sql = "SELECT COALESCE(MAX(CD_FORNECEDOR),0)+1 AS MAIOR FROM FORNECEDOR ";
             pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
                 return rs.getInt("MAIOR");
             }
-
-        } catch (SQLException ex) {
-            System.out.println("Erro ao pegar maior ID Fornecedor");
+        } catch (SQLException sqle) {
+            JOptionPane.showMessageDialog(null, "Falha ao buscar Fornecedor(es)!");
+            sqle.printStackTrace();
+            this.connection.rollback();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Falha inesperada ao buscar Fornecedor(es)!");
             ex.printStackTrace();
+            this.connection.rollback();
         } finally {
-            pstm.close();
+            this.connection.commit();
             this.connection.close();
+
         }
         return 1;
     }
