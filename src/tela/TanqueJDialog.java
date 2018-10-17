@@ -23,6 +23,8 @@ public class TanqueJDialog extends javax.swing.JDialog {
     public TanqueJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        limpaCampos();
+
         tDao = new TanqueDAO();
         try {
             tfCodigo.setText(String.valueOf(tDao.getLastId()));
@@ -32,9 +34,10 @@ public class TanqueJDialog extends javax.swing.JDialog {
             tfDescricaoBusca.setEnabled(false);
         } catch (SQLException sqle) {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro no banco de "
-                    + "dados\n ao tentar salvar as informações");
+                    + "dados\n ao tentar buscar as informações");
             sqle.printStackTrace();
         }
+
     }
 
     /**
@@ -52,7 +55,6 @@ public class TanqueJDialog extends javax.swing.JDialog {
         lbDescricao = new javax.swing.JLabel();
         tfDescricao = new javax.swing.JTextField();
         lbCapacidade = new javax.swing.JLabel();
-        tfCapacidade = new javax.swing.JTextField();
         lbCombustivel = new javax.swing.JLabel();
         cbCombustivel = new javax.swing.JComboBox<>();
         btNovo = new javax.swing.JButton();
@@ -69,14 +71,24 @@ public class TanqueJDialog extends javax.swing.JDialog {
         tfDescricaoBusca = new javax.swing.JTextField();
         btBuscar = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
+        jLabel1 = new javax.swing.JLabel();
+        tfCapacidade = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Tanque");
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
+            }
+        });
 
         lbCodigo.setText("Código");
 
         tfCodigo.setEnabled(false);
 
         lbDescricao.setText("Descrição");
+
+        tfDescricao.setEnabled(false);
 
         lbCapacidade.setText("Capacidade");
 
@@ -150,113 +162,121 @@ public class TanqueJDialog extends javax.swing.JDialog {
             }
         });
 
+        jLabel1.setText("Litros");
+
+        tfCapacidade.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(40, 40, 40)
-                                    .addComponent(lbCodigo))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(24, 24, 24)
-                                    .addComponent(lbDescricao)))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(spTanque, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lbCodigoBusca)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfCodigoBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbDescricaoBusca)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfDescricaoBusca)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lbBuscarPor)
-                                    .addComponent(lbCapacidade))))
+                                .addComponent(btRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(48, 48, 48)
+                                .addComponent(lbCombustivel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbBuscarPor)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(rbCodigo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(rbDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(btSalvar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                                    .addComponent(btNovo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbCapacidade, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lbDescricao, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lbCodigo, javax.swing.GroupLayout.Alignment.TRAILING))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tfDescricao, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cbCombustivel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tfDescricao)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(tfCapacidade, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(lbCombustivel))
                                     .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(btNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(rbCodigo)
+                                        .addComponent(tfCapacidade, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(rbDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btRemover)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(cbCombustivel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jSeparator1)
-                            .addComponent(spTanque, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(lbCodigoBusca)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfCodigoBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbDescricaoBusca)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfDescricaoBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)))))
+                                        .addComponent(jLabel1)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfCodigo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbCodigo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbDescricao)
-                    .addComponent(tfDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbCapacidade)
-                    .addComponent(tfCapacidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbCombustivel)
-                    .addComponent(cbCombustivel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btNovo)
-                    .addComponent(btSalvar)
-                    .addComponent(btRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbCodigo)
+                            .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(8, 8, 8)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btSalvar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btRemover)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbDescricao)
+                            .addComponent(tfDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbCapacidade)
+                            .addComponent(jLabel1)
+                            .addComponent(tfCapacidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbCombustivel)
+                            .addComponent(cbCombustivel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(21, 21, 21)))
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbBuscarPor)
                     .addComponent(rbCodigo)
                     .addComponent(rbDescricao))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbCodigoBusca)
                     .addComponent(tfCodigoBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbDescricaoBusca)
                     .addComponent(tfDescricaoBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btBuscar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(spTanque, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spTanque, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-        
+
         try {
             tDao.save(getTanqueInserido());
             carregaTable(tDao.getAll());
@@ -265,10 +285,13 @@ public class TanqueJDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Erro ao salvar.");
             ex.printStackTrace();
         }
+        limpaCampos();
+        setEnabledCampos(false);
     }//GEN-LAST:event_btSalvarActionPerformed
 
     private void btNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNovoActionPerformed
         limpaCampos();
+        setEnabledCampos(true);
     }//GEN-LAST:event_btNovoActionPerformed
 
     private void btRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverActionPerformed
@@ -287,25 +310,30 @@ public class TanqueJDialog extends javax.swing.JDialog {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        limpaCampos();
+        setEnabledCampos(false);
     }//GEN-LAST:event_btRemoverActionPerformed
 
     private void btBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarActionPerformed
         List<Tanque> tanqueList = new ArrayList();
         try {
-            if (rbCodigo.isSelected() &&
-                    tfCodigoBusca.getText().length() > 0) {
+            if (rbCodigo.isSelected()
+                    && tfCodigoBusca.getText().length() > 0) {
                 Tanque tanque = tDao.getById(Integer.parseInt(tfCodigoBusca.getText().trim()));
                 tanqueList.add(tanque);
                 carregaTable(tanqueList);
-            } else if (rbDescricao.isSelected() && 
-                    tfDescricaoBusca.getText().length() > 0) {
+            } else if (rbDescricao.isSelected()
+                    && tfDescricaoBusca.getText().length() > 0) {
                 carregaTable(tDao.getByName(tfDescricaoBusca.getText()));
-            } else if (tfCodigoBusca.getText().trim().length() == 0 &&
-                    tfDescricaoBusca.getText().trim().length() == 0) {
+            } else if (tfCodigoBusca.getText().trim().length() == 0
+                    && tfDescricaoBusca.getText().trim().length() == 0) {
                 carregaTable(tDao.getAll());
             } else {
                 carregaTable(tanqueList);
             }
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(null, "Favor, informar apenas numeros no campo de BUSCA!");
         } catch (SQLException sqle) {
             JOptionPane.showMessageDialog(null, "Erro ao conectar ao banco.");
             sqle.printStackTrace();
@@ -322,6 +350,19 @@ public class TanqueJDialog extends javax.swing.JDialog {
         habilitaBuscaDs();
     }//GEN-LAST:event_descricaoStateChanged
 
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+        if ((tfDescricao.getText().length() != 0) && (tfCapacidade.getText().length() != 0)) {
+            btSalvar.setEnabled(true);
+        } else {
+            btSalvar.setEnabled(false);
+        }
+        if (tbTanque.getSelectedRow() != -1) {
+            btRemover.setEnabled(true);
+        } else {
+            btRemover.setEnabled(false);
+        }
+    }//GEN-LAST:event_formMouseMoved
+
     /**
      * @param args the command line arguments
      */
@@ -336,16 +377,24 @@ public class TanqueJDialog extends javax.swing.JDialog {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TanqueJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TanqueJDialog.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TanqueJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TanqueJDialog.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TanqueJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TanqueJDialog.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TanqueJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TanqueJDialog.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -380,11 +429,11 @@ public class TanqueJDialog extends javax.swing.JDialog {
         }
 
     }
-    
+
     private void carregaComboBox(List<Combustivel> combustivelList) {
         try {
-            DefaultComboBoxModel combustivelModel = 
-                    new DefaultComboBoxModel(combustivelList.toArray());
+            DefaultComboBoxModel combustivelModel
+                    = new DefaultComboBoxModel(combustivelList.toArray());
             cbCombustivel.setModel(combustivelModel);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro. contate o suporte.\n[combobox]");
@@ -396,6 +445,10 @@ public class TanqueJDialog extends javax.swing.JDialog {
         Tanque t = new Tanque();
         t.setCodigo(Integer.parseInt(tfCodigo.getText()));
         t.setDescricao(tfDescricao.getText());
+
+        String teste = tfCapacidade.getText();
+        System.out.println("valor da capacidade " + teste);
+
         t.setCapacidade(Double.parseDouble(tfCapacidade.getText()));
         t.setCombustivel((Combustivel) cbCombustivel.getSelectedItem());
         t.setUsuario(1);
@@ -403,22 +456,21 @@ public class TanqueJDialog extends javax.swing.JDialog {
     }
 
     private void setEnabledCampos(boolean status) {
-        tfCodigo.setEnabled(status);
+        tfCapacidade.setEnabled(status);
         tfDescricao.setEnabled(status);
     }
 
     private void limpaCampos() {
         tfDescricao.setText("");
         tfCapacidade.setText("");
-        cbCombustivel.setSelectedIndex(0);
     }
-    
+
     private void habilitaBuscaId() {
-        tfCodigoBusca.setEnabled(true); 
+        tfCodigoBusca.setEnabled(true);
         tfDescricaoBusca.setEnabled(false);
         tfDescricaoBusca.setText("");
     }
-    
+
     private void habilitaBuscaDs() {
         tfDescricaoBusca.setEnabled(true);
         tfCodigoBusca.setEnabled(false);
@@ -433,6 +485,7 @@ public class TanqueJDialog extends javax.swing.JDialog {
     private javax.swing.JButton btSalvar;
     private javax.swing.JComboBox<String> cbCombustivel;
     private javax.swing.ButtonGroup gpBusca;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lbBuscarPor;
     private javax.swing.JLabel lbCapacidade;
@@ -451,6 +504,5 @@ public class TanqueJDialog extends javax.swing.JDialog {
     private javax.swing.JTextField tfDescricao;
     private javax.swing.JTextField tfDescricaoBusca;
     // End of variables declaration//GEN-END:variables
-
 
 }

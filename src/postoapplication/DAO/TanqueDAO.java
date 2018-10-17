@@ -180,7 +180,7 @@ public class TanqueDAO implements GenericDAO<Tanque> {
                 tanque = new Tanque();
                 tanque.setCodigo(rs.getInt("CD_TANQUE"));
                 tanque.setCapacidade(rs.getDouble("CP_TANQUE"));
-                tanque.setDescricao("DS_TANQUE");
+                tanque.setDescricao(rs.getString("DS_TANQUE"));
                 tanque.setUsuario(rs.getInt("USUARIO"));
                 tanque.setCombustivel(populaCombustivel(rs.getInt("CD_COMBUSTIVEL"),
                         rs.getString("DS_COMBUSTIVEL"), rs.getString("TP_COMBUSTIVEL"), rs.getInt("USUARIO")));
