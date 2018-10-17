@@ -27,8 +27,8 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
         try {
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("insert into combustivel(cd_combustivel, ds_combustivel, tp_combustivel,")
-                    .append("unidademedida_combustivel, dt_record, usuario) values (?,?,?,?,?,?)");
+            sql.append("INSERT INTO COMBUSTIVEL(CD_COMBUSTIVEL, DS_COMBUSTIVEL, TP_COMBUSTIVEL,")
+                    .append("UNIDADEMEDIDA_COMBUSTIVEL, DT_RECORD, USUARIO) VALUES (?,?,?,?,?,?)");
             
             //Preparar a execução do comando
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
@@ -44,6 +44,9 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
         } catch (SQLException ex) {
             System.out.println("Erro ao inserir Combustivel.");
             ex.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("Erro inesperado ao inserir Combustivel");
+            ex.printStackTrace();
         } finally {//Sempre executa o Finally 
             connection.close();
         }
@@ -54,10 +57,10 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
         try{
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("update combustivel set ds_combustivel = ?, ")
-                    .append("tp_combustivel = ?, unidademedida_combustivel = ?, ")
-                    .append("dt_update = ?, usuario = ? ")
-                    .append("where cd_combustivel = ?");
+            sql.append("UPDATE COMBUSTIVEL SET DS_COMBUSTIVEL = ?, ")
+                    .append("TP_COMBUSTIVEL = ?, UNIDADEMEDIDA_COMBUSTIVEL = ?, ")
+                    .append("DT_UPDATE = ?, USUARIO = ? ")
+                    .append("WHERE CD_COMBUSTIVEL = ?");
             
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setString(1, entity.getDescricao());
@@ -69,7 +72,10 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
             pstm.execute();//Executa o comando no banco
             pstm.close();
         }catch (SQLException ex){
-            System.out.println("Erro ao Atualizar Combustivel");
+            System.out.println("Erro ao atualizar Combustivel");
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("Erro inesperado ao atualizar Combustivel");
             ex.printStackTrace();
         }finally{
             connection.close();
@@ -80,12 +86,15 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
     public void delete(int id) throws SQLException {
         try {
             this.connection = new ConnectionFactory().getConnection();
-            String sql = "delete from combustivel where cd_combustivel = "+id;
+            String sql = "DELETE FROM COMBUSTIVEL WHERE CD_COMBUSTIVEL = "+id;
             PreparedStatement pstm = connection.prepareStatement(sql);
             pstm.execute();
             pstm.close();            
         }catch (SQLException ex){
-            System.out.println("Erro ao Atualizar Combustivel");
+            System.out.println("Erro ao deletar Combustivel");
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("Erro inesperado ao deletar Combustivel");
             ex.printStackTrace();
         }finally {
             this.connection.close();
@@ -109,7 +118,10 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
             }
             pstm.close();
         }catch (SQLException ex){
-            System.out.println("Erro ao Atualizar Combustivel");
+            System.out.println("Erro ao buscar Combustivel por id");
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("Erro inesperado ao atualizar buscar Combustivel por id");
             ex.printStackTrace();
         }finally {
             this.connection.close();
@@ -139,6 +151,9 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
         }catch (SQLException ex){
             System.out.println("Erro ao consultar por Nome");
             ex.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("Erro inesperado ao consultar por Nome");
+            ex.printStackTrace();
         }finally {
             this.connection.close();
         }
@@ -167,6 +182,9 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
         }catch (SQLException ex){
             System.out.println("Erro ao consultar todos Combustivel");
             ex.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("Erro inesperado ao consultar todos Combustivel");
+            ex.printStackTrace();
         }finally {
             this.connection.close();
         }
@@ -185,7 +203,10 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
                 return rs.getInt("MAIOR");
               
         }catch (SQLException ex){
-            System.out.println("Erro ao maior ID Combustivel");
+            System.out.println("Erro ao recuperar maior ID Combustivel");
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("Erro inesperado ao recuperar maior ID Combustivel");
             ex.printStackTrace();
         }finally {
             pstm.close();

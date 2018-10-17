@@ -30,27 +30,12 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         combustivelDAO = new CombustivelDAO();
-
+        setTfCodigo();
         try {
             carregaTable(combustivelDAO.getAll());
         } catch (SQLException ex) {
             Logger.getLogger(CombustivelJDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
-        btSalvar.setEnabled(false);
-        tfCodigo.setEnabled(false);
-        desabilitaCampos(false);
-        habilitaFiltroCodigo();
-    }
-
-    private void desabilitaCampos(boolean ativo) {
-        tfDescricao.setEnabled(ativo);
-        cbTipo.setEnabled(ativo);
-    }
-
-    private void limparCampos() {
-        tfCodigo.setText("");
-        tfDescricao.setText("");
-        cbTipo.setSelectedIndex(0);
     }
 
     /**
@@ -72,10 +57,8 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         btSalvar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbDados = new javax.swing.JTable();
-        btNovo = new javax.swing.JButton();
+        btLimpar = new javax.swing.JButton();
         tfCodigoFiltro = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         tfDescicaoFiltro = new javax.swing.JTextField();
         btFiltrar = new javax.swing.JButton();
         rbCodigo = new javax.swing.JRadioButton();
@@ -83,8 +66,16 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         btRemover = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("COMBUSTIVEL");
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
+            }
+        });
 
         jLabel1.setText("Código");
+
+        tfCodigo.setEnabled(false);
 
         jLabel2.setText("Descrição");
 
@@ -92,7 +83,8 @@ public class CombustivelJDialog extends javax.swing.JDialog {
 
         cbTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "GA", "GC", "AA", "DS10", "DS500", "GLV", " " }));
 
-        btSalvar.setText("Salvar");
+        btSalvar.setText("Gravar");
+        btSalvar.setEnabled(false);
         btSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSalvarActionPerformed(evt);
@@ -101,7 +93,14 @@ public class CombustivelJDialog extends javax.swing.JDialog {
 
         tbDados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
                 "Código", "Descrição", "Tipo"
@@ -110,23 +109,34 @@ public class CombustivelJDialog extends javax.swing.JDialog {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbDados.getTableHeader().setReorderingAllowed(false);
+        tbDados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbDadosMouseClicked(evt);
+            }
         });
         jScrollPane1.setViewportView(tbDados);
 
-        btNovo.setText("Novo");
-        btNovo.addActionListener(new java.awt.event.ActionListener() {
+        btLimpar.setText("Limpar");
+        btLimpar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btNovoActionPerformed(evt);
+                btLimparActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Codigo");
-
-        jLabel5.setText("Descrição");
+        tfDescicaoFiltro.setEnabled(false);
 
         btFiltrar.setText("Filtrar");
         btFiltrar.addActionListener(new java.awt.event.ActionListener() {
@@ -153,6 +163,7 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         });
 
         btRemover.setText("Remover");
+        btRemover.setEnabled(false);
         btRemover.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRemoverActionPerformed(evt);
@@ -164,52 +175,40 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 573, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfCodigoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(rbCodigo))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(rbDescricao)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tfDescicaoFiltro)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGap(60, 60, 60)
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(tfDescricao, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                                    .addComponent(tfCodigo)))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(17, 17, 17)
-                                .addComponent(jLabel2)
-                                .addGap(317, 317, 317))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(rbCodigo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                                .addComponent(jLabel4)
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addComponent(jLabel3)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(cbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addComponent(btNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btSalvar)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btRemover))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(tfCodigoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel5)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(tfDescicaoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(26, 26, 26)
-                        .addComponent(btFiltrar)))
-                .addContainerGap(20, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(rbDescricao)
+                                .addComponent(tfCodigo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btRemover))
+                            .addComponent(tfDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -217,102 +216,93 @@ public class CombustivelJDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btRemover)
+                    .addComponent(btSalvar)
+                    .addComponent(btLimpar)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(tfDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(cbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btSalvar)
-                    .addComponent(btNovo)
-                    .addComponent(btRemover))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfCodigoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(tfDescicaoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(btFiltrar)
-                    .addComponent(rbCodigo))
-                .addGap(1, 1, 1)
-                .addComponent(rbDescricao)
+                    .addComponent(rbCodigo)
+                    .addComponent(rbDescricao)
+                    .addComponent(btFiltrar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfCodigoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfDescicaoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-        Combustivel combustivel = new Combustivel();
-        combustivel.setCodigo(Integer.parseInt(tfCodigo.getText()));
-        combustivel.setDescricao(tfDescricao.getText());
-        combustivel.setTipoCombustivel(cbTipo.getSelectedItem().toString());
-        try {
-            combustivelDAO.save(combustivel);
-            JOptionPane.showMessageDialog(null, "Registro Salvo Com Sucesso!!!");
-            limparCampos();
-            desabilitaCampos(false);
-            carregaTable(combustivelDAO.getAll());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        salvar();
+        setTfCodigo();
+        btSalvar.setText("Gravar");
     }//GEN-LAST:event_btSalvarActionPerformed
 
-    private void btNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNovoActionPerformed
-        try {
-            tfCodigo.setText(String.valueOf(combustivelDAO.getLastId()));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        desabilitaCampos(true);
-        btSalvar.setEnabled(true);
-    }//GEN-LAST:event_btNovoActionPerformed
+    private void btLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLimparActionPerformed
+        limparCampos();
+        setTfCodigo();
+        btSalvar.setEnabled(false);
+        btSalvar.setText("Gravar");
+    }//GEN-LAST:event_btLimparActionPerformed
 
     private void btFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFiltrarActionPerformed
-        try {
-            if (rbCodigo.isSelected() && tfCodigoFiltro.getText().trim().length() > 0) {//Codigo está selecionado
-                Combustivel comb = combustivelDAO.getById(Integer.parseInt(tfCodigoFiltro.getText()));
-                List<Combustivel> combList = new ArrayList<>();
-                combList.add(comb);
-                carregaTable(combList);
-            } else if (rbDescricao.isSelected() && tfDescicaoFiltro.getText().trim().length() > 0) {
-                carregaTable(combustivelDAO.getByName(tfDescicaoFiltro.getText()));
-            }else {
-                JOptionPane.showMessageDialog(null, "Favor Informe um filtro para Pesquisa...");
-            }
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+        filtrar();
     }//GEN-LAST:event_btFiltrarActionPerformed
 
     private void rbDescricaoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbDescricaoItemStateChanged
-        tfCodigoFiltro.setText("");
-        tfCodigoFiltro.setEnabled(false);
-        tfDescicaoFiltro.setEnabled(true);
+        habilitaFiltroCodigo(false);
     }//GEN-LAST:event_rbDescricaoItemStateChanged
 
     private void rbCodigoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbCodigoItemStateChanged
-        habilitaFiltroCodigo();
+        habilitaFiltroCodigo(true);
     }//GEN-LAST:event_rbCodigoItemStateChanged
 
     private void btRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverActionPerformed
         remover();
+        setTfCodigo();
+        btSalvar.setText("Gravar");
     }//GEN-LAST:event_btRemoverActionPerformed
 
-    private void habilitaFiltroCodigo(){
-        tfDescicaoFiltro.setText("");
-        tfDescicaoFiltro.setEnabled(false);
-        tfCodigoFiltro.setEnabled(true);
-    }
-    
+    private void tbDadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbDadosMouseClicked
+        Combustivel combustivel = new Combustivel();
+        try {
+            combustivel = combustivelDAO.getById((int) tbDados.getValueAt(tbDados.getSelectedRow(), 0));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        btSalvar.setText("Atualizar");
+        tfCodigo.setText(String.valueOf(combustivel.getCodigo()));
+        tfDescricao.setText(combustivel.getDescricao());
+        cbTipo.setSelectedItem(combustivel.getTipoCombustivel());
+        btSalvar.setEnabled(true);
+        btRemover.setEnabled(true);
+    }//GEN-LAST:event_tbDadosMouseClicked
+
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+        if(tfDescricao.getText().trim().length() > 0)
+            btSalvar.setEnabled(true);
+        else
+            btSalvar.setEnabled(false);
+        if(tbDados.getSelectedRow() != -1)
+            btRemover.setEnabled(true);
+        else
+            btRemover.setEnabled(false);
+    }//GEN-LAST:event_formMouseMoved
+
     /**
      * @param args the command line arguments
      */
@@ -358,15 +348,13 @@ public class CombustivelJDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btFiltrar;
     private javax.swing.ButtonGroup btGroupFiltros;
-    private javax.swing.JButton btNovo;
+    private javax.swing.JButton btLimpar;
     private javax.swing.JButton btRemover;
     private javax.swing.JButton btSalvar;
     private javax.swing.JComboBox<String> cbTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JRadioButton rbCodigo;
     private javax.swing.JRadioButton rbDescricao;
@@ -389,17 +377,74 @@ public class CombustivelJDialog extends javax.swing.JDialog {
 
     private void remover() {
         //Recupera a Linha selecionada na Tabela
-        int linhaSeleciona = tbDados.getSelectedRow();
-        if (linhaSeleciona == -1) {//Nenhuma Linha foi Selecionada
-            JOptionPane.showMessageDialog(null, "Selecione uma linha para Remover");
-            return;
-        }
-        int codigoRemover = (int) tbDados.getValueAt(linhaSeleciona, 0);
+        int codigoRemover = (int) tbDados.getValueAt(tbDados.getSelectedRow(), 0);
         try {
             combustivelDAO.delete(codigoRemover);
             carregaTable(combustivelDAO.getAll());
+            JOptionPane.showMessageDialog(null, "Registro Removido Com Sucesso!!!");
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }       
+        }
+        limparCampos();
+        btSalvar.setEnabled(false);
+        btRemover.setEnabled(false);
     }
+    
+    private void salvar() {
+        Combustivel combustivel = new Combustivel();
+        combustivel.setCodigo(Integer.parseInt(tfCodigo.getText()));
+        combustivel.setDescricao(tfDescricao.getText());
+        combustivel.setTipoCombustivel(cbTipo.getSelectedItem().toString());
+        try {
+            if(combustivelDAO.getLastId() == Integer.parseInt(tfCodigo.getText()))
+                combustivelDAO.save(combustivel);
+            else
+                combustivelDAO.update(combustivel);
+            carregaTable(combustivelDAO.getAll());
+            JOptionPane.showMessageDialog(null, "Registro Salvo Com Sucesso!!!");
+            btSalvar.setEnabled(false);
+            limparCampos();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void filtrar() {
+        try {
+            if (rbCodigo.isSelected() && tfCodigoFiltro.getText().trim().length() > 0) {//Codigo está selecionado
+                Combustivel comb = combustivelDAO.getById(Integer.parseInt(tfCodigoFiltro.getText()));
+                List<Combustivel> combList = new ArrayList<>();
+                combList.add(comb);
+                carregaTable(combList);
+            } else if (rbDescricao.isSelected() && tfDescicaoFiltro.getText().trim().length() > 0) {
+                carregaTable(combustivelDAO.getByName(tfDescicaoFiltro.getText()));
+            }else {
+                carregaTable(combustivelDAO.getAll());
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    private void setTfCodigo() {
+        try {
+            tfCodigo.setText(String.valueOf(combustivelDAO.getLastId()));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void limparCampos() {
+        tfCodigo.setText("");
+        tfDescricao.setText("");
+        cbTipo.setSelectedIndex(0);
+    }
+    
+    private void habilitaFiltroCodigo(boolean habilitado){
+        tfCodigoFiltro.setText("");
+        tfDescicaoFiltro.setText("");
+        tfCodigoFiltro.setEnabled(habilitado);
+        tfDescicaoFiltro.setEnabled(!habilitado);
+    }
+    
 }
