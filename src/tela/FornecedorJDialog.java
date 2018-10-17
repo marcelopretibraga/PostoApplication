@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import postoapplication.DAO.FornecedorDAO;
-import postoapplication.model.Combustivel;
 import postoapplication.model.Fornecedor;
 
 /**
@@ -30,6 +29,7 @@ public class FornecedorJDialog extends javax.swing.JDialog {
     public FornecedorJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.setLocationRelativeTo(null);
         fornecedorDAO = new FornecedorDAO();
         setTfCodigo();
         try {
