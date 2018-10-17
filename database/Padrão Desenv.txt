@@ -1,0 +1,9 @@
+Padrão SQL = UPPER
+Padrão Exception = 1° SqlException 2° Exception Com Mensagem
+Padrão SQL + uma linha = STRINGBUILDER
+Padrão Delete Table = Selecionar com o Mouse (ex: Fornecedor)
+Padrão Transação ao Inserir 
+
+
+
+

@@ -27,10 +27,11 @@ public class ClienteDAO implements GenericDAO<Cliente> {
     @Override
     public void save(Cliente entity) throws SQLException {
         try {
-            this.connection = new ConnectionFactory().getConnection();
+            connection = new ConnectionFactory().getConnection();
+            connection.setAutoCommit(false);
             StringBuilder sql = new StringBuilder();
-            sql.append("insert into cliente(cd_cliente, ds_cliente, cpfcnpj_cliente,")
-                    .append("fone_cliente, endereco_cliente, dt_record, dt_update, usuario) values (?,?,?,?,?,?,?,?);");
+            sql.append("INSERT INTO CLIENTE(CD_CLIENTE, DS_CLIENTE, CPFCNPJ_CLIENTE,")
+                    .append("FONE_CLIENTE, ENDERECO_CLIENTE, DT_RECORD, DT_UPDATE, USUARIO) values (?,?,?,?,?,?,?,?);");
 
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setInt(1, entity.getCodigo());
@@ -44,10 +45,16 @@ public class ClienteDAO implements GenericDAO<Cliente> {
 
             pstm.execute();
             pstm.close();
-        } catch (SQLException ex) {
+        } catch (SQLException sqle) {
+            connection.rollback();
             JOptionPane.showMessageDialog(null, "Erro ao inserir Cliente.", "ERRO", JOptionPane.ERROR_MESSAGE);
+            sqle.printStackTrace();
+        } catch (Exception ex) {
+            connection.rollback();
+            JOptionPane.showMessageDialog(null, "Erro inesperado ao inserir Cliente.", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
+            connection.commit();
             connection.close();
         }
     }
@@ -55,12 +62,13 @@ public class ClienteDAO implements GenericDAO<Cliente> {
     @Override
     public void update(Cliente entity) throws SQLException {
         try {
-            this.connection = new ConnectionFactory().getConnection();
+            connection = new ConnectionFactory().getConnection();
+            connection.setAutoCommit(false);
             StringBuilder sql = new StringBuilder();
-            sql.append("update cliente set ds_cliente = ?, ")
-                    .append("cpfcnpj_cliente = ?, fone_cliente= ?, ")
-                    .append("endereco_cliente = ?, dt_update = ?,usuario = ? ")
-                    .append("where cd_cliente = ?");
+            sql.append("UPDATE CLIENTE SET DS_CLIENTE = ?, ")
+                    .append("CPFCNPJ_CLIENTE = ?, FONE_CLIENTE = ?, ")
+                    .append("ENDERECO_CLIENTE = ?, DT_UPDATE = ?,USUARIO = ? ")
+                    .append("WHERE CD_CLIENTE = ?");
 
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setString(1, entity.getNome());
@@ -72,10 +80,16 @@ public class ClienteDAO implements GenericDAO<Cliente> {
             pstm.setInt(7, entity.getCodigo());
             pstm.execute();
             pstm.close();
-        } catch (SQLException ex) {
-           JOptionPane.showMessageDialog(null, "Erro ao Atualizar Cliente", "ERRO", JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException sqle) {
+            connection.rollback();
+            JOptionPane.showMessageDialog(null, "Erro ao Atualizar Cliente", "ERRO", JOptionPane.ERROR_MESSAGE);
+            sqle.printStackTrace();
+        } catch (Exception ex) {
+            connection.rollback();
+            JOptionPane.showMessageDialog(null, "Erro inesperado ao inserir Cliente.", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
+            connection.commit();
             connection.close();
         }
     }
@@ -83,16 +97,23 @@ public class ClienteDAO implements GenericDAO<Cliente> {
     @Override
     public void delete(int id) throws SQLException {
         try {
-            this.connection = new ConnectionFactory().getConnection();
-            String sql = "delete from cliente where cd_cliente = " + id;
+            connection = new ConnectionFactory().getConnection();
+            connection.setAutoCommit(false);
+            String sql = "DELETE FROM CLIENTE WHERE CD_CLIENTE = " + id;
             PreparedStatement pstm = connection.prepareStatement(sql);
             pstm.execute();
             pstm.close();
-        } catch (SQLException ex) {
+        } catch (SQLException sqle) {
+            connection.rollback();
             JOptionPane.showMessageDialog(null, "Erro ao deletar Cliente", "ERRO", JOptionPane.ERROR_MESSAGE);
+            sqle.printStackTrace();
+        } catch (Exception ex) {
+            connection.rollback();
+            JOptionPane.showMessageDialog(null, "Erro inesperado ao inserir Cliente.", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
-            this.connection.close();
+            connection.commit();
+            connection.close();
         }
     }
 
@@ -100,25 +121,32 @@ public class ClienteDAO implements GenericDAO<Cliente> {
     public Cliente getById(int id) throws SQLException {
         Cliente cliente = null;
         try {
-            this.connection = new ConnectionFactory().getConnection();
-            String sql = "select * from cliente where cd_cliente = " + id;
+            connection = new ConnectionFactory().getConnection();
+            connection.setAutoCommit(false);
+            String sql = "SELECT * FROM CLIENTE WHERE CD_CLIENTE = " + id;
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             cliente = new Cliente();
             while (rs.next()) {
-                cliente.setCodigo(rs.getInt("cd_cliente"));
-                cliente.setNome(rs.getString("ds_cliente"));
-                cliente.setCpfCnpj(rs.getString("cpfcnpj_cliente"));
-                cliente.setTelefone(rs.getString("fone_cliente"));
-                cliente.setEndereco(rs.getString("endereco_cliente"));
-                cliente.setUsuario(rs.getInt("usuario"));
+                cliente.setCodigo(rs.getInt("CD_CLIENTE"));
+                cliente.setNome(rs.getString("DS_CLIENTE"));
+                cliente.setCpfCnpj(rs.getString("CPFCNPJ_CLIENTE"));
+                cliente.setTelefone(rs.getString("FONE_CLIENTE"));
+                cliente.setEndereco(rs.getString("ENDERECO_CLIENTE"));
+                cliente.setUsuario(rs.getInt("USUARIO"));
             }
             pstm.close();
-        } catch (SQLException ex) {
+        } catch (SQLException sqle) {
+            connection.rollback();
            JOptionPane.showMessageDialog(null, "Erro ao consultar por  ID", "ERRO", JOptionPane.ERROR_MESSAGE);
-           ex.printStackTrace();
+           sqle.printStackTrace();
+        } catch (Exception ex) {
+            connection.rollback();
+            JOptionPane.showMessageDialog(null, "Erro inesperado ao inserir Cliente.", "ERRO", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
         } finally {
-            this.connection.close();
+            connection.commit();
+            connection.close();
         }
         return cliente;
     }
@@ -128,27 +156,34 @@ public class ClienteDAO implements GenericDAO<Cliente> {
         Cliente cliente = null;
         List<Cliente> clienteList = null;
         try {
-            this.connection = new ConnectionFactory().getConnection();
-            String sql = "select * from cliente where upper(ds_cliente) like upper('%" + name + "%')";
+            connection = new ConnectionFactory().getConnection();
+            connection.setAutoCommit(false);
+            String sql = "SELECT * FROM CLIENTE WHERE UPPER(DS_CLIENTE) LIKE UPPER('%" + name + "%')";
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             clienteList = new ArrayList<>();
             while (rs.next()) {
                 cliente = new Cliente();
-                cliente.setCodigo(rs.getInt("cd_cliente"));
-                cliente.setNome(rs.getString("ds_cliente"));
-                cliente.setCpfCnpj(rs.getString("cpfcnpj_cliente"));
-                cliente.setTelefone(rs.getString("fone_cliente"));
-                cliente.setEndereco(rs.getString("endereco_cliente"));
-                cliente.setUsuario(rs.getInt("usuario"));
+                cliente.setCodigo(rs.getInt("CD_CLIENTE"));
+                cliente.setNome(rs.getString("DS_CLIENTE"));
+                cliente.setCpfCnpj(rs.getString("CPFCNPJ_CLIENTE"));
+                cliente.setTelefone(rs.getString("FONE_CLIENTE"));
+                cliente.setEndereco(rs.getString("ENDERECO_CLIENTE"));
+                cliente.setUsuario(rs.getInt("USUARIO"));
                 clienteList.add(cliente);
             }
             pstm.close();
-        } catch (SQLException ex) {
+        } catch (SQLException sqle) {
+            connection.rollback();
             JOptionPane.showMessageDialog(null, "Erro ao consultar por nome", "ERRO", JOptionPane.ERROR_MESSAGE);
+            sqle.printStackTrace();
+        } catch (Exception ex) {
+            connection.rollback();
+            JOptionPane.showMessageDialog(null, "Erro inesperado ao inserir Cliente.", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
-            this.connection.close();
+            connection.commit();
+            connection.close();
         }
         return clienteList;
     }
@@ -158,27 +193,34 @@ public class ClienteDAO implements GenericDAO<Cliente> {
         List<Cliente> clienteList = null;
         Cliente cliente = null;
         try {
-            this.connection = new ConnectionFactory().getConnection();
-            String sql = "select * from cliente order by cd_cliente";
+            connection = new ConnectionFactory().getConnection();
+            connection.setAutoCommit(false);
+            String sql = "SELECT * FROM CLIENTE ORDER BY CD_CLIENTE";
             PreparedStatement pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             clienteList = new ArrayList<>();
             while (rs.next()) {
                 cliente = new Cliente();
-                cliente.setCodigo(rs.getInt("cd_cliente"));
-                cliente.setNome(rs.getString("ds_cliente"));
-                cliente.setCpfCnpj(rs.getString("cpfcnpj_cliente"));
-                cliente.setTelefone(rs.getString("fone_cliente"));
-                cliente.setEndereco(rs.getString("endereco_cliente"));
-                cliente.setUsuario(rs.getInt("usuario"));
+                cliente.setCodigo(rs.getInt("CD_CLIENTE"));
+                cliente.setNome(rs.getString("DS_CLIENTE"));
+                cliente.setCpfCnpj(rs.getString("CPFCNPJ_CLIENTE"));
+                cliente.setTelefone(rs.getString("FONE_CLIENTE"));
+                cliente.setEndereco(rs.getString("ENDERECO_CLIENTE"));
+                cliente.setUsuario(rs.getInt("USUARIO"));
                 clienteList.add(cliente);
             }
             pstm.close();
-        } catch (SQLException ex) {
+        } catch (SQLException sqle) {
+            connection.rollback();
             JOptionPane.showMessageDialog(null, "Erro ao consultar todos os clientes", "ERRO", JOptionPane.ERROR_MESSAGE);
+            sqle.printStackTrace();
+        } catch (Exception ex) {
+            connection.rollback();
+            JOptionPane.showMessageDialog(null, "Erro inesperado ao inserir Cliente.", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
-            this.connection.close();
+            connection.commit();
+            connection.close();
         }
         return clienteList;
     }
@@ -187,19 +229,26 @@ public class ClienteDAO implements GenericDAO<Cliente> {
     public int getLastId() throws SQLException {
         PreparedStatement pstm = null;
         try {
-            this.connection = new ConnectionFactory().getConnection();
-            String sql = "select coalesce(max(cd_cliente),0)+1 as maior from cliente";
+            connection = new ConnectionFactory().getConnection();
+            connection.setAutoCommit(false);
+            String sql = "SELECT COALESCE(MAX(CD_CLIENTE),0)+1 AS MAIOR FROM CLIENTE";
             pstm = connection.prepareStatement(sql);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
                 return rs.getInt("MAIOR");
             }
-        } catch (SQLException ex) {
+            pstm.close();
+        } catch (SQLException sqle) {
+            connection.rollback();
             JOptionPane.showMessageDialog(null, "Erro ao mostrar  maior ID Cliente", "ERRO", JOptionPane.ERROR_MESSAGE);
+            sqle.printStackTrace();
+        } catch (Exception ex) {
+            connection.rollback();
+            JOptionPane.showMessageDialog(null, "Erro inesperado ao inserir Cliente.", "ERRO", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } finally {
-            pstm.close();
-            this.connection.close();
+            connection.commit();
+            connection.close();
         }
         return 1;
     }

@@ -32,7 +32,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
-       
+
         clienteDAO = new ClienteDAO();
         try {
             carregaTable(clienteDAO.getAll());
@@ -101,14 +101,13 @@ public class ClienteJdialog extends javax.swing.JDialog {
         jLabel7.setText("jLabel7");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jLabel1.setText("Codigo");
-
-        tfEnderecoCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfEnderecoClienteActionPerformed(evt);
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
             }
         });
+
+        jLabel1.setText("Codigo");
 
         jLabel2.setText("Endereço");
 
@@ -126,9 +125,15 @@ public class ClienteJdialog extends javax.swing.JDialog {
                 "Codigo", "Nome", "Cpf/Cnpj", "Telefone", "Endereco"
             }
         ));
+        tbCliente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbClienteMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbCliente);
 
         btSalvar.setText("Salvar");
+        btSalvar.setEnabled(false);
         btSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSalvarActionPerformed(evt);
@@ -136,6 +141,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
         });
 
         btRemover.setText("Remover");
+        btRemover.setEnabled(false);
         btRemover.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRemoverActionPerformed(evt);
@@ -306,15 +312,10 @@ public class ClienteJdialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tfEnderecoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfEnderecoClienteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfEnderecoClienteActionPerformed
-
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-        if (validaCampos() == true && validaCodigo(Integer.parseInt(tfCodigoCliente.getText())) == true){
+        if (validaCampos() == true) {
             salvar();
         }
-
     }//GEN-LAST:event_btSalvarActionPerformed
 
     private void tfCpfClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfCpfClienteActionPerformed
@@ -323,6 +324,7 @@ public class ClienteJdialog extends javax.swing.JDialog {
 
     private void btRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverActionPerformed
         remover();
+        limpaCampos();
     }//GEN-LAST:event_btRemoverActionPerformed
 
     private void btFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFiltrarActionPerformed
@@ -407,6 +409,37 @@ public class ClienteJdialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btAtualizarActionPerformed
 
+    private void tbClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbClienteMouseClicked
+        Cliente cliente = new Cliente();
+        try {
+            cliente = clienteDAO.getById((int) tbCliente.getValueAt(tbCliente.getSelectedRow(), 0));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        novo();
+        btSalvar.setText("Atualizar");
+        tfCodigoCliente.setText(String.valueOf(cliente.getCodigo()));
+        tfCpfCliente.setText(cliente.getCpfCnpj());
+        tfNomeCliente.setText(cliente.getNome());
+        tfEnderecoCliente.setText(cliente.getEndereco());
+        tfTelefoneCliente.setText(cliente.getTelefone());
+        btSalvar.setEnabled(true);
+        btRemover.setEnabled(true);
+    }//GEN-LAST:event_tbClienteMouseClicked
+
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+        if (tfCpfCliente.getText().trim().length() > 0 && tfNomeCliente.getText().trim().length() > 0 && tfEnderecoCliente.getText().trim().length() > 0 && tfTelefoneCliente.getText().trim().length() > 0) {
+            btSalvar.setEnabled(true);
+        } else {
+            btSalvar.setEnabled(false);
+        }
+        if (tbCliente.getSelectedRow() != -1) {
+            btRemover.setEnabled(true);
+        } else {
+            btRemover.setEnabled(false);
+        }
+    }//GEN-LAST:event_formMouseMoved
+
     private void carregaTable(List<Cliente> clienteList) {
         if (clienteList == null) {
             return;
@@ -475,7 +508,12 @@ public class ClienteJdialog extends javax.swing.JDialog {
             cliente.setNome(tfNomeCliente.getText());
             cliente.setTelefone(tfTelefoneCliente.getText());
             try {
-                clienteDAO.save(cliente);
+                if (clienteDAO.getLastId() == Integer.parseInt(tfCodigoCliente.getText())) {
+                    clienteDAO.save(cliente);
+                } else {
+                    clienteDAO.update(cliente);
+                    btSalvar.setText("Salvar");
+                }
                 JOptionPane.showMessageDialog(null, "Cliente Salvo com Sucesso");
                 limpaCampos();
                 desabilitaCampos(false);
@@ -564,21 +602,5 @@ public class ClienteJdialog extends javax.swing.JDialog {
             return false;
         }
         return true;
-    }
-
-    public Boolean validaCodigo(int codigo) {
-        Boolean retorno = true;
-        try {
-            for (Cliente c : clienteDAO.getAll()) {
-                if (c.getCodigo() == codigo) {
-                    JOptionPane.showMessageDialog(null, "Esse código ja está sendo usado. Cadastre outro.", "Erro", JOptionPane.ERROR_MESSAGE);
-                    retorno =  false;
-                }
-            }
-        } catch (SQLException ex) {
-                ex.printStackTrace();
-        }
-        return retorno;
-
     }
 }
