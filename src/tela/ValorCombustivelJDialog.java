@@ -5,18 +5,48 @@
  */
 package tela;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import postoapplication.DAO.CombustivelDAO;
+import postoapplication.DAO.ValorCombustivelDAO;
+import postoapplication.model.Combustivel;
+import postoapplication.model.ValorCombustivel;
+
 /**
  *
- * @author mathe
+ * @author matheus
  */
 public class ValorCombustivelJDialog extends javax.swing.JDialog {
 
+    private ValorCombustivelDAO valorCombustivelDAO;
+    
     /**
      * Creates new form ValorCombustivelJDialog
      */
     public ValorCombustivelJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        valorCombustivelDAO = new ValorCombustivelDAO();
+        setTfCodigo();
+        try {
+            carregaTable(valorCombustivelDAO.getAll());
+        } catch (SQLException ex) {
+            Logger.getLogger(CombustivelJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        CombustivelDAO combustivelDAO = new CombustivelDAO();
+        try {
+            DefaultComboBoxModel model = new DefaultComboBoxModel(combustivelDAO.getAll().toArray());
+            cbCombustivel.setModel(model);
+        } catch (SQLException ex) {
+            Logger.getLogger(ValorCombustivelJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -34,23 +64,29 @@ public class ValorCombustivelJDialog extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        tfCodigo = new javax.swing.JTextField();
+        tfValorUnitario = new javax.swing.JTextField();
+        tfDataEmissao = new javax.swing.JTextField();
+        tfMargem = new javax.swing.JTextField();
+        cbCombustivel = new javax.swing.JComboBox<>();
+        btSalvar = new javax.swing.JButton();
+        btRemover = new javax.swing.JButton();
+        btLimpar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
+        tbDados = new javax.swing.JTable();
+        rbCodigo = new javax.swing.JRadioButton();
+        rbDescricao = new javax.swing.JRadioButton();
+        tfCodigoFiltro = new javax.swing.JTextField();
+        tfDescricaoFiltro = new javax.swing.JTextField();
+        btFiltrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("VALOR DE COMBUSTÍVEL");
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
+            }
+        });
 
         jLabel1.setText("Código");
 
@@ -62,19 +98,36 @@ public class ValorCombustivelJDialog extends javax.swing.JDialog {
 
         jLabel5.setText("Combustível");
 
-        jTextField1.setEnabled(false);
+        tfCodigo.setEnabled(false);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", " ", " ", " " }));
+        tfDataEmissao.setEnabled(false);
 
-        jButton1.setText("Gravar");
-        jButton1.setEnabled(false);
+        cbCombustivel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", " ", " ", " " }));
 
-        jButton2.setText("Remover");
-        jButton2.setEnabled(false);
+        btSalvar.setText("Gravar");
+        btSalvar.setEnabled(false);
+        btSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSalvarActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Limpar");
+        btRemover.setText("Remover");
+        btRemover.setEnabled(false);
+        btRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRemoverActionPerformed(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        btLimpar.setText("Limpar");
+        btLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLimparActionPerformed(evt);
+            }
+        });
+
+        tbDados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -99,17 +152,39 @@ public class ValorCombustivelJDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
+        tbDados.getTableHeader().setReorderingAllowed(false);
+        tbDados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbDadosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbDados);
 
-        jRadioButton1.setSelected(true);
-        jRadioButton1.setText("Código");
+        buttonGroup1.add(rbCodigo);
+        rbCodigo.setSelected(true);
+        rbCodigo.setText("Código");
+        rbCodigo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbCodigoItemStateChanged(evt);
+            }
+        });
 
-        jRadioButton2.setText("Descrição Combustível");
+        buttonGroup1.add(rbDescricao);
+        rbDescricao.setText("Descrição Combustível");
+        rbDescricao.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbDescricaoItemStateChanged(evt);
+            }
+        });
 
-        jTextField6.setEnabled(false);
+        tfDescricaoFiltro.setEnabled(false);
 
-        jButton4.setText("Filtrar");
+        btFiltrar.setText("Filtrar");
+        btFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btFiltrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -127,35 +202,35 @@ public class ValorCombustivelJDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tfValorUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(tfMargem, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbCombustivel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jTextField3)
+                                .addComponent(tfDataEmissao)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2))))
+                                .addComponent(btRemover))))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jRadioButton1))
+                            .addComponent(tfCodigoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(rbCodigo))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jRadioButton2)
+                                .addComponent(rbDescricao)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextField6))))
+                                .addComponent(btFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tfDescricaoFiltro))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -164,38 +239,101 @@ public class ValorCombustivelJDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfValorUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfMargem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbCombustivel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3)
-                    .addComponent(jButton2))
+                    .addComponent(tfDataEmissao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btSalvar)
+                    .addComponent(btLimpar)
+                    .addComponent(btRemover))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2)
-                    .addComponent(jButton4))
+                    .addComponent(rbCodigo)
+                    .addComponent(rbDescricao)
+                    .addComponent(btFiltrar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfCodigoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfDescricaoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
+        salvar();
+        setTfCodigo();
+        btSalvar.setText("Gravar");
+        cbCombustivel.setEnabled(true);
+    }//GEN-LAST:event_btSalvarActionPerformed
+
+    private void btRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverActionPerformed
+        remover();
+        setTfCodigo();
+        btSalvar.setText("Gravar");
+        cbCombustivel.setEnabled(true);
+    }//GEN-LAST:event_btRemoverActionPerformed
+
+    private void btLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLimparActionPerformed
+        limparCampos();
+        setTfCodigo();
+        btSalvar.setEnabled(false);
+        btSalvar.setText("Gravar");
+        cbCombustivel.setEnabled(true);
+    }//GEN-LAST:event_btLimparActionPerformed
+
+    private void btFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFiltrarActionPerformed
+        filtrar();
+    }//GEN-LAST:event_btFiltrarActionPerformed
+
+    private void tbDadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbDadosMouseClicked
+        ValorCombustivel valorCombustivel = new ValorCombustivel();
+        try {
+            valorCombustivel = valorCombustivelDAO.getById((int) tbDados.getValueAt(tbDados.getSelectedRow(), 0));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        btSalvar.setText("Atualizar");
+        tfCodigo.setText(String.valueOf(valorCombustivel.getCodigo()));
+        cbCombustivel.setSelectedItem(valorCombustivel.getCombustivel());
+        tfDataEmissao.setText(valorCombustivel.getDataEmissao().toString());
+        tfMargem.setText(valorCombustivel.getMargem().toString());
+        tfValorUnitario.setText(valorCombustivel.getValorUnitario().toString());
+        cbCombustivel.setEnabled(false);
+        btSalvar.setEnabled(true);
+        btRemover.setEnabled(true);
+    }//GEN-LAST:event_tbDadosMouseClicked
+
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+        if(tfMargem.getText().trim().length() > 0  &&  tfValorUnitario.getText().trim().length() > 0)
+            btSalvar.setEnabled(true);
+        else
+            btSalvar.setEnabled(false);
+        if(tbDados.getSelectedRow() != -1)
+            btRemover.setEnabled(true);
+        else
+            btRemover.setEnabled(false);
+    }//GEN-LAST:event_formMouseMoved
+
+    private void rbDescricaoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbDescricaoItemStateChanged
+        habilitaFiltroCodigo(false);
+    }//GEN-LAST:event_rbDescricaoItemStateChanged
+
+    private void rbCodigoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbCodigoItemStateChanged
+        habilitaFiltroCodigo(true);
+    }//GEN-LAST:event_rbCodigoItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -240,26 +378,117 @@ public class ValorCombustivelJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btFiltrar;
+    private javax.swing.JButton btLimpar;
+    private javax.swing.JButton btRemover;
+    private javax.swing.JButton btSalvar;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cbCombustivel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
+    private javax.swing.JRadioButton rbCodigo;
+    private javax.swing.JRadioButton rbDescricao;
+    private javax.swing.JTable tbDados;
+    private javax.swing.JTextField tfCodigo;
+    private javax.swing.JTextField tfCodigoFiltro;
+    private javax.swing.JTextField tfDataEmissao;
+    private javax.swing.JTextField tfDescricaoFiltro;
+    private javax.swing.JTextField tfMargem;
+    private javax.swing.JTextField tfValorUnitario;
     // End of variables declaration//GEN-END:variables
+    
+    private void carregaTable(List<ValorCombustivel> valorCombustivelList) {
+        if (valorCombustivelList == null)
+            return;
+        DefaultTableModel model = (DefaultTableModel) tbDados.getModel();
+        model.setRowCount(0);
+        for (ValorCombustivel c : valorCombustivelList) {
+            model.addRow(new Object[]{c.getCodigo(), c.getCombustivel().getDescricao(), c.getValorUnitario(), c.getMargem()});
+        }
+    }
+
+    private void remover() {
+        //Recupera a Linha selecionada na Tabela
+        int codigoRemover = (int) tbDados.getValueAt(tbDados.getSelectedRow(), 0);
+        try {
+            valorCombustivelDAO.delete(codigoRemover);
+            carregaTable(valorCombustivelDAO.getAll());
+            JOptionPane.showMessageDialog(null, "Registro Removido Com Sucesso!!!");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        limparCampos();
+        btSalvar.setEnabled(false);
+        btRemover.setEnabled(false);
+    }
+    
+    private void salvar() {
+        ValorCombustivel valorCombustivel = new ValorCombustivel();
+        valorCombustivel.setCodigo(Integer.parseInt(tfCodigo.getText()));
+        valorCombustivel.setValorUnitario(Double.parseDouble(tfValorUnitario.getText()));
+        valorCombustivel.setMargem(Double.parseDouble(tfMargem.getText()));
+        valorCombustivel.setDataEmissao(new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+        valorCombustivel.setCombustivel((Combustivel)cbCombustivel.getSelectedItem());
+        try {
+            if(valorCombustivelDAO.getLastId() == Integer.parseInt(tfCodigo.getText()))
+                valorCombustivelDAO.save(valorCombustivel);
+            else
+                valorCombustivelDAO.update(valorCombustivel);
+            carregaTable(valorCombustivelDAO.getAll());
+            JOptionPane.showMessageDialog(null, "Registro Salvo Com Sucesso!!!");
+            btSalvar.setEnabled(false);
+            limparCampos();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void filtrar() {
+        try {
+            if (rbCodigo.isSelected() && tfCodigoFiltro.getText().trim().length() > 0) {//Codigo está selecionado
+                ValorCombustivel valorCombustivel = valorCombustivelDAO.getById(Integer.parseInt(tfCodigoFiltro.getText()));
+                List<ValorCombustivel> valorCombustivelList = new ArrayList<>();
+                valorCombustivelList.add(valorCombustivel);
+                carregaTable(valorCombustivelList);
+            } else if (rbDescricao.isSelected() && tfDescricaoFiltro.getText().trim().length() > 0) {
+                carregaTable(valorCombustivelDAO.getByName(tfDescricaoFiltro.getText()));
+            }else {
+                carregaTable(valorCombustivelDAO.getAll());
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    private void setTfCodigo() {
+        try {
+            tfCodigo.setText(String.valueOf(valorCombustivelDAO.getLastId()));
+            setTfDataEmissao();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void limparCampos() {
+        tfCodigo.setText("");
+        cbCombustivel.setSelectedIndex(0);
+        tfDataEmissao.setText("");
+        tfMargem.setText("");
+        tfValorUnitario.setText("");
+    }
+    
+    private void habilitaFiltroCodigo(boolean habilitado){
+        tfCodigoFiltro.setText("");
+        tfDescricaoFiltro.setText("");
+        tfCodigoFiltro.setEnabled(habilitado);
+        tfDescricaoFiltro.setEnabled(!habilitado);
+    }
+    
+    private void setTfDataEmissao() {
+        tfDataEmissao.setText(new java.sql.Date(Calendar.getInstance().getTimeInMillis()).toString());
+    }
 }

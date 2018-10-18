@@ -40,9 +40,7 @@ public class Combustivel extends Record{
 
     @Override
     public String toString() {
-        return codigo + " - "+descricao + " usuario "+ 
-                //Super está acessando a SuperClass no caso Record para buscar os atributos da mesma
-                super.getUsuario() + super.getDataCadastro();
+        return codigo + " - "+descricao;
     }
     
 }

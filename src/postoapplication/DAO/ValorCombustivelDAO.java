@@ -6,6 +6,7 @@
 package postoapplication.DAO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,12 +37,12 @@ public class ValorCombustivelDAO implements GenericDAO<ValorCombustivel>{
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setInt(1, entity.getCodigo());
             pstm.setDouble(2, entity.getValorUnitario());
-            pstm.setDate(3, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+            pstm.setDate(3, (Date)entity.getDataEmissao());
             pstm.setDouble(4, entity.getMargem());
             pstm.setInt(5, entity.getCombustivel().getCodigo());
+            pstm.setDate(6, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
             pstm.setDate(7, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
-            pstm.setDate(8, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
-            pstm.setInt(9, entity.getUsuario());
+            pstm.setInt(8, entity.getUsuario());
             
             pstm.execute();//Executa o comando no banco
             pstm.close();
@@ -70,7 +71,7 @@ public class ValorCombustivelDAO implements GenericDAO<ValorCombustivel>{
             pstm.setDouble(2, entity.getMargem());
             pstm.setDate(3, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
             pstm.setInt(4, entity.getUsuario());
-            pstm.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+            pstm.setDate(5, (Date)entity.getDataEmissao());
             pstm.setInt(6, entity.getCodigo());
             pstm.execute();//Executa o comando no banco
             pstm.close();
