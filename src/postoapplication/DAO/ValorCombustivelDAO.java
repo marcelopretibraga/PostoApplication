@@ -62,15 +62,16 @@ public class ValorCombustivelDAO implements GenericDAO<ValorCombustivel>{
             this.connection = new ConnectionFactory().getConnection();
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE VALORCOMBUSTIVEL SET VLUNITARIO_VALORCOMBUSTIVEL = ?, ")
-                    .append("MARGEM_VALORCOMBUSTIVEL = ?, DT_UPDATE = ?, USUARIO = ?")
-                    .append("WHERE CD_VALORCOMBUSTIVEL = ?");
+                    .append("MARGEM_VALORCOMBUSTIVEL = ?, DT_UPDATE = ?, USUARIO = ?, ")
+                    .append("DTEMISSAO_VALORCOMBUSTIVEL = ? WHERE CD_VALORCOMBUSTIVEL = ?");
             
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setDouble(1, entity.getValorUnitario());
             pstm.setDouble(2, entity.getMargem());
             pstm.setDate(3, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
             pstm.setInt(4, entity.getUsuario());
-            pstm.setInt(5, entity.getCodigo());
+            pstm.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+            pstm.setInt(6, entity.getCodigo());
             pstm.execute();//Executa o comando no banco
             pstm.close();
         }catch (SQLException ex){
@@ -135,8 +136,37 @@ public class ValorCombustivelDAO implements GenericDAO<ValorCombustivel>{
 
     @Override
     public List<ValorCombustivel> getByName(String name) throws SQLException {
-        //Sem descricao
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ValorCombustivel valorCombustivel = null;
+        List<ValorCombustivel> valorCombustivelList = null;
+        CombustivelDAO combustivelDAO = new CombustivelDAO();
+        try{
+            this.connection = new ConnectionFactory().getConnection();
+            String sql = "SELECT * FROM VALORCOMBUSTIVEL INNER JOIN COMBUSTIVEL ON " 
+                    +"UPPER(DS_COMBUSTIVEL) LIKE UPPER('%"+name+"%') WHERE " 
+                    +"VALORCOMBUSTIVEL.CD_COMBUSTIVEL = COMBUSTIVEL.CD_COMBUSTIVEL";
+            PreparedStatement pstm = connection.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
+            valorCombustivelList = new ArrayList<>();
+            while (rs.next()) {
+                valorCombustivel = new ValorCombustivel();
+                valorCombustivel.setCodigo(rs.getInt("CD_VALORCOMBUSTIVEL"));
+                valorCombustivel.setCombustivel(combustivelDAO.getById(rs.getInt("CD_COMBUSTIVEL")));
+                valorCombustivel.setValorUnitario(rs.getDouble("VLUNITARIO_VALORCOMBUSTIVEL"));
+                valorCombustivel.setDataEmissao(rs.getDate("DTEMISSAO_VALORCOMBUSTIVEL"));
+                valorCombustivel.setMargem(rs.getDouble("MARGEM_VALORCOMBUSTIVEL"));
+                valorCombustivelList.add(valorCombustivel);
+            }
+            pstm.close();
+        }catch (SQLException ex){
+            System.out.println("Erro ao consultar por Descricao de Combustivel");
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("Erro inesperado ao consultar por Descricao de Combustivel");
+            ex.printStackTrace();
+        }finally {
+            this.connection.close();
+        }
+        return valorCombustivelList;
     }
 
     @Override
@@ -157,6 +187,7 @@ public class ValorCombustivelDAO implements GenericDAO<ValorCombustivel>{
                 valorCombustivel.setValorUnitario(rs.getDouble("VLUNITARIO_VALORCOMBUSTIVEL"));
                 valorCombustivel.setDataEmissao(rs.getDate("DTEMISSAO_VALORCOMBUSTIVEL"));
                 valorCombustivel.setMargem(rs.getDouble("MARGEM_VALORCOMBUSTIVEL"));
+                valorCombustivelList.add(valorCombustivel);
             }
             pstm.close();
         }catch (SQLException ex){
