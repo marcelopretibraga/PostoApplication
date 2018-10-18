@@ -121,7 +121,7 @@ public class CombustivelDAO implements GenericDAO<Combustivel>{
             System.out.println("Erro ao buscar Combustivel por id");
             ex.printStackTrace();
         } catch (Exception ex) {
-            System.out.println("Erro inesperado ao atualizar buscar Combustivel por id");
+            System.out.println("Erro inesperado ao buscar Combustivel por id");
             ex.printStackTrace();
         }finally {
             this.connection.close();
