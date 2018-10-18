@@ -64,6 +64,7 @@ public class CombustivelJDialog extends javax.swing.JDialog {
         rbCodigo = new javax.swing.JRadioButton();
         rbDescricao = new javax.swing.JRadioButton();
         btRemover = new javax.swing.JButton();
+        btCadValor = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("COMBUSTIVEL");
@@ -170,6 +171,13 @@ public class CombustivelJDialog extends javax.swing.JDialog {
             }
         });
 
+        btCadValor.setText("Cadastrar Valor");
+        btCadValor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCadValorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -207,7 +215,10 @@ public class CombustivelJDialog extends javax.swing.JDialog {
                                 .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btRemover))
-                            .addComponent(tfDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(tfDescricao)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btCadValor))))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -224,7 +235,8 @@ public class CombustivelJDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(tfDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btCadValor))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -303,6 +315,11 @@ public class CombustivelJDialog extends javax.swing.JDialog {
             btRemover.setEnabled(false);
     }//GEN-LAST:event_formMouseMoved
 
+    private void btCadValorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCadValorActionPerformed
+        ValorCombustivelJDialog dialog = new ValorCombustivelJDialog(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btCadValorActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -346,6 +363,7 @@ public class CombustivelJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btCadValor;
     private javax.swing.JButton btFiltrar;
     private javax.swing.ButtonGroup btGroupFiltros;
     private javax.swing.JButton btLimpar;
