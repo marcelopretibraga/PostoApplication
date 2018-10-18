@@ -242,7 +242,6 @@ public class FornecedorDAO implements GenericDAO<Fornecedor> {
         } finally {
             this.connection.commit();
             this.connection.close();
-
         }
         return 1;
     }
