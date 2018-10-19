@@ -6,6 +6,7 @@
 package tela;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -37,10 +38,10 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro no banco de "
                     + "dados\n ao tentar Carregar as informações");
             sqle.printStackTrace();
-        } 
         }
+    }
 
-        @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -66,14 +67,14 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         cbCliente = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
+        tfCodigoCliente = new javax.swing.JTextField();
+        btBuscarCliente = new javax.swing.JButton();
         paFornecedor = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         cbFornecedor = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
+        tfCodigoFornecedor = new javax.swing.JTextField();
+        btBuscarFornecedor = new javax.swing.JButton();
         btSairCabecalho = new javax.swing.JButton();
         btRodapeItens = new javax.swing.JButton();
 
@@ -250,7 +251,12 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
 
         jLabel7.setText("Cod. Cliente");
 
-        jButton3.setText("Buscar");
+        btBuscarCliente.setText("Buscar");
+        btBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btBuscarClienteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout paClienteLayout = new javax.swing.GroupLayout(paCliente);
         paCliente.setLayout(paClienteLayout);
@@ -264,9 +270,9 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(paClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(paClienteLayout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfCodigoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3))
+                        .addComponent(btBuscarCliente))
                     .addComponent(cbCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(187, Short.MAX_VALUE))
         );
@@ -280,8 +286,8 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(paClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3))
+                    .addComponent(tfCodigoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btBuscarCliente))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -291,7 +297,12 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
 
         jLabel9.setText("Cod. Fornecedor");
 
-        jButton4.setText("Buscar");
+        btBuscarFornecedor.setText("Buscar");
+        btBuscarFornecedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btBuscarFornecedorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout paFornecedorLayout = new javax.swing.GroupLayout(paFornecedor);
         paFornecedor.setLayout(paFornecedorLayout);
@@ -305,9 +316,9 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(paFornecedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(paFornecedorLayout.createSequentialGroup()
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfCodigoFornecedor, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4))
+                        .addComponent(btBuscarFornecedor))
                     .addComponent(cbFornecedor, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(161, Short.MAX_VALUE))
         );
@@ -321,8 +332,8 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(paFornecedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4))
+                    .addComponent(tfCodigoFornecedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btBuscarFornecedor))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -407,6 +418,14 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btSairCabecalhoActionPerformed
 
+    private void btBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarClienteActionPerformed
+        filtrarCodigoCliente();
+    }//GEN-LAST:event_btBuscarClienteActionPerformed
+
+    private void btBuscarFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarFornecedorActionPerformed
+        filtrarCodigoFornecedor();
+    }//GEN-LAST:event_btBuscarFornecedorActionPerformed
+
     private void verificaTipoNota() {
         if (rbSaida.isSelected()) {
             paFornecedor.setVisible(false);
@@ -461,6 +480,8 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btBuscarCliente;
+    private javax.swing.JButton btBuscarFornecedor;
     private javax.swing.JButton btCabecalho;
     private javax.swing.JButton btItens;
     private javax.swing.JButton btRodapeItens;
@@ -468,8 +489,6 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> cbCliente;
     private javax.swing.JComboBox<String> cbFornecedor;
     private javax.swing.ButtonGroup gbTipoNota;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -481,14 +500,14 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JPanel paAbas;
     private javax.swing.JPanel paCliente;
     private javax.swing.JPanel paFornecedor;
     private javax.swing.JRadioButton rbEntrada;
     private javax.swing.JRadioButton rbSaida;
     private javax.swing.JTextField tfCod;
+    private javax.swing.JTextField tfCodigoCliente;
+    private javax.swing.JTextField tfCodigoFornecedor;
     private javax.swing.JFormattedTextField tfDataEmissao;
     private javax.swing.JFormattedTextField tfDataEntrada;
     private javax.swing.JTextField tfNumero;
@@ -515,5 +534,47 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro ao carregar COMBO BOX de CLIENTE. contate o suporte.\n[combobox]");
             ex.printStackTrace();
         }
+    }
+
+    private void filtrarCodigoCliente() {
+        try {
+            Cliente cliente = clienteDAO.getById(Integer.parseInt(tfCodigoCliente.getText()));
+            List<Cliente> clienteList = new ArrayList<>();
+            for (Cliente cli : clienteDAO.getAll()) {
+                if (cli.getCodigo() == Integer.parseInt(tfCodigoCliente.getText())) {
+                    clienteList.add(cliente);
+                    carregaComboCliente(clienteList);
+                    return;
+                }
+            }
+            JOptionPane.showMessageDialog(null, "O código inserido não está cadastrado!");
+            carregaComboCliente(clienteDAO.getAll());
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(null, "Não foi possível efetuar a busca pelo cliente, tente novamente!");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro Inesperado ao buscar cliente!");
+        }
+    }
+
+    private void filtrarCodigoFornecedor() {
+        try {
+            Fornecedor fornecedor = fornecedorDAO.getById(Integer.parseInt(tfCodigoFornecedor.getText()));
+            List<Fornecedor> fornecedorList = new ArrayList<>();
+            for (Fornecedor f : fornecedorDAO.getAll()) {
+                if (f.getCodigo() == Integer.parseInt(tfCodigoFornecedor.getText())) {
+                    fornecedorList.add(fornecedor);
+                    carregaComboFornecedor(fornecedorList);
+                    return;
+                }
+            }
+            JOptionPane.showMessageDialog(null, "O código inserido não está cadastrado!");
+            carregaComboFornecedor(fornecedorDAO.getAll());
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(null, "Não foi possivel efetuar  a busca pelo fornecedor, tente novamente!");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro Inesperado ao buscar fornecedor!");
+
+        }
+
     }
 }
