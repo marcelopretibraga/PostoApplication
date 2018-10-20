@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import postoapplication.DAO.CombustivelDAO;
 import postoapplication.model.Combustivel;
+import postoapplication.model.NotaFiscal;
 
 /**
  *
@@ -15,6 +16,7 @@ import postoapplication.model.Combustivel;
  */
 public class NotaFiscalJDialog extends javax.swing.JDialog {
     
+    public static NotaFiscal nota = NotaFiscalCabecalhoJDialog.cabecalhoNota;
     CombustivelDAO combustivelDAO = new CombustivelDAO();
     List<Combustivel> combList = new ArrayList<Combustivel>();
 

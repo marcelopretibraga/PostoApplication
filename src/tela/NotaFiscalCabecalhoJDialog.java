@@ -5,14 +5,17 @@
  */
 package tela;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import postoapplication.DAO.ClienteDAO;
 import postoapplication.DAO.FornecedorDAO;
+import postoapplication.DAO.NotaFiscalDAO;
 import postoapplication.model.Cliente;
 import postoapplication.model.Fornecedor;
+import postoapplication.model.NotaFiscal;
 
 /**
  *
@@ -20,17 +23,20 @@ import postoapplication.model.Fornecedor;
  */
 public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
 
-    ClienteDAO clienteDAO = new ClienteDAO();
-    FornecedorDAO fornecedorDAO = new FornecedorDAO();
+    public static NotaFiscal cabecalhoNota;
+    ClienteDAO clienteDAO;
+    FornecedorDAO fornecedorDAO;
+    NotaFiscalDAO nfeDAO;
 
     public NotaFiscalCabecalhoJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        clienteDAO = new ClienteDAO();
+        fornecedorDAO = new FornecedorDAO();
+        nfeDAO = new NotaFiscalDAO();
+        setTfCodigo();
         try {
-            rbSaida.setSelected(true);
-            verificaTipoNota();
-            paCliente.setVisible(true);
-            btCabecalho.setEnabled(false);
+            verificaTipoNota(true);
             carregaComboCliente(clienteDAO.getAll());
             carregaComboFornecedor(fornecedorDAO.getAll());
         } catch (SQLException sqle) {
@@ -38,7 +44,7 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
                     + "dados\n ao tentar Carregar as informações");
             sqle.printStackTrace();
         } 
-        }
+    }
 
         @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -52,15 +58,15 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         rbSaida = new javax.swing.JRadioButton();
         rbEntrada = new javax.swing.JRadioButton();
-        tfCod = new javax.swing.JTextField();
+        tfCodigo = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         tfNumero = new javax.swing.JTextField();
         tfSerie = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         tfDataEmissao = new javax.swing.JFormattedTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        lbEmissao = new javax.swing.JLabel();
+        lbEntrada = new javax.swing.JLabel();
         tfDataEntrada = new javax.swing.JFormattedTextField();
         paCliente = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -79,10 +85,17 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cabeçalho Nota Fiscal");
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
+            }
+        });
 
         btCabecalho.setText("Cabeçalho");
+        btCabecalho.setEnabled(false);
 
         btItens.setText("Itens");
+        btItens.setEnabled(false);
         btItens.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btItensActionPerformed(evt);
@@ -115,18 +128,19 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tipo de Nota", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP));
 
         gbTipoNota.add(rbSaida);
+        rbSaida.setSelected(true);
         rbSaida.setText("Saída");
-        rbSaida.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                rbSaidaStateChanged(evt);
+        rbSaida.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbSaidaItemStateChanged(evt);
             }
         });
 
         gbTipoNota.add(rbEntrada);
         rbEntrada.setText("Entrada");
-        rbEntrada.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                rbEntradaStateChanged(evt);
+        rbEntrada.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbEntradaItemStateChanged(evt);
             }
         });
 
@@ -150,7 +164,7 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
                 .addGap(0, 6, Short.MAX_VALUE))
         );
 
-        tfCod.setEnabled(false);
+        tfCodigo.setEnabled(false);
 
         jLabel1.setText("Código:");
 
@@ -164,9 +178,9 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
             ex.printStackTrace();
         }
 
-        jLabel5.setText("Data de Emissão");
+        lbEmissao.setText("Data de Emissão");
 
-        jLabel6.setText("Data de Entrada");
+        lbEntrada.setText("Data de Entrada");
 
         try {
             tfDataEntrada.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -188,7 +202,7 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(tfCod, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -199,12 +213,12 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
                         .addComponent(tfSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbEmissao, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tfDataEmissao, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tfDataEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(31, 31, 31))
         );
@@ -224,7 +238,7 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGap(19, 19, 19)
-                                        .addComponent(tfCod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(6, 6, 6)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -234,14 +248,14 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
                                         .addComponent(jLabel4))
                                     .addComponent(tfSerie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
+                                .addComponent(lbEmissao)
                                 .addGap(4, 4, 4)
                                 .addComponent(tfDataEmissao, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(4, 4, 4)
-                                .addComponent(jLabel6)
+                                .addComponent(lbEntrada)
                                 .addGap(6, 6, 6)
                                 .addComponent(tfDataEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         paCliente.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -334,6 +348,7 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
         });
 
         btRodapeItens.setText("Itens");
+        btRodapeItens.setEnabled(false);
         btRodapeItens.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRodapeItensActionPerformed(evt);
@@ -383,39 +398,36 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btItensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btItensActionPerformed
-        this.dispose();
-        NotaFiscalJDialog dialog = new NotaFiscalJDialog(new javax.swing.JFrame(), true);
-        dialog.setVisible(true);
-
+        chamaNotaFiscalJDialog();
     }//GEN-LAST:event_btItensActionPerformed
 
-    private void rbSaidaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rbSaidaStateChanged
-        verificaTipoNota();
-    }//GEN-LAST:event_rbSaidaStateChanged
-
-    private void rbEntradaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rbEntradaStateChanged
-        verificaTipoNota();
-    }//GEN-LAST:event_rbEntradaStateChanged
-
     private void btRodapeItensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRodapeItensActionPerformed
-        this.dispose();
-        NotaFiscalJDialog dialog = new NotaFiscalJDialog(new javax.swing.JFrame(), true);
-        dialog.setVisible(true);
+        chamaNotaFiscalJDialog();
     }//GEN-LAST:event_btRodapeItensActionPerformed
 
     private void btSairCabecalhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSairCabecalhoActionPerformed
         this.dispose();
     }//GEN-LAST:event_btSairCabecalhoActionPerformed
 
-    private void verificaTipoNota() {
-        if (rbSaida.isSelected()) {
-            paFornecedor.setVisible(false);
-            paCliente.setVisible(true);
-        } else {
-            paCliente.setVisible(false);
-            paFornecedor.setVisible(true);
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+        if(tfNumero.getText().trim().length() > 0  &&  tfSerie.getText().trim().length() > 0  && (tfDataEmissao.getText().trim().length() == 10  ||  tfDataEntrada.getText().trim().length() == 10)) {
+            btItens.setEnabled(true);
+            btRodapeItens.setEnabled(true);
+        }else {
+            btItens.setEnabled(false);
+            btRodapeItens.setEnabled(false);
         }
-    }
+    }//GEN-LAST:event_formMouseMoved
+
+    private void rbSaidaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbSaidaItemStateChanged
+        tfDataEntrada.setText("");
+        verificaTipoNota(true);
+    }//GEN-LAST:event_rbSaidaItemStateChanged
+
+    private void rbEntradaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbEntradaItemStateChanged
+        tfDataEmissao.setText("");
+        verificaTipoNota(false);
+    }//GEN-LAST:event_rbEntradaItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -474,8 +486,6 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -483,18 +493,30 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel lbEmissao;
+    private javax.swing.JLabel lbEntrada;
     private javax.swing.JPanel paAbas;
     private javax.swing.JPanel paCliente;
     private javax.swing.JPanel paFornecedor;
     private javax.swing.JRadioButton rbEntrada;
     private javax.swing.JRadioButton rbSaida;
-    private javax.swing.JTextField tfCod;
+    private javax.swing.JTextField tfCodigo;
     private javax.swing.JFormattedTextField tfDataEmissao;
     private javax.swing.JFormattedTextField tfDataEntrada;
     private javax.swing.JTextField tfNumero;
     private javax.swing.JTextField tfSerie;
     // End of variables declaration//GEN-END:variables
 
+    
+    private void verificaTipoNota(boolean visible) {
+        paFornecedor.setVisible(!visible);
+        tfDataEntrada.setVisible(!visible);
+        lbEntrada.setVisible(!visible);
+        paCliente.setVisible(visible);
+        tfDataEmissao.setVisible(visible);
+        lbEmissao.setVisible(visible);
+    }
+    
     private void carregaComboCliente(List<Cliente> listCliente) {
         try {
             DefaultComboBoxModel clienteModel = new DefaultComboBoxModel(listCliente.toArray());
@@ -515,5 +537,24 @@ public class NotaFiscalCabecalhoJDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro ao carregar COMBO BOX de CLIENTE. contate o suporte.\n[combobox]");
             ex.printStackTrace();
         }
+    }
+    
+    private void setTfCodigo() {
+        try {
+            tfCodigo.setText(String.valueOf(nfeDAO.getLastId()));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void chamaNotaFiscalJDialog() {
+        cabecalhoNota.setCodigo(Integer.parseInt(tfCodigo.getText()));
+        cabecalhoNota.setNumeroNota(Integer.parseInt(tfNumero.getText()));
+        cabecalhoNota.setSerie(tfSerie.getText());
+        cabecalhoNota.setCliente((Cliente)cbCliente.getSelectedItem());
+        cabecalhoNota.setDataEmissao(Date.valueOf(tfDataEmissao.getText()));
+        this.dispose();
+        NotaFiscalJDialog dialog = new NotaFiscalJDialog(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
     }
 }

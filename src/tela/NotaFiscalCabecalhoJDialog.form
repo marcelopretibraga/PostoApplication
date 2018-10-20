@@ -13,6 +13,9 @@
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="formMouseMoved"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -104,11 +107,13 @@
         <Component class="javax.swing.JButton" name="btCabecalho">
           <Properties>
             <Property name="text" type="java.lang.String" value="Cabe&#xe7;alho"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btItens">
           <Properties>
             <Property name="text" type="java.lang.String" value="Itens"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btItensActionPerformed"/>
@@ -140,7 +145,7 @@
                   <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="tfCod" min="-2" pref="120" max="-2" attributes="0"/>
+                          <Component id="tfCodigo" min="-2" pref="120" max="-2" attributes="0"/>
                           <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
                           <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -154,12 +159,12 @@
                   </Group>
                   <EmptySpace pref="30" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel5" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                      <Component id="lbEmissao" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                       <Component id="tfDataEmissao" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel6" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                              <Component id="lbEntrada" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                               <Component id="tfDataEntrada" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -185,7 +190,7 @@
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="19" pref="19" max="-2" attributes="0"/>
-                                          <Component id="tfCod" min="-2" max="-2" attributes="0"/>
+                                          <Component id="tfCodigo" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="jPanel1" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -200,18 +205,18 @@
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbEmissao" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="4" pref="4" max="-2" attributes="0"/>
                                   <Component id="tfDataEmissao" min="-2" pref="23" max="-2" attributes="0"/>
                                   <EmptySpace min="4" pref="4" max="-2" attributes="0"/>
-                                  <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbEntrada" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                                   <Component id="tfDataEntrada" min="-2" pref="23" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="13" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -256,10 +261,11 @@
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                   <ComponentRef name="gbTipoNota"/>
                 </Property>
+                <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Sa&#xed;da"/>
               </Properties>
               <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="rbSaidaStateChanged"/>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbSaidaItemStateChanged"/>
               </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="rbEntrada">
@@ -270,12 +276,12 @@
                 <Property name="text" type="java.lang.String" value="Entrada"/>
               </Properties>
               <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="rbEntradaStateChanged"/>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbEntradaItemStateChanged"/>
               </Events>
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JTextField" name="tfCod">
+        <Component class="javax.swing.JTextField" name="tfCodigo">
           <Properties>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
@@ -306,12 +312,12 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel5">
+        <Component class="javax.swing.JLabel" name="lbEmissao">
           <Properties>
             <Property name="text" type="java.lang.String" value="Data de Emiss&#xe3;o"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel6">
+        <Component class="javax.swing.JLabel" name="lbEntrada">
           <Properties>
             <Property name="text" type="java.lang.String" value="Data de Entrada"/>
           </Properties>
@@ -496,6 +502,7 @@
     <Component class="javax.swing.JButton" name="btRodapeItens">
       <Properties>
         <Property name="text" type="java.lang.String" value="Itens"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRodapeItensActionPerformed"/>
