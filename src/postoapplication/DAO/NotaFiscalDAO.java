@@ -137,4 +137,27 @@ public class NotaFiscalDAO implements GenericDAO<NotaFiscal> {
         }
         return 1;
     }
+    
+    public int getLastIdItem() throws SQLException {
+        PreparedStatement pstm = null;
+        try {
+            this.connection = new ConnectionFactory().getConnection();
+            String sql = "SELECT COALESCE(MAX(CD_ITEMNF),0)+1 AS MAIOR FROM ITEMNF ";
+            pstm = connection.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
+            while (rs.next())
+                return rs.getInt("MAIOR");
+              
+        }catch (SQLException ex){
+            System.out.println("Erro ao recuperar maior ID ItemNF");
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("Erro inesperado ao recuperar maior ID ItemNF");
+            ex.printStackTrace();
+        }finally {
+            pstm.close();
+            this.connection.close();
+        }
+        return 1;
+    }
 }
