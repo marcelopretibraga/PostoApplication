@@ -121,12 +121,6 @@ public class NotaFiscalJDialog extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        cbCombustivel.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbCombustivelItemStateChanged(evt);
-            }
-        });
-
         jLabel5.setText("Produto:");
 
         jLabel2.setText("Valor Unitario:");
@@ -279,7 +273,7 @@ public class NotaFiscalJDialog extends javax.swing.JDialog {
                 .addComponent(jLabel10)
                 .addGap(35, 35, 35)
                 .addComponent(btRemoverItem, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -309,6 +303,7 @@ public class NotaFiscalJDialog extends javax.swing.JDialog {
         });
 
         btCabecalho1.setText("Cabeçalho");
+        btCabecalho1.setEnabled(false);
         btCabecalho1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btCabecalho1ActionPerformed(evt);
@@ -359,9 +354,7 @@ public class NotaFiscalJDialog extends javax.swing.JDialog {
                                 .addComponent(btSair, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(btGravar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(paAbas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(paAbas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -399,6 +392,14 @@ public class NotaFiscalJDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btCabecalho1ActionPerformed
 
     private void btGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGravarActionPerformed
+        Double total = 0.00;
+        for(ItemNF i : nota.getItensNF()) {
+            if(i.getValorDesconto() == null) {
+                i.setValorDesconto(0.00);
+            }
+            total += i.getValorTotal();
+        }
+        nota.setValorTotal(total);
         try {
             notaFiscalDAO.save(nota);
         } catch (SQLException ex) {
@@ -408,30 +409,33 @@ public class NotaFiscalJDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btGravarActionPerformed
 
-    private void cbCombustivelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCombustivelItemStateChanged
-        try {
-            List<ValorCombustivel> vlCombustivelList = (vlCombustivelDAO.getByName(((Combustivel)cbCombustivel.getSelectedItem()).getDescricao()));
-            tfVlUnit.setText(String.valueOf(vlCombustivelList.get(vlCombustivelList.size()-1)));
-        } catch (SQLException ex) {
-            Logger.getLogger(NotaFiscalJDialog.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }//GEN-LAST:event_cbCombustivelItemStateChanged
-
     private void btAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
         ItemNF item = new ItemNF();
         try {
-            item.setCodigo(notaFiscalDAO.getLastIdItem());
+            if(nota.getItensNF() != null) {
+                item.setCodigo(notaFiscalDAO.getLastIdItem() + nota.getItensNF().size());
+            }else {
+                item.setCodigo(notaFiscalDAO.getLastIdItem());
+            }
         } catch (SQLException ex) {
             Logger.getLogger(NotaFiscalJDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         item.setNotaFiscal(nota);
         item.setQuantidade(Double.parseDouble(tfQnt.getText()));
         item.setValorUnitario(Double.parseDouble(tfVlUnit.getText()));
-        item.setValorDesconto(Double.parseDouble(tfVlDesconto.getText()));
+        if(tfVlDesconto.getText().trim().length() > 0) {
+            item.setValorDesconto(Double.parseDouble(tfVlDesconto.getText()));
+        }
         item.setValorTotal(Double.parseDouble(tfVlTot.getText()));
         item.setCombustivel((Combustivel)cbCombustivel.getSelectedItem());
-        nota.getItensNF().add(item);
+        if(nota.getItensNF() != null) {
+            nota.getItensNF().add(item);
+        }else {
+            List<ItemNF> itemList = new ArrayList<ItemNF>();
+            itemList.add(item);
+            nota.setItensNF(itemList);
+        }
+        
         carregaTabela(nota.getItensNF());
         limpaCampos();
     }//GEN-LAST:event_btAddActionPerformed
@@ -443,7 +447,7 @@ public class NotaFiscalJDialog extends javax.swing.JDialog {
         }else {
             btAdd.setEnabled(false);
         }
-        if(nota.getItensNF().size() > 0) {
+        if(nota.getItensNF() != null  &&  nota.getItensNF().size() > 0) {
             btGravar.setEnabled(true);
         }else {
             btGravar.setEnabled(false);
@@ -464,26 +468,32 @@ public class NotaFiscalJDialog extends javax.swing.JDialog {
         Será buscado pelo código por padrão:
         Se ambos os campos estiverem preenchidos, será buscado pelo código.
         */
+        List<Combustivel> combustivelList = new ArrayList<Combustivel>();
         try {
-            if(tfBuscarCodigo.getText().trim().length() > 0) {
-                cbCombustivel.setSelectedItem(combustivelDAO.getById(Integer.parseInt(tfBuscarCodigo.getText())));
-            }else {
-                List<Combustivel> combustivelList = combustivelDAO.getByName(tfBuscarDescricao.getText());
-                if(combustivelList.size() == 1) {
-                    cbCombustivel.setSelectedItem(combustivelList.get(0));
-                }else {
-                    JOptionPane.showMessageDialog(null, "A pesquisa retornou muitos resultados ou nenhum");
+            combustivelList = combustivelDAO.getAll();
+        } catch (SQLException ex) {
+            Logger.getLogger(NotaFiscalJDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(tfBuscarCodigo.getText().trim().length() > 0) {
+            for(int i = 0; i < combustivelList.size(); i++) {
+                if(combustivelList.get(i).getCodigo() == Integer.parseInt(tfBuscarCodigo.getText())) {
+                    cbCombustivel.setSelectedIndex(i);
+                    return;
                 }
             }
-        } catch(SQLException sqlex) {
-            sqlex.printStackTrace();
-        } catch(Exception ex) {
-            ex.printStackTrace();
+        }else {
+            for(int i = 0; i < combustivelList.size(); i++) {
+                if(combustivelList.get(i).getDescricao().equalsIgnoreCase(tfBuscarDescricao.getText())) {
+                    cbCombustivel.setSelectedIndex(i);
+                    return;
+                }
+            }
+            JOptionPane.showMessageDialog(null, "A pesquisa retornou muitos resultados ou nenhum");
         }
     }//GEN-LAST:event_btBuscarActionPerformed
 
     private void btRemoverItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoverItemActionPerformed
-        nota.getItensNF().remove((int) tbItens.getValueAt(tbItens.getSelectedRow(), 0));
+        nota.getItensNF().remove(((int) tbItens.getValueAt(tbItens.getSelectedRow(), 0))-1);
         carregaTabela(nota.getItensNF());
         btRemoverItem.setEnabled(false);
     }//GEN-LAST:event_btRemoverItemActionPerformed
@@ -491,7 +501,7 @@ public class NotaFiscalJDialog extends javax.swing.JDialog {
     private void calculaTotal() {
         Double vlTotal = Double.parseDouble(tfQnt.getText()) * Double.parseDouble(tfVlUnit.getText());
         if(!tfVlDesconto.getText().trim().isEmpty()) {
-            vlTotal += Double.parseDouble(tfVlDesconto.getText());
+            vlTotal -= Double.parseDouble(tfVlDesconto.getText());
         }
         tfVlTot.setText(String.valueOf(vlTotal));
     }

@@ -31,7 +31,7 @@ public class NotaFiscalDAO implements GenericDAO<NotaFiscal> {
             PreparedStatement pstm = connection.prepareStatement(sql.toString());
             pstm.setInt(1, entity.getCodigo());
             pstm.setInt(2, entity.getNumeroNota());
-            pstm.setString(3, entity.getSerie());
+            pstm.setInt(3, Integer.parseInt(entity.getSerie()));
             pstm.setDate(4, (Date) entity.getDataEmissao());
             pstm.setDouble(5, entity.getValorTotal());
             pstm.setInt(6, entity.getCliente().getCodigo());
@@ -39,11 +39,11 @@ public class NotaFiscalDAO implements GenericDAO<NotaFiscal> {
             pstm.setDate(8, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
             pstm.execute();
             StringBuilder sqlItem = new StringBuilder();
-            for (ItemNF inf : entity.getItensNF()) {
                 sqlItem.append("INSERT INTO ITEMNF (CD_ITEMNF, QT_ITEMNF, VLUNITARIO_ITEMNF, ")
                         .append("DESCONTO_ITEMNF, VLTOTAL_ITEMNF, CD_COMBUSTIVEL, CD_NOTAFISCAL, ")
                         .append("DT_RECORD, DT_UPDATE) VALUES (?,?,?,?,?,?,?,?,?)");
                 pstm = connection.prepareStatement(sqlItem.toString());
+            for (ItemNF inf : entity.getItensNF()) {
                 pstm.setInt(1, inf.getCodigo());
                 pstm.setDouble(2, inf.getQuantidade());
                 pstm.setDouble(3, inf.getValorUnitario());
